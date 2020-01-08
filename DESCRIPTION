@@ -1,0 +1,27 @@
+Package: prospect
+Title: This package includes PROSPECT leaf model as well as inversion routines for the estimation of leaf chemistry from spectroscopic measurements
+Version: 0.0.0.9000
+Authors@R: c(person(given = "Jean-Baptiste", 
+					    family = "Feret", 
+					    email = "jb.feret@teledetection.fr", 
+					    role = c("aut", "cre", "cph"),
+					    comment = c(ORCID = "0000-0002-0151-1334")),
+			    person(	given = "Florian", 
+					    family = "de Boissieu", 
+					    email = "florian.deboissieu@irstea.fr", 
+					    role = c("aut"), 
+					    comment = c(ORCID = "0000-0002-2185-9952")))
+Description: The package prospect includes PROSPECT-PRO, the latest version of the PROSPECT leaf model. It also includes 
+              inversion routines based on iterative optimization in order to estimate leaf chemistry from spectroscopic measurements.
+License: GPL-3
+Depends: R (>= 3.5.0)
+Encoding: UTF-8
+LazyData: true
+Roxygen: list(markdown = TRUE)
+RoxygenNote: 6.1.1
+Suggests: knitr,
+    rmarkdown
+VignetteBuilder: knitr
+Imports: 
+    expint,
+    pracma
