@@ -106,7 +106,6 @@ Merit_PROSPECT_Generic <- function(xinit,SpecPROSPECT,Refl,Tran,Input_PROSPECT,W
 
   xinit[xinit<0] = 0
   Input_PROSPECT[WhichVars2Estimate] = xinit
-  print(Input_PROSPECT)
   RT = PROSPECT(SpecPROSPECT = SpecPROSPECT,Input_PROSPECT = Input_PROSPECT)
   fc = CostVal(RT,Refl,Tran)
   return(fc)
