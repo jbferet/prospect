@@ -38,7 +38,7 @@ Invert_PROSPECT  <- function(SpecPROSPECT,Refl = NULL,Tran = NULL,
   # define init value and lower/upper boundaries for inversion
   #               CHL   CAR   ANT   BROWN   EWT   LMA   PROT  CBC   N     alpha
   xinit_All   = c(40,   10,   0.1,  0.01,   0.01, 0.008,0.001,0.008,    1.5,  40)
-  lb_All      = c(1e-5, 1e-5, 0,    0,      1e-7, 1e-7, 0.0,  0.00,     0.5,  10)
+  lb_All      = c(1e-4, 1e-4, 0,    0,      1e-7, 1e-7, 0.0,  0.00,     0.5,  10)
   ub_All      = c(150,  25,   20.0, 1.0,    0.08, 0.04, 0.005,0.04,     3.0,  90)
   # # update init value and lower/upper boundaries for inversion based on user values
   # if (!is.null(xinit_user)){
@@ -82,7 +82,7 @@ Invert_PROSPECT  <- function(SpecPROSPECT,Refl = NULL,Tran = NULL,
                   SpecPROSPECT=SpecPROSPECT,Refl=Refl,Tran=Tran,
                   Input_PROSPECT = InPROSPECT,WhichVars2Estimate=Vars2Estimate,
                   method = "SQP",A = NULL, b = NULL, Aeq = NULL, beq = NULL,
-                  lb = lb, ub = ub, hin = NULL, heq = NULL,tol = 1e-08,
+                  lb = lb, ub = ub, hin = NULL, heq = NULL,tol = 1e-07,
                   maxfeval = 2000, maxiter = 1000)
   OutPROSPECT  = InPROSPECT
   OutPROSPECT[Vars2Estimate]= res$par
@@ -106,6 +106,7 @@ Merit_PROSPECT_Generic <- function(xinit,SpecPROSPECT,Refl,Tran,Input_PROSPECT,W
 
   xinit[xinit<0] = 0
   Input_PROSPECT[WhichVars2Estimate] = xinit
+  print(Input_PROSPECT)
   RT = PROSPECT(SpecPROSPECT = SpecPROSPECT,Input_PROSPECT = Input_PROSPECT)
   fc = CostVal(RT,Refl,Tran)
   return(fc)
