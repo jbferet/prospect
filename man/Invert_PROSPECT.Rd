@@ -6,7 +6,8 @@
 in order to define estimate a set of user defined parameters}
 \usage{
 Invert_PROSPECT(SpecPROSPECT, Refl = NULL, Tran = NULL,
-  Parms2Estimate = "ALL", ParmSet = NULL, PROSPECT_version = "D")
+  Parms2Estimate = "ALL", ParmSet = NULL, PROSPECT_version = "D",
+  MeritFunction = "Merit_RMSE")
 }
 \arguments{
 \item{SpecPROSPECT}{list. Includes optical constants
@@ -21,6 +22,9 @@ refractive index, specific absorption coefficients and corresponding spectral ba
 \item{ParmSet}{list. Parameters set to a fixed value by user}
 
 \item{PROSPECT_version}{character. '5', '5B', 'D', 'DB', 'PRO', 'PROB',}
+
+\item{MeritFunction}{character. name of the function to be used as merit function
+with given criterion to minimize (default = RMSE)}
 }
 \value{
 OutPROSPECT estimated values corresponding to Parms2Estimate

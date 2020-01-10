@@ -18,6 +18,8 @@
 #' @param Parms2Estimate  list. Parameters to estimate (can be 'ALL')
 #' @param ParmSet  list. Parameters set to a fixed value by user
 #' @param PROSPECT_version  character. '5', '5B', 'D', 'DB', 'PRO', 'PROB',
+#' @param MeritFunction  character. name of the function to be used as merit function
+#' with given criterion to minimize (default = RMSE)
 #'
 #' @return OutPROSPECT estimated values corresponding to Parms2Estimate
 #' @importFrom pracma fmincon
