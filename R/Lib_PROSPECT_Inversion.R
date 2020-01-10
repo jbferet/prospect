@@ -108,7 +108,7 @@ Merit_RMSE <- function(xinit,SpecPROSPECT,Refl,Tran,Input_PROSPECT,WhichVars2Est
   xinit[xinit<0] = 0
   Input_PROSPECT[WhichVars2Estimate] = xinit
   RT = PROSPECT(SpecPROSPECT = SpecPROSPECT,Input_PROSPECT = Input_PROSPECT)
-  fc = CostVal_RMSE(RT,Refl,Tran,RMSE)
+  fc = CostVal_RMSE(RT,Refl,Tran)
   return(fc)
 }
 
