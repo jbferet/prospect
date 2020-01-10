@@ -24,7 +24,7 @@
 #' @export
 Invert_PROSPECT  <- function(SpecPROSPECT,Refl = NULL,Tran = NULL,
                              Parms2Estimate = 'ALL',ParmSet = NULL,
-                             PROSPECT_version = 'D'){
+                             PROSPECT_version = 'D',MeritFunction = 'Merit_RMSE'){
 
   # define PROSPECT input parameters
   InPROSPECT  = data.frame('CHL'=0,'CAR'=0,'ANT'=0,'BROWN'=0,'EWT'=0,
@@ -78,12 +78,13 @@ Invert_PROSPECT  <- function(SpecPROSPECT,Refl = NULL,Tran = NULL,
   xinit = xinit_All[Vars2Estimate]
   lb    = lb_All[Vars2Estimate]
   ub    = ub_All[Vars2Estimate]
-  res   = fmincon(x0 = xinit, fn = Merit_PROSPECT_Generic, gr = NULL,
+  res   = fmincon(x0 = xinit, fn = MeritFunction, gr = NULL,
                   SpecPROSPECT=SpecPROSPECT,Refl=Refl,Tran=Tran,
                   Input_PROSPECT = InPROSPECT,WhichVars2Estimate=Vars2Estimate,
                   method = "SQP",A = NULL, b = NULL, Aeq = NULL, beq = NULL,
                   lb = lb, ub = ub, hin = NULL, heq = NULL,tol = 1e-07,
                   maxfeval = 2000, maxiter = 1000)
+
   OutPROSPECT  = InPROSPECT
   OutPROSPECT[Vars2Estimate]= res$par
   return(OutPROSPECT)
@@ -102,12 +103,12 @@ Invert_PROSPECT  <- function(SpecPROSPECT,Refl = NULL,Tran = NULL,
 #'
 #' @return fc estimates of the parameters
 #' @export
-Merit_PROSPECT_Generic <- function(xinit,SpecPROSPECT,Refl,Tran,Input_PROSPECT,WhichVars2Estimate) {
+Merit_RMSE <- function(xinit,SpecPROSPECT,Refl,Tran,Input_PROSPECT,WhichVars2Estimate) {
 
   xinit[xinit<0] = 0
   Input_PROSPECT[WhichVars2Estimate] = xinit
   RT = PROSPECT(SpecPROSPECT = SpecPROSPECT,Input_PROSPECT = Input_PROSPECT)
-  fc = CostVal(RT,Refl,Tran)
+  fc = CostVal_RMSE(RT,Refl,Tran,RMSE)
   return(fc)
 }
 
@@ -119,7 +120,7 @@ Merit_PROSPECT_Generic <- function(xinit,SpecPROSPECT,Refl,Tran,Input_PROSPECT,W
 #'
 #' @return fc sum of squared difference between simulated and measured leaf optical properties
 #' @export
-CostVal  <- function(RT,Refl,Tran) {
+CostVal_RMSE  <- function(RT,Refl,Tran) {
 
   if (is.null(Tran)){
     fc = sqrt(sum((Refl-RT$Reflectance)**2)/length(RT$Reflectance))
