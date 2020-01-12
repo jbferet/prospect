@@ -41,7 +41,7 @@ The specific absoprtion coefficients corresponding to these constituents are rec
 ## Input variables
 The function `PROSPECT` runs PROSPECT for individual samples and expects the following input variables.
 
-* `SpecPROSPECT`: dataframe including the refractive index and specific absorption ceofficients, defined for a given spectral range (max range: 400 nm - 2500 nm). simulation and inversion on different spctral domains can be peformed by adapting the information in `SpecPROSPECT`
+* `SpecPROSPECT`: dataframe including the refractive index and specific absorption ceofficients, defined for a given spectral range (max range: 400 nm - 2500 nm). simulation and inversion on different spectral domains can be peformed by adapting the information in `SpecPROSPECT`
 * The biochemical and biophysical input variables of PROSPECT can then be introduced following two possible ways:
 
     * as individual values : these input variables include `N`, `CHL`, `CAR`, `ANT`, `BROWN`, `EWT`, `LMA`, `PROT`, `CBC`, `alpha`. If no value, their default value is set
@@ -85,4 +85,29 @@ N   = 1+2*runif(1000)
 Input_PROSPECT  = data.frame('CHL'=CHL,'CAR'=CAR,'ANT'=ANT,'EWT'=EWT,'LMA'=LMA,'N'=N)
 LUT             = PROSPECT_LUT(SpecPROSPECT,Input_PROSPECT)
 ```
+
+
+# Running __prospect__ in inverse mode
+
+`PROSPECT` can be inverted using iterative optimization, by calling the function `Invert_PROSPECT`.
+By default, the merit function used for the inversion minimizes RMSE bewen simulated and measured leaf optical properties. 
+However, users can define their own merit function with associated criterion to minimize by defining their own merit function and adding it as input variable, such as `MeritFunction = MyOwnMeritFunction`
+
+## Input variables
+The function `Invert_PROSPECT` requires either reflectance, or transmittance, or both.
+Use can define which input variable of `PROSPECT` should be estimated during inversion, and which ones should be set. 
+The list of input variables for inversion is :
+
+* `SpecPROSPECT`: dataframe including the refractive index and specific absorption ceofficients, defined for a given spectral range (max range: 400 nm - 2500 nm). simulation and inversion on different spectral domains can be peformed by adapting the information in `SpecPROSPECT`
+* `Refl`: numeric: individual leaf reflectance corresponding to the spectral domain defined in `SpecPROSPECT`. Set to NULL if inversion on transmittance only
+* `Tran`: numeric: individual leaf transmittance corresponding to the spectral domain defined in `SpecPROSPECT`. Set to NULL if inversion on reflectance only
+* `Parms2Estimate` Parms2Estimate list. Parameters to estimate. Set to 'ALL' by default. the leaf structure parameter N is systematically estimated, unless defined in `ParmSet`
+* `ParmSet` list of PROSPECT parameters which should be set to a given value
+* `PROSPECT_version` character. corresponds to the PROSPECT version. should be one of the following versions: '5', '5B', 'D', 'DB', 'PRO', 'PROB'. Use the vesion ending with 'B' if you want to estimate brown pigments
+* `MeritFunction` character. name of the function to be used as merit function with given criterion to minimize (default = RMSE)
+
+
+## Output variables
+`Invert_PROSPECT` returns a list containing estimated values of PROSPECT input parameters
+
 
