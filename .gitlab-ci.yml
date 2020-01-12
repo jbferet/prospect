@@ -1,4 +1,4 @@
-image: methodsconsultants/r-packaging
+image:  thomaschln/r-devtools
 
 # gitlab-ci file copied from https://www.r-bloggers.com/developing-r-packages-with-usethis-and-gitlab-ci-part-iii/
 
@@ -8,8 +8,8 @@ variables:
   BUILD_LOGS_DIR: "$CI_PROJECT_DIR/ci/logs/$CI_PROJECT_NAME.Rcheck"
 
 before_script:
-  - apt update
-  - apt install -y qpdf
+  - apt-get update
+  - apt-get install -y qpdf
 
 check:
   script:
