@@ -7,6 +7,10 @@ variables:
   CHECK_DIR: "$CI_PROJECT_DIR/ci/logs"
   BUILD_LOGS_DIR: "$CI_PROJECT_DIR/ci/logs/$CI_PROJECT_NAME.Rcheck"
 
+before_script:
+  - apt-get update
+  - apt-get install -y qpdf
+
 check:
   script:
   - mkdir -p $R_LIBS_USER $BUILD_LOGS_DIR
