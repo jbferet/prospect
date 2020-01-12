@@ -8,8 +8,8 @@ variables:
   BUILD_LOGS_DIR: "$CI_PROJECT_DIR/ci/logs/$CI_PROJECT_NAME.Rcheck"
 
 before_script:
-  - apt-get update
-  - apt-get install -y qpdf
+  - apt update
+  - apt install -y qpdf
 
 check:
   script:
