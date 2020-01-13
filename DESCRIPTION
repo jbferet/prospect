@@ -1,5 +1,5 @@
 Package: prospect
-Title: This package includes PROSPECT leaf model as well as inversion routines for the estimation of leaf chemistry from spectroscopic measurements
+Title: PROSPECT leaf radiative transfer model and inversion routines
 Version: 0.0.0.9000
 Authors@R: c(person(given = "Jean-Baptiste", 
 					    family = "Feret", 
@@ -25,5 +25,5 @@ VignetteBuilder: knitr
 Imports: 
     expint,
     pracma
-URL: https://gitlab.com/jbferet/prospect
+URL: https://gitlab.com/jbferet/prospect/
 BugReports: https://gitlab.com/jbferet/prospect/issues

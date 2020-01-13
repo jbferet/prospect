@@ -4,12 +4,20 @@
 \name{prospect-package}
 \alias{prospect}
 \alias{prospect-package}
-\title{prospect: This package includes PROSPECT leaf model as well as inversion routines for the estimation of leaf chemistry from spectroscopic measurements}
+\title{prospect: PROSPECT leaf radiative transfer model and inversion routines}
 \description{
 \if{html}{\figure{logo.png}{options: align='right'}}
 
 The package prospect includes PROSPECT-PRO, the latest version of the PROSPECT leaf model. It also includes 
               inversion routines based on iterative optimization in order to estimate leaf chemistry from spectroscopic measurements.
+}
+\seealso{
+Useful links:
+\itemize{
+  \item \url{https://gitlab.com/jbferet/prospect}
+  \item Report bugs at \url{https://gitlab.com/jbferet/prospect/issues}
+}
+
 }
 \author{
 \strong{Maintainer}: Jean-Baptiste Feret \email{jb.feret@teledetection.fr} (0000-0002-0151-1334) [copyright holder]
