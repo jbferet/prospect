@@ -23,3 +23,12 @@ check:
   cache:
     paths:
     - $R_LIBS_USER
+
+pages:
+  script:
+  - R -e 'devtools::install_cran('pkgdown')'
+  - R -e 'pkgdown::build_site()'
+  - mv docs public
+  artifacts:
+    paths:
+    - public
