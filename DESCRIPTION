@@ -25,3 +25,5 @@ VignetteBuilder: knitr
 Imports: 
     expint,
     pracma
+URL: https://gitlab.com/jbferet/prospect
+BugReports: https://gitlab.com/jbferet/prospect/issues
