@@ -1,4 +1,4 @@
-image:  r-base:latest
+image:  r-base:3.4.4
 
 # gitlab-ci file copied from https://www.r-bloggers.com/developing-r-packages-with-usethis-and-gitlab-ci-part-iii/
 
