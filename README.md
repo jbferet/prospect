@@ -4,14 +4,15 @@ output: github_document
 
 <!-- README.md is generated from README.Rmd. Please edit that file -->
 
-```{r include = FALSE}
-knitr::opts_chunk$set(
-  collapse = TRUE,
-  comment = "#>",
-  fig.path = "man/figures/README-",
-  out.width = "100%"
-)
-```
+<!-- ```{r include = FALSE} -->
+<!-- knitr::opts_chunk$set( -->
+<!--   collapse = TRUE, -->
+<!--   comment = "#>", -->
+<!--   fig.path = "man/figures/README-", -->
+<!--   out.width = "100%" -->
+<!-- ) -->
+<!-- ``` -->
+
 # prospect
 
 <!-- badges: start -->
@@ -31,7 +32,7 @@ devtools::install_gitlab('jbferet/prospect')
 
 This is a basic example which shows you how to simulate leaf optical properties using __prospect__:
 
-```{r example}
+``` r
 library(prospect)
 #############################################################
 ###         run PROSPECT using default parameters         ###
