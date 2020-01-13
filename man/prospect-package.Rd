@@ -6,6 +6,8 @@
 \alias{prospect-package}
 \title{prospect: This package includes PROSPECT leaf model as well as inversion routines for the estimation of leaf chemistry from spectroscopic measurements}
 \description{
+\if{html}{\figure{logo.png}{options: align='right'}}
+
 The package prospect includes PROSPECT-PRO, the latest version of the PROSPECT leaf model. It also includes 
               inversion routines based on iterative optimization in order to estimate leaf chemistry from spectroscopic measurements.
 }
