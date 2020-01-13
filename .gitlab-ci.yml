@@ -1,4 +1,4 @@
-image:  r-base:3.4.4
+image: thomaschln/r-devtools
 
 # gitlab-ci file copied from https://www.r-bloggers.com/developing-r-packages-with-usethis-and-gitlab-ci-part-iii/
 
@@ -9,13 +9,13 @@ variables:
 
 before_script:
   - apt-get update
-  - apt-get install -y libcurl4-openssl-dev libssl-dev libssh2-1-dev libxml2-dev qpdf
+  - apt-get install -y qpdf
 
 check:
   script:
   - R -e 'print(Sys.getenv("R_LIBS_USER"))'
   - mkdir -p $R_LIBS_USER $BUILD_LOGS_DIR
-  - R -e "install.packages(c('devtools', 'testthat', 'roxygen2'))"
+  # - R -e "install.packages(c('devtools', 'testthat', 'roxygen2'))"
   - R -e 'devtools::install_deps(dep = T)'
   - R -e 'devtools::check(check_dir = Sys.getenv("CHECK_DIR"))'
   - R -e 'if (length(devtools::check_failures(path = Sys.getenv("BUILD_LOGS_DIR"), note = FALSE)) > 0) stop()'
