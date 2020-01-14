@@ -14,7 +14,7 @@ The package prospect includes PROSPECT-PRO, the latest version of the PROSPECT l
 \seealso{
 Useful links:
 \itemize{
-  \item \url{https://gitlab.com/jbferet/prospect}
+  \item \url{https://gitlab.com/jbferet/prospect/}
   \item Report bugs at \url{https://gitlab.com/jbferet/prospect/issues}
 }
 

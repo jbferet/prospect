@@ -21,9 +21,9 @@ Roxygen: list(markdown = TRUE)
 RoxygenNote: 6.1.1
 Suggests: knitr,
     rmarkdown
-VignetteBuilder: knitr
 Imports: 
     expint,
     pracma
+VignetteBuilder: knitr
 URL: https://gitlab.com/jbferet/prospect/
 BugReports: https://gitlab.com/jbferet/prospect/issues
