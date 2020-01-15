@@ -130,7 +130,7 @@ Input_PROSPECT <- data.frame('CHL'=CHL,'CAR'=CAR,'ANT'=ANT,'EWT'=EWT,'LMA'=LMA,'
 LUT <- PROSPECT_LUT(SpecPROSPECT,Input_PROSPECT)
 ```
 
-# Running __prospect__ in inverse mode
+# Running `prospect` in inverse mode
 
 `PROSPECT` can be inverted using iterative optimization, by calling the function `Invert_PROSPECT`. This iterative optimization is based on the function [`fmincon` included in the package `pracma`](https://rdrr.io/cran/pracma/man/fmincon.html).
 
