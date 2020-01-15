@@ -170,3 +170,48 @@ OutPROSPECT    = Invert_PROSPECT(SpecPROSPECT,Refl = LRT_D$Reflectance,Tran = LR
                              PROSPECT_version = 'D',MeritFunction = 'Merit_RMSE')
 ```
 
+###   run PROSPECT-D inversion to estimate EWT and LMA using their optimal spectral domain 
+see [Féret et al. (2019) https://doi.org/10.1016/j.rse.2018.11.002](https://www.sciencedirect.com/science/article/abs/pii/S0034425718305030) for more information on optimal spectral domains.
+
+```{r prospect inverse mode 2}
+
+# simulate leaf optical properties
+CHL <- 45;      CAR <- 10;      ANT <- 0.2
+EWT <- 0.012;   LMA <- 0.010;   N   <- 1.3
+LRT_D <- PROSPECT(SpecPROSPECT,CHL=CHL,CAR=CAR,ANT=ANT,EWT=EWT,LMA=LMA,N=N)
+
+# define optimal domain for leaf constituents
+OptDomain = list()
+OptDomain$EWT = c(1700,2400)
+OptDomain$LMA = c(1700,2400)
+
+Parms2Estimate <- c('EWT','LMA') # N is estimated as well by default, pigments do not influence SWIR domain
+# Fit spectral data to match PROSPECT with user optical properties
+SubData = FitSpectralData(SpecPROSPECT=SpecPROSPECT,lambda=SpecPROSPECT$lambda,Refl=LRT_D$Reflectance,Tran=LRT_D$Transmittance,UserDomain = OptDomain$EWT)
+SubSpecPROSPECT = SubData$SpecPROSPECT
+Sublambda       = SubData$lambda
+SubRefl         = SubData$Refl
+SubTran         = SubData$Tran
+
+# Invert PROSPECT with optimal spectral information
+res= Invert_PROSPECT(SubSpecPROSPECT,Refl = SubRefl,Tran = SubTran,PROSPECT_version = 'D',Parms2Estimate = Parms2Estimate)
+EWT_mod    = res$EWT
+LMA_mod    = res$LMA
+Nstruct_mod= res$N
+
+```
+
+###   run PROSPECT-PRO inversion
+```{r prospect inverse mode 3}
+# simulate leaf optical properties
+CHL <- 45;      CAR <- 10;      ANT <- 0.2
+EWT <- 0.012;   LMA <- 0.000;   N   <- 1.3;
+PROT <- 0.001;  CBC <- 0.010;
+LRT_PRO <- PROSPECT(SpecPROSPECT,CHL=CHL,CAR=CAR,ANT=ANT,EWT=EWT,LMA=LMA,N=N,PROT=PROT,CBC = CBC)
+
+# invert PROSPECT with simulated leaf optical properties
+OutPROSPECT    = Invert_PROSPECT(SpecPROSPECT,Refl = LRT_PRO$Reflectance,Tran = LRT_PRO$Transmittance,
+                             Parms2Estimate = 'ALL',ParmSet = NULL,
+                             PROSPECT_version = 'PRO',MeritFunction = 'Merit_RMSE')
+```
+
