@@ -167,7 +167,7 @@ LRT_D <- PROSPECT(SpecPROSPECT,CHL=CHL,CAR=CAR,ANT=ANT,EWT=EWT,LMA=LMA,N=N)
 # invert PROSPECT with simulated leaf optical properties
 OutPROSPECT    = Invert_PROSPECT(SpecPROSPECT,Refl = LRT_D$Reflectance,Tran = LRT_D$Transmittance,
                              Parms2Estimate = 'ALL',ParmSet = NULL,
-                             PROSPECT_version = 'D',MeritFunction = 'Merit_RMSE')
+                             PROSPECT_version = 'D',MeritFunction = 'Merit_RMSE_PROSPECT')
 ```
 
 ###   run PROSPECT-D inversion to estimate EWT and LMA using their optimal spectral domain 
@@ -212,6 +212,6 @@ LRT_PRO <- PROSPECT(SpecPROSPECT,CHL=CHL,CAR=CAR,ANT=ANT,EWT=EWT,LMA=LMA,N=N,PRO
 # invert PROSPECT with simulated leaf optical properties
 OutPROSPECT    = Invert_PROSPECT(SpecPROSPECT,Refl = LRT_PRO$Reflectance,Tran = LRT_PRO$Transmittance,
                              Parms2Estimate = 'ALL',ParmSet = NULL,
-                             PROSPECT_version = 'PRO',MeritFunction = 'Merit_RMSE')
+                             PROSPECT_version = 'PRO',MeritFunction = 'Merit_RMSE_PROSPECT')
 ```
 
