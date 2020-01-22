@@ -26,16 +26,15 @@ knitr::opts_chunk$set(
 )
 ```
 
-# Inversion of PROSPECT-PRO on LOPEX data
 
-### Getting leaf optical properties
+# Download LOPEX datasets
 
 The leaf optical properties used in Feret et al. 2020 are available online and can be downloaded directly wih a R script. 
 They corespond to the LOPEX dataset, split into 4 specific datasets:
 
-* LOPEX_DRY_CAL and LOPEX_FRESH_CAL correspond to the dry and fresh samples extracted from the LOPEX dataset and used for the calibration of PROSPECT-PRO
+*  __LOPEX_DRY_CAL__ and __LOPEX_FRESH_CAL__ correspond to the dry and fresh samples extracted from the LOPEX dataset and used for the __calibration__ of __PROSPECT-PRO__
 
-* LOPEX_DRY_VAL and LOPEX_FRESH_VAL correspond to the dry and fresh samples extracted from the LOPEX dataset and used for the validation of PROSPECT-PRO
+* __LOPEX_DRY_VAL__ and __LOPEX_FRESH_VAL__ correspond to the dry and fresh samples extracted from the LOPEX dataset and used for the __validation__ of __PROSPECT-PRO__
 
 These datasets include both reflctance and transmittance data, as well as a set of mesured checmical constituents, including `EWT`, `LMA`, `PROT` and `CBC`.
 
@@ -60,7 +59,7 @@ for (db in dbName){
 }
 ```
 
-### Invert PROSPECT
+# Inversion of PROSPECT-PRO using optimal subdomains
 
 Once the datasets are imported, PROSPECT-PRO can be inverted using the optimal spectral domains corresponding to each of the constituents of interest. 
 EWT, PROT and CBC will be estimated, and their optimal spectral domain defined based on te results obtained by Feret et al. (RSE 2020). 
@@ -94,7 +93,7 @@ for (parm in Parms2Estimate){
 }
 ```
 
-### Results
+# Results: estimation of `PROT`, `CBC`, `EWT` and `LMA`
 
 The reults obtained here are very close to those obtained with Matlab, using the same algorithm.
 
@@ -112,8 +111,7 @@ The reults obtained here are very close to those obtained with Matlab, using the
 <p>&nbsp;</p>
 
 
-
-For the sake of comparison, the comparison of te results obtained with Matlab and R are presented in Fig. 2.
+For the sake of comparison, the comparison of the results obtained with __Matlab__ and __R__ are presented in Fig. 2.
 
 * One sample shows underestimation of CBC with R, while it is correctly estimated with Matlab. This difference is reported for te estimation of LMA.
 
@@ -121,7 +119,7 @@ For the sake of comparison, the comparison of te results obtained with Matlab an
 
 * Inversion did not converge for the estimation of EWT with one dry sample with R, while it succeeded with Matlab
 
-Appart from the samples, the performances are identical. If inversion does not succeed, a message is displayed, but the process coan continue (values to be estimatd will then be set to NA).
+Appart from the samples, __the performances are identical__. If inversion does not succeed, a message is displayed, but the process coan continue (values to be estimatd will then be set to NA).
 
 
 <p float="left">
