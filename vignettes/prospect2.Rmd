@@ -1,0 +1,205 @@
+---
+title: "2. Forward mode"
+author: "Jean-Baptiste Féret, Florian de Boissieu"
+date: "`r Sys.Date()`"
+output:
+  html_vignette:
+    number_sections: true
+  html_document:
+    toc: true
+    toc_float:
+      collapsed: false
+      smooth_scroll: false
+    toc_depth: 2
+vignette: >
+  \usepackage[utf8]{inputenc}
+  %\VignetteIndexEntry{2. Forward mode}
+  %\VignetteEncoding{UTF-8}
+  %\VignetteEngine{knitr::rmarkdown}
+---
+
+```{r setup, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>",
+  eval=FALSE
+)
+```
+
+<style>
+  .col2 {
+    columns: 2 180px;         /* number of columns and width in pixels*/
+    -webkit-columns: 2 180px; /* chrome, safari */
+    -moz-columns: 2 180px;    /* firefox */
+  }
+</style>
+
+
+# Running `prospect` in forward mode
+
+### Input variables
+The function `PROSPECT` runs PROSPECT for individual samples and expects the following input variables.
+
+* `SpecPROSPECT`: dataframe including the refractive index and specific absorption ceofficients, defined for a given spectral range (max range: 400 nm - 2500 nm). simulation and inversion on different spectral domains can be peformed by adapting the information in `SpecPROSPECT`
+* The biochemical and biophysical input variables of PROSPECT are :
+
+<div class="col2">
+
+  *  `N` (default = 1.5)
+  *  `CHL` (default = 40.0  $\mu g.cm^2$)
+  *  `CAR` (default = 8.0  $\mu g.cm^2$)
+  *  `ANT` (default = 0.0  $\mu g.cm^2$)
+  *  `BROWN` (default = 0.0 arbitrary units)
+  *  `EWT` (default = 0.01  $g.cm^2$)
+  *  `LMA` (default = 0.008  $g.cm^2$)
+  *  `PROT` (default = 0.0  $g.cm^2$)
+  *  `CBC` (default = 0.0  $g.cm^2$)
+  *  `alpha` (default = 40.0 degrees)
+
+</div>
+
+
+### Output variables
+`PROSPECT` returns a list containing directional-hemispherical reflectance and transmittance (`reflectance` and `transmittance`) corresponding to the input variables, and the corresponding wavelengths in the list element `wvl`.
+
+### run PROSPECT using default parameters over the full range from 400 nm to 2500 nm
+```{r prospect direct mode default}
+library(prospect)
+LRT_default <- PROSPECT(SpecPROSPECT)
+```
+
+###   run PROSPECT using user defined set of parameters over the full range from 400 nm to 2500 nm
+Default value wil be set for undeclared parameters
+```{r prospect direct mode VSWIR}
+LRT_VSWIR <- PROSPECT(SpecPROSPECT,N = 1.4,CHL = 30,CAR = 6,EWT = 0.02,LMA = 0.01)
+```
+
+###   run PROSPECT using user defined spectral domain
+Following the same definition of the input parameters, user only has to adjust the spectral range from `SpecPROSPECT`.
+`SpecPROSPECT$lambda` contains the spectral bands for the different optical constants. 
+
+```{r prospect direct mode VNIR}
+# define the spectral range for simulations in the VNIR from 400 to 1000 nm
+# identify closest spectral bands to the boundaries 
+# (please adjust if you need strict inclusion / excusion of bands)
+wvlRange = list()
+wvlRange$lb <- which(abs(SpecPROSPECT$lambda-400)==min(abs(SpecPROSPECT$lambda-400)))
+wvlRange$ub <- which(abs(SpecPROSPECT$lambda-1000)==min(abs(SpecPROSPECT$lambda-1000)))
+SpecPROSPECT_VNIR <- SpecPROSPECT[wvlRange$lb:wvlRange$ub,]
+LRT_VNIR <- PROSPECT(SpecPROSPECT_VNIR,N = 1.4,CHL = 30,CAR = 6,EWT = 0.02,LMA = 0.01)
+```
+
+# Comparison between PROSPECT-PRO and PROSPECT-D
+
+PROSPECT-PRO is the latest official version released. However, you may not be interested in all these input biochemical constituents. 
+
+Still, __we recommend using PROSPECT-PRO and selecting the constituents of interest, performances should correspond to your expectations__.
+
+#### PROSPECT-D
+The only difference between PROSPECT-PRO and PROSPECT-D is that LMA is divided into proteins and CBC. Therefore, the default values in `prospect` correspond to calling PROSPECT-D, as `PROT` and `CBC` are set to 0. 
+Keep in mind that either `LMA` or `PROT` and `CBC` should be set to 0. A message will be displayed if it is not the case:
+
+```{r message mix PROSPECT-D and PROSPECT-PRO}
+'PROT and/or CBC are not set to 0
+LMA is not set to 0 neither, which is physically incorrect
+(LMA = PROT + CBC)
+We assume that PROSPECT-PRO was called and set LMA to 0
+Please correct input parameters LMA, PROT and/or CBC if needed'
+```
+
+Here is an example to run PROSPECT-D:
+```{r run PROSPECT-D}
+CHL <- 45;      CAR <- 10;      ANT <- 0.2
+EWT <- 0.012;   LMA <- 0.010;   N   <- 1.3
+LRT_D <- PROSPECT(SpecPROSPECT,CHL=CHL,CAR=CAR,ANT=ANT,EWT=EWT,LMA=LMA,N=N)
+```
+
+and another one with PROSPECT-PRO, which should lead to very similar leaf optics: 
+```{r run PROSPECT-PRO}
+CHL <- 45;      CAR <- 10;      ANT <- 0.2
+EWT <- 0.012;   LMA <- 0.000;   N   <- 1.3
+PROT <- 0.001;  CBC <- 0.009;
+Input_PROSPECT <- data.frame('CHL'=CHL,'CAR'=CAR,'ANT'=ANT,'EWT'=EWT,'LMA'=LMA,'PROT'=PROT,'CBC'=CBC,'N'=N)
+LRT_PRO <- PROSPECT(SpecPROSPECT,CHL=CHL,CAR=CAR,ANT=ANT,EWT=EWT,LMA=LMA,PROT=PROT,CBC=CBC,N=N)
+```
+
+The resulting leaf optical properties are, indeed, very similar:
+<p>&nbsp;</p>
+<center>
+  <img align="bottom" width="50%" height="50%" src="../man/figures/compare_PROSPECT.png">
+</center> 
+<center>
+  Fig. 1. Comparison between PROSPECT-D and PROSPECT-PRO, stoichiometry respected
+</center> 
+<p>&nbsp;</p>
+
+
+while using proteins only instead of proteins + CBC to simulate LMA leads to different results: 
+```{r run PROSPECT-PRO2}
+CHL <- 45;      CAR <- 10;      ANT <- 0.2
+EWT <- 0.012;   LMA <- 0.000;   N   <- 1.3
+PROT <- 0.010;  CBC <- 0.000;
+Input_PROSPECT <- data.frame('CHL'=CHL,'CAR'=CAR,'ANT'=ANT,'EWT'=EWT,'LMA'=LMA,'PROT'=PROT,'CBC'=CBC,'N'=N)
+LRT_PRO2 <- PROSPECT(SpecPROSPECT,CHL=CHL,CAR=CAR,ANT=ANT,EWT=EWT,LMA=LMA,PROT=PROT,CBC=CBC,N=N)
+```
+
+
+<p>&nbsp;</p>
+<center>
+  <img align="bottom" width="50%" height="50%" src="../man/figures/compare_PROSPECT2.png">
+</center> 
+<center>
+  Fig. 2. Comparison between PROSPECT-D and PROSPECT-PRO, Proteins only, no CBC
+</center> 
+<p>&nbsp;</p>
+
+
+On the other hand, using CBC only instead of proteins + CBC to simulate LMA leads to very similar results compared to simulation with PROSPECT-D. 
+
+This is explained by the low proportion of poteins compared to CBC in he total comntribution to LMA, and the very similar specific absorption coefficient between LMA and CBC. This also highlights the challenges for the proper estimation of proteines from LOP.
+
+```{r run PROSPECT-PRO3}
+CHL <- 45;      CAR <- 10;      ANT <- 0.2
+EWT <- 0.012;   LMA <- 0.000;   N   <- 1.3
+PROT <- 0.000;  CBC <- 0.010;
+Input_PROSPECT <- data.frame('CHL'=CHL,'CAR'=CAR,'ANT'=ANT,'EWT'=EWT,'LMA'=LMA,'PROT'=PROT,'CBC'=CBC,'N'=N)
+LRT_PRO3 <- PROSPECT(SpecPROSPECT,CHL=CHL,CAR=CAR,ANT=ANT,EWT=EWT,LMA=LMA,PROT=PROT,CBC=CBC,N=N)
+```
+
+
+<p>&nbsp;</p>
+<center>
+  <img align="bottom" width="50%" height="50%" src="../man/figures/compare_PROSPECT3.png">
+</center> 
+<center>
+  Fig. 3. Comparison between PROSPECT-D and PROSPECT-PRO, CBC only, no Proteins
+</center> 
+<p>&nbsp;</p>
+
+
+### Run previous versions from PROSPECT-PRO
+
+If you want to run previous versions of PROSPECT:
+
+*  __We do not recommend using PROSPECT-4 or PROSPECT-5__, as the calibration of the refractive index along with specific absorption coefficients for chlorophyls and carotenoids resulted in artifacts in the VIS domain. 
+
+*  However if you are not interested in anthocyanins, the default value for `ANT` is 0.0, so simulating leaf optics without `ANT` should do the job. 
+
+*  If you do not want to differentiate chlorophylls and carotenoids, we recommend that you use PROSPECT-PRO and set `CAR` as a constant fraction of `CHL`.
+
+# Computing a Look-Up-Table with `prospect`
+
+Look-Up-Tables (LUT) are widely used in order to infer leaf charactristics from PROSPECT, based on minimization techniques. The function `PROSPECT_LUT` allows computation of a LUT directly based on a list of input parameters.
+
+The following example produces a LUT with the function `PROSPECT_LUT` of `prospect`. Undefined parameters are set to their default value; Vectors of values are expected to be the same length.
+
+```{r prospect LUT}
+CHL <- 100*runif(1000)
+CAR <- 25*runif(1000)
+ANT <- 2*runif(1000)
+EWT <- 0.04*runif(1000)
+LMA <- 0.02*runif(1000)
+N   <- 1+2*runif(1000)
+Input_PROSPECT <- data.frame('CHL'=CHL,'CAR'=CAR,'ANT'=ANT,'EWT'=EWT,'LMA'=LMA,'N'=N)
+LUT <- PROSPECT_LUT(SpecPROSPECT,Input_PROSPECT)
+```
