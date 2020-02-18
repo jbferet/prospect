@@ -32,7 +32,7 @@ devtools::install_git('https://gitlab.com/jbferet/prospect',credentials = git2r:
 <!-- ) -->
 <!-- ``` -->
 
-A tutorial vignette is available [here](https://jbferet.gitlab.io/prospect/articles/prospect.html).
+A tutorial vignette is available [here](https://jbferet.gitlab.io/prospect/articles/prospect1.html).
 
 # 3 Citation
 
