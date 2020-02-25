@@ -1,0 +1,91 @@
+---
+title: "5. Estimation with R or T only"
+author: "Jean-Baptiste Féret, Florian de Boissieu"
+date: "`r Sys.Date()`"
+output:
+  html_vignette:
+    number_sections: true
+  html_document:
+    toc: true
+    toc_float:
+      collapsed: false
+      smooth_scroll: false
+    toc_depth: 2
+vignette: >
+  \usepackage[utf8]{inputenc}
+  %\VignetteIndexEntry{5. Estimation with R or T only}
+  %\VignetteEncoding{UTF-8}
+  %\VignetteEngine{knitr::rmarkdown}
+---
+
+```{r setup, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>",
+  eval=FALSE
+)
+```
+
+
+# Introduction
+The `N` structure parameter is usually estimated based on the inversion of PROSPECT using reflectance and transmittance information for spectral bands corresponding to minimum absorption, maximum reflectance, and maximum transmittance. 
+
+[Qiu et al. (2018)](https://doi.org/10.1109/TGRS.2018.2791930 "Qiu et al., TGRS 2018") reported a strong correlation between the N parameter and the ratio between reflectance and transmittance measured in the NIR at 800 nm. Taking advantage of this correlation to estimate N requires measuring both leaf reflectance and transmittance, in line with the original method used to compute N from leaf optical properties. However, absorptance in the NIR domain is usually very low: [Merzlyak et al. (2004)](https://doi.org/10.1016/j.jphotobiol.2004.03.003 "Merzlyak et al. (2004)") even suggest that absorptance in the domain ranging from 750 nm to 800 nm can be neglected. Thus assuming light in the NIR is primarily either reflected or transmitted as a function of leaf structure, information about reflectance only or transmittance only might be sufficient to accurately estimate the N parameter with moderate uncertainty, following the hypothesis that absorptance is negligible. 
+
+The estimation of N prior to PROSPECT inversion may therefore lead to improved estimation of leaf constituents when using optimal spectral subdomains with only reflectance or transmittance.
+
+
+# Prior estimation of N
+
+Here, we assume that absorptance is negligeible in specific spectral domains of the NIR. Therefore, the R/T ratio is equivalent to R/(1-R) and to (1-T)/T.
+Then, we can adjust the N ~ R/(1-R) and N ~ (1-T)/T relationship based on simulations, and apply this linear relationship on experimental to get estimates of N based on R only or T only. 
+
+The function `Get_Nprior` aims at adjusting this linear relationship, based on the work described in Spafford et al.(submitted).
+
+This estimated N value can then be used as prior information when inverting PROSPECT leaf chemical constituents.
+
+```{r get prior estimate of N}
+# Prior estimation of N using R or T only
+
+# invert specific constituents using optimal spectral domains
+# Use Reflectance only and prior estimation of N
+Nprior = Get_Nprior(SpecPROSPECT,lambda,Refl=Refl)
+```
+
+# Inversion of PROSPECT using optimal spectral domains
+
+the leaf chemical constituents can then be estimated based on PROSPECT inversion using optimal spectral domains and prior estimation of `N`.
+
+```{r invert using optimal spectral domains}
+
+# define optimal domain for leaf constituents
+# ref:  - Feret et al., RSE (2019) https://doi.org/10.1016/j.rse.2018.11.002
+#       - Spafford et al., (submitted)
+OptDomain = list('CHL' = c(700,720), 'CAR' = c(540,560),
+                 'EWT' = c(1700,2400), 'LMA' = c(1700,2400),
+                 'PROT' = c(2100,2200), 'CBC' = c(2100,2400))
+Parms2Estimate  = c('EWT','LMA')
+# Fit spectral data to match PROSPECT with user optical properties
+SubData = FitSpectralData(SpecPROSPECT=SpecPROSPECT,lambda=lambda,Refl=Refl,Tran=Tran,UserDomain = OptDomain$EWT)
+SubSpecPROSPECT = SubData$SpecPROSPECT
+Sublambda       = SubData$lambda
+SubRefl         = SubData$Refl
+SubTran         = SubData$Tran
+
+# Invert PROSPECT with optimal spectral information
+EWT_mod4    = LMA_mod4    = Nstruct_mod4= list()
+for (i in 1:ncol(SubRefl)){
+  print(i)
+  ParmSet = list('N'=c(Nprior[i])[[1]])
+  res= Invert_PROSPECT(SubSpecPROSPECT,Refl = SubRefl[,i],Tran = SubTran[,i],PROSPECT_version = 'D',Parms2Estimate = Parms2Estimate,ParmSet = ParmSet)
+  EWT_mod4[i]    = res$EWT
+  LMA_mod4[i]    = res$LMA
+  Nstruct_mod4[i]= res$N
+}
+plot(Bioch[,5],EWT_mod4,xlim = c(0,0.06),ylim = c(0,0.06))
+plot(Bioch[,6],LMA_mod4,xlim = c(0,0.04),ylim = c(0,0.04))
+rmse(actual = c(matrix(Bioch[,6])),predicted = c(do.call(rbind,LMA_mod4)))
+```
+
+# Results
+
