@@ -4,12 +4,16 @@
 \alias{Merit_RMSE_PROSPECT}
 \title{Merit function for PROSPECT inversion}
 \usage{
-Merit_RMSE_PROSPECT(xinit, SpecPROSPECT, Refl, Tran, Input_PROSPECT,
-  WhichVars2Estimate)
+Merit_RMSE_PROSPECT(
+  x,
+  SpecPROSPECT,
+  Refl,
+  Tran,
+  Input_PROSPECT,
+  Parms2Estimate
+)
 }
 \arguments{
-\item{xinit}{numeric. Vector of input variables to estimate}
-
 \item{SpecPROSPECT}{list. Includes optical constants
 refractive index, specific absorption coefficients and corresponding spectral bands}
 
@@ -18,6 +22,8 @@ refractive index, specific absorption coefficients and corresponding spectral ba
 \item{Tran}{numeric. measured Transmittance data}
 
 \item{Input_PROSPECT}{dataframe. set of PROSPECT input variables}
+
+\item{xinit}{numeric. Vector of input variables to estimate}
 
 \item{WhichVars2Estimate}{numeric. location of variables from Input_PROSPECT
 to be estimated through inversion}

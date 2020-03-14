@@ -32,18 +32,13 @@
 #' @return leaf directional-hemisphrical reflectance and transmittance
 #' @importFrom expint expint
 #' @export
-PROSPECT  <- function(SpecPROSPECT,Input_PROSPECT=NULL,N = 1.5,CHL = 40.0,
-                      CAR = 8.0,ANT = 0.0,BROWN = 0.0,EWT = 0.01,
-                      LMA = 0.008,PROT = 0.0,CBC = 0.0,alpha = 40.0){
+PROSPECT  <- function(SpecPROSPECT, N = 1.5, CHL = 40.0,
+                      CAR = 8.0, ANT = 0.0, BROWN = 0.0, EWT = 0.01,
+                      LMA = 0.008, PROT = 0.0, CBC = 0.0, alpha = 40.0){
 
   # if PROSPECT values are provided as individual parametrs
-  if (is.null(Input_PROSPECT)){
-    Input_PROSPECT = data.frame('CHL'= CHL, 'CAR'= CAR, 'ANT'=ANT, 'BROWN'= BROWN, 'EWT'=EWT,
-                                'LMA'=LMA, 'PROT'= PROT, 'CBC'= CBC, 'N'=N, 'alpha'= alpha)
-  }
-  if (is.null(Input_PROSPECT$alpha)){
-    Input_PROSPECT$alpha = alpha
-  }
+  Input_PROSPECT = data.frame(CHL, CAR, ANT, BROWN, EWT,
+                                LMA, PROT, CBC, N, alpha)
 
   if (!is.null(Input_PROSPECT$PROT) | !is.null(Input_PROSPECT$CBC)){
     if (Input_PROSPECT$LMA>0 & (Input_PROSPECT$PROT >0 | Input_PROSPECT$CBC >0)){
@@ -134,7 +129,7 @@ PROSPECT  <- function(SpecPROSPECT,Input_PROSPECT=NULL,N = 1.5,CHL = 40.0,
 #'
 #' @return numeric. Transmissivity of a dielectric plane surface
 #' @export
-calctav  <- function(alpha,nr) {
+calctav  <- function(alpha, nr) {
   # Stern F. (1964), Transmission of isotropic radiation across an
   # interface between two dielectrics, Appl. Opt., 3(1):111-113.
   # Allen W.A. (1973), Transmission of isotropic light across a

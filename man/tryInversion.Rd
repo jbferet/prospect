@@ -4,12 +4,18 @@
 \alias{tryInversion}
 \title{Function handling error during inversion}
 \usage{
-tryInversion(xinit, MeritFunction, SpecPROSPECT, Refl, Tran, InPROSPECT,
-  Vars2Estimate, lb, ub)
+tryInversion(
+  x0,
+  MeritFunction,
+  SpecPROSPECT,
+  Refl,
+  Tran,
+  Parms2Estimate,
+  lb,
+  ub
+)
 }
 \arguments{
-\item{xinit}{numeric. Vector of input variables to estimate}
-
 \item{MeritFunction}{character. name of the function to be used as merit function}
 
 \item{SpecPROSPECT}{list. Includes optical constants
@@ -19,14 +25,16 @@ refractive index, specific absorption coefficients and corresponding spectral ba
 
 \item{Tran}{numeric. measured Transmittance data}
 
+\item{lb}{numeric. Lower bound}
+
+\item{ub}{numeric. Upper bound}
+
+\item{xinit}{numeric. Vector of input variables to estimate}
+
 \item{InPROSPECT}{dataframe. set of PROSPECT input variables}
 
 \item{Vars2Estimate}{numeric. location of variables from Input_PROSPECT
 to be estimated through inversion}
-
-\item{lb}{numeric. Lower bound}
-
-\item{ub}{numeric. Upper bound}
 }
 \value{
 fc estimates of the parameters

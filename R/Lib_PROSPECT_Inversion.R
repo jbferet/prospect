@@ -4,6 +4,7 @@
 # ==============================================================================
 # PROGRAMMERS:
 # Jean-Baptiste FERET <jb.feret@irstea.fr>
+# Florian de Boissieu <fdeboiss@gmail.com>
 # Copyright 2019/11 Jean-Baptiste FERET
 # ==============================================================================
 # This Library includes functions dedicated to PROSPECT inversion
@@ -15,81 +16,88 @@
 #' refractive index, specific absorption coefficients and corresponding spectral bands
 #' @param Refl  numeric. Measured reflectance data
 #' @param Tran  numeric. Measured Transmittance data
-#' @param Parms2Estimate  list. Parameters to estimate (can be 'ALL')
-#' @param ParmSet  list. Parameters set to a fixed value by user
-#' @param PROSPECT_version  character. '5', '5B', 'D', 'DB', 'PRO', 'PROB',
+#' @param Parms2Estimate  character vector. Parameters to estimate (can be 'ALL')
+#' @param x0  data.frame. Default values of PROSPECT parameters. During optimization,
+#' they are used either as initialization values for parameters to estimate,
+#' or as fix values for other parameters.
+#' Parameters not compatible with PROSPECT_version are not taken into account.
+#' @param PROSPECT_version  character. Version of prospect model used for the inversion: '5', '5B', 'D', 'DB', 'PRO', 'PROB',
+#' See details.
 #' @param MeritFunction  character. name of the function to be used as merit function
 #' with given criterion to minimize (default = RMSE)
+#' @param xlub data.frame. Boundaries of the parameters to estimate.
+#' The data.frame must have columns corresponding to \code{Parms2Estimate} first line being
+#' the lower boundaries and second line the upper boundaries.
 #'
 #' @return OutPROSPECT estimated values corresponding to Parms2Estimate
+#' @details
+#' Six versions of prospect are available for inversion.
+#' The version is depending on the parameters taken into account:
+#'
+#' | Version  | 5                                       | 5B                                    | D                                      | DB                                     | PRO                                    | PROB
+#' | :------: |:--------------------------------------:|:--------------------------------------:|:--------------------------------------:|:--------------------------------------:|:--------------------------------------:|:---------------------------------------:|
+#' | CHL      |`r emojifont::emoji('white_check_mark')`|`r emojifont::emoji('white_check_mark')`|`r emojifont::emoji('white_check_mark')`|`r emojifont::emoji('white_check_mark')`|`r emojifont::emoji('white_check_mark')`|`r emojifont::emoji('white_check_mark')`|
+#' | CAR      |`r emojifont::emoji('white_check_mark')`|`r emojifont::emoji('white_check_mark')`|`r emojifont::emoji('white_check_mark')`|`r emojifont::emoji('white_check_mark')`|`r emojifont::emoji('white_check_mark')`|`r emojifont::emoji('white_check_mark')`|
+#' | ANT      |                                        |                                        |`r emojifont::emoji('white_check_mark')`|`r emojifont::emoji('white_check_mark')`|`r emojifont::emoji('white_check_mark')`|`r emojifont::emoji('white_check_mark')`|
+#' | BROWN    |                                        |`r emojifont::emoji('white_check_mark')`|                                        |`r emojifont::emoji('white_check_mark')`|                                        |`r emojifont::emoji('white_check_mark')`|
+#' | EWT      |`r emojifont::emoji('white_check_mark')`|`r emojifont::emoji('white_check_mark')`|`r emojifont::emoji('white_check_mark')`|`r emojifont::emoji('white_check_mark')`|`r emojifont::emoji('white_check_mark')`|`r emojifont::emoji('white_check_mark')`|
+#' | LMA      |`r emojifont::emoji('white_check_mark')`|`r emojifont::emoji('white_check_mark')`|`r emojifont::emoji('white_check_mark')`|`r emojifont::emoji('white_check_mark')`|                                        |
+#' | PROT     |                                        |                                        |                                        |                                        |`r emojifont::emoji('white_check_mark')`|`r emojifont::emoji('white_check_mark')`|
+#' | CBC      |                                        |                                        |                                        |                                        |`r emojifont::emoji('white_check_mark')`|`r emojifont::emoji('white_check_mark')`|
+#' | N        |`r emojifont::emoji('white_check_mark')`|`r emojifont::emoji('white_check_mark')`|`r emojifont::emoji('white_check_mark')`|`r emojifont::emoji('white_check_mark')`|`r emojifont::emoji('white_check_mark')`|`r emojifont::emoji('white_check_mark')`|
+#'
+#'
 #' @importFrom pracma fmincon
 #' @export
-Invert_PROSPECT  <- function(SpecPROSPECT,Refl = NULL,Tran = NULL,
-                             Parms2Estimate = 'ALL',ParmSet = NULL,
-                             PROSPECT_version = 'D',MeritFunction = 'Merit_RMSE_PROSPECT'){
+#' @md
+Invert_PROSPECT  <- function(SpecPROSPECT, Refl = NULL, Tran = NULL,
+                             x0 = data.frame(CHL = 40, CAR = 10, ANT = 0.1, BROWN = 0.01, EWT = 0.01,
+                                             LMA = 0.008, PROT = 0.001, CBC = 0.008, N = 1.5, alpha = 40),
+                             Parms2Estimate = 'ALL',
+                             PROSPECT_version = 'D',
+                             MeritFunction = 'Merit_RMSE_PROSPECT',
+                             xlub = data.frame(CHL = c(1e-4, 150), CAR = c(1e-4, 25), ANT = c(0, 20),
+                                               BROWN = c(0, 1), EWT = c(1e-7, .08), LMA = c(1e-7, .4),
+                                               PROT = c(0, .005), CBC = c(0, .04), N = c(.5, 3),
+                                               alpha = c(10, 90))){
 
   # define PROSPECT input parameters
-  InPROSPECT  = data.frame('CHL'=0,'CAR'=0,'ANT'=0,'BROWN'=0,'EWT'=0,
-                           'LMA'=0,'PROT'=0,'CBC'=0,'N'=0,'alpha'=40)
-  # update InPROSPECT according to ParmSet
-  if (!is.null(ParmSet)){
-    for (i in 1:length(names(ParmSet))){
-      InPROSPECT[which(names(InPROSPECT)%in%names(ParmSet)[i])] = ParmSet[i]
-    }
+  if (PROSPECT_version == '5'){
+    allParms = c('CHL', 'CAR', 'EWT', 'LMA', 'N')
+  } else if (PROSPECT_version == '5B'){
+    allParms = c('CHL', 'CAR', 'BROWN', 'EWT', 'LMA', 'N')
+  } else if (PROSPECT_version == 'D'){
+    allParms = c('CHL', 'CAR', 'ANT', 'EWT', 'LMA', 'N')
+  } else if (PROSPECT_version == 'DB'){
+    allParms = c('CHL', 'CAR', 'ANT', 'BROWN', 'EWT', 'LMA', 'N')
+  } else if (PROSPECT_version == 'PRO'){
+    allParms = c('CHL', 'CAR', 'ANT', 'EWT', 'PROT', 'CBC', 'N')
+  } else if (PROSPECT_version == 'PROB'){
+    allParms = c('CHL', 'CAR', 'ANT', 'BROWN', 'EWT', 'PROT', 'CBC', 'N')
+  }else{
+    stop('PROSPECT_version not available. Choice is limited to "5", "5B", "D", "DB", "PRO", "PROB".')
   }
-  # define init value and lower/upper boundaries for inversion
-  #               CHL   CAR   ANT   BROWN   EWT   LMA   PROT  CBC   N     alpha
-  xinit_All   = c(40,   10,   0.1,  0.01,   0.01, 0.008,0.001,0.008,    1.5,  40)
-  lb_All      = c(1e-4, 1e-4, 0,    0,      1e-7, 1e-7, 0.0,  0.00,     0.5,  10)
-  ub_All      = c(150,  25,   20.0, 1.0,    0.08, 0.04, 0.005,0.04,     3.0,  90)
-  # # update init value and lower/upper boundaries for inversion based on user values
-  # if (!is.null(xinit_user)){
-  # }
 
-  # set parameters to user value defined in ParmSet
-  Vars2Estimate = c()
-  if ('ALL'%in%Parms2Estimate){
-    if (PROSPECT_version == '5'){
-      Vars2Estimate = c(1,2,5,6,9)
-    } else if (PROSPECT_version == '5B'){
-      Vars2Estimate = c(1,2,4,5,6,9)
-    } else if (PROSPECT_version == 'D'){
-      Vars2Estimate = c(1,2,3,5,6,9)
-    } else if (PROSPECT_version == 'DB'){
-      Vars2Estimate = c(1,2,3,4,5,6,9)
-    } else if (PROSPECT_version == 'PRO'){
-      Vars2Estimate = c(1,2,3,5,7,8,9)
-    } else if (PROSPECT_version == 'PROB'){
-      Vars2Estimate = c(1,2,3,4,5,7,8,9)
-    }
-  } else {
-    if ('CHL'%in%Parms2Estimate){Vars2Estimate = c(Vars2Estimate,1)}
-    if ('CAR'%in%Parms2Estimate){Vars2Estimate = c(Vars2Estimate,2)}
-    if ('ANT'%in%Parms2Estimate){Vars2Estimate = c(Vars2Estimate,3)}
-    if ('BROWN'%in%Parms2Estimate){Vars2Estimate = c(Vars2Estimate,4)}
-    if ('EWT'%in%Parms2Estimate){Vars2Estimate = c(Vars2Estimate,5)}
-    if ('LMA'%in%Parms2Estimate){Vars2Estimate = c(Vars2Estimate,6)}
-    if ('PROT'%in%Parms2Estimate){Vars2Estimate = c(Vars2Estimate,7)}
-    if ('CBC'%in%Parms2Estimate){Vars2Estimate = c(Vars2Estimate,8)}
-    if (!'N'%in%Parms2Estimate & !'N'%in%names(ParmSet)){Vars2Estimate = c(Vars2Estimate,9)}
-    if ('alpha'%in%Parms2Estimate){Vars2Estimate = c(Vars2Estimate,10)}
-  }
+
+  if ('ALL'%in%Parms2Estimate)
+    Parms2Estimate = allParms
+
+  Parms2Estimate = allParms[ allParms %in% Parms2Estimate]
+  if(!all(allParms %in% names(xlub)))
+    stop('Some prospect parameters are missing in argument "x0".')
+  x0 = x0[allParms[allParms %in% names(x0)]]
+  if(!all(Parms2Estimate %in% names(xlub)))
+    stop('Boundaries are missing for some parameters. Please make sure all parameters to estimate have a boundary defined in argument "xlub".')
+  xlub = xlub[, Parms2Estimate]
 
   # update init value and lower/upper boundaries for inversion based on Vars2Estimate
-  xinit = xinit_All[Vars2Estimate]
-  lb    = lb_All[Vars2Estimate]
-  ub    = ub_All[Vars2Estimate]
+  lb    = xlub[1,]
+  ub    = xlub[2,]
   # run inversion procedure with standard parameterization
-  res <- tryInversion(xinit,MeritFunction,SpecPROSPECT,Refl,Tran,
-                           InPROSPECT,Vars2Estimate,lb,ub)
-  # res   = fmincon(x0 = xinit, fn = MeritFunction, gr = NULL,
-  #                 SpecPROSPECT=SpecPROSPECT,Refl=Refl,Tran=Tran,
-  #                 Input_PROSPECT = InPROSPECT,WhichVars2Estimate=Vars2Estimate,
-  #                 method = "SQP",A = NULL, b = NULL, Aeq = NULL, beq = NULL,
-  #                 lb = lb, ub = ub, hin = NULL, heq = NULL,tol = 1e-07,
-  #                 maxfeval = 2000, maxiter = 1000)
-  OutPROSPECT  = InPROSPECT
-  OutPROSPECT[Vars2Estimate]= res$par
+  res <- tryInversion(x0,MeritFunction,SpecPROSPECT,Refl,Tran,Parms2Estimate,lb,ub)
+
+  OutPROSPECT  = x0
+  OutPROSPECT[names(res$par)]= res$par
   return(OutPROSPECT)
 }
 
@@ -110,15 +118,14 @@ Invert_PROSPECT  <- function(SpecPROSPECT,Refl = NULL,Tran = NULL,
 #' @return fc estimates of the parameters
 #' @export
 
-tryInversion <- function(xinit,MeritFunction,SpecPROSPECT,Refl,Tran,
-                         InPROSPECT,Vars2Estimate,lb,ub) {
+tryInversion <- function(x0, MeritFunction, SpecPROSPECT, Refl, Tran, Parms2Estimate, lb, ub) {
   res <- tryCatch(
     {
-      res   = fmincon(x0 = xinit, fn = MeritFunction, gr = NULL,
+      res   = fmincon(x0 = as.numeric(x0[Parms2Estimate]), fn = MeritFunction, gr = NULL,
                       SpecPROSPECT=SpecPROSPECT,Refl=Refl,Tran=Tran,
-                      Input_PROSPECT = InPROSPECT,WhichVars2Estimate=Vars2Estimate,
+                      Input_PROSPECT = x0, Parms2Estimate=Parms2Estimate,
                       method = "SQP",A = NULL, b = NULL, Aeq = NULL, beq = NULL,
-                      lb = lb, ub = ub, hin = NULL, heq = NULL,tol = 1e-07,
+                      lb = as.numeric(lb), ub = as.numeric(ub), hin = NULL, heq = NULL,tol = 1e-15,
                       maxfeval = 2000, maxiter = 1000)
     },
     error=function(cond) {
@@ -153,12 +160,12 @@ tryInversion <- function(xinit,MeritFunction,SpecPROSPECT,Refl,Tran,
 #'
 #' @return fc estimates of the parameters
 #' @export
-Merit_RMSE_PROSPECT <- function(xinit,SpecPROSPECT,Refl,Tran,Input_PROSPECT,WhichVars2Estimate) {
+Merit_RMSE_PROSPECT <- function(x, SpecPROSPECT, Refl, Tran, Input_PROSPECT, Parms2Estimate) {
 
-  xinit[xinit<0] = 0
-  Input_PROSPECT[WhichVars2Estimate] = xinit
-  RT = PROSPECT(SpecPROSPECT = SpecPROSPECT,Input_PROSPECT = Input_PROSPECT)
-  fc = CostVal_RMSE(RT,Refl,Tran)
+  x[x<0] = 0
+  Input_PROSPECT[Parms2Estimate] = x
+  RT = do.call('PROSPECT', c(list(SpecPROSPECT = SpecPROSPECT), Input_PROSPECT))
+  fc = CostVal_RMSE(RT, Refl, Tran)
   return(fc)
 }
 
@@ -170,7 +177,7 @@ Merit_RMSE_PROSPECT <- function(xinit,SpecPROSPECT,Refl,Tran,Input_PROSPECT,Whic
 #'
 #' @return fc sum of squared difference between simulated and measured leaf optical properties
 #' @export
-CostVal_RMSE  <- function(RT,Refl,Tran) {
+CostVal_RMSE  <- function(RT, Refl, Tran) {
 
   if (is.null(Tran)){
     fc = sqrt(sum((Refl-RT$Reflectance)**2)/length(RT$Reflectance))

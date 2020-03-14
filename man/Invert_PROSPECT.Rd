@@ -5,9 +5,19 @@
 \title{Performs PROSPECT inversion using iterative optimization
 in order to define estimate a set of user defined parameters}
 \usage{
-Invert_PROSPECT(SpecPROSPECT, Refl = NULL, Tran = NULL,
-  Parms2Estimate = "ALL", ParmSet = NULL, PROSPECT_version = "D",
-  MeritFunction = "Merit_RMSE_PROSPECT")
+Invert_PROSPECT(
+  SpecPROSPECT,
+  Refl = NULL,
+  Tran = NULL,
+  x0 = data.frame(CHL = 40, CAR = 10, ANT = 0.1, BROWN = 0.01, EWT = 0.01, LMA = 0.008,
+    PROT = 0.001, CBC = 0.008, N = 1.5, alpha = 40),
+  Parms2Estimate = "ALL",
+  PROSPECT_version = "D",
+  MeritFunction = "Merit_RMSE_PROSPECT",
+  xlub = data.frame(CHL = c(1e-04, 150), CAR = c(1e-04, 25), ANT = c(0, 20), BROWN =
+    c(0, 1), EWT = c(1e-07, 0.08), LMA = c(1e-07, 0.4), PROT = c(0, 0.005), CBC = c(0,
+    0.04), N = c(0.5, 3), alpha = c(10, 90))
+)
 }
 \arguments{
 \item{SpecPROSPECT}{list. Includes optical constants
@@ -17,14 +27,22 @@ refractive index, specific absorption coefficients and corresponding spectral ba
 
 \item{Tran}{numeric. Measured Transmittance data}
 
-\item{Parms2Estimate}{list. Parameters to estimate (can be 'ALL')}
+\item{x0}{data.frame. Default values of PROSPECT parameters. During optimization,
+they are used either as initialization values for parameters to estimate,
+or as fix values for other parameters.
+Parameters not compatible with PROSPECT_version are not taken into account.}
 
-\item{ParmSet}{list. Parameters set to a fixed value by user}
+\item{Parms2Estimate}{character vector. Parameters to estimate (can be 'ALL')}
 
-\item{PROSPECT_version}{character. '5', '5B', 'D', 'DB', 'PRO', 'PROB',}
+\item{PROSPECT_version}{character. Version of prospect model used for the inversion: '5', '5B', 'D', 'DB', 'PRO', 'PROB',
+See details.}
 
 \item{MeritFunction}{character. name of the function to be used as merit function
 with given criterion to minimize (default = RMSE)}
+
+\item{xlub}{data.frame. Boundaries of the parameters to estimate.
+The data.frame must have columns corresponding to \code{Parms2Estimate} first line being
+the lower boundaries and second line the upper boundaries.}
 }
 \value{
 OutPROSPECT estimated values corresponding to Parms2Estimate
@@ -32,4 +50,19 @@ OutPROSPECT estimated values corresponding to Parms2Estimate
 \description{
 Performs PROSPECT inversion using iterative optimization
 in order to define estimate a set of user defined parameters
+}
+\details{
+Six versions of prospect are available for inversion.
+The version is depending on the parameters taken into account:\tabular{ccccccc}{
+   Version \tab 5 \tab 5B \tab D \tab DB \tab PRO \tab PROB \cr
+   CHL \tab ✅ \tab ✅ \tab ✅ \tab ✅ \tab ✅ \tab ✅ \cr
+   CAR \tab ✅ \tab ✅ \tab ✅ \tab ✅ \tab ✅ \tab ✅ \cr
+   ANT \tab  \tab  \tab ✅ \tab ✅ \tab ✅ \tab ✅ \cr
+   BROWN \tab  \tab ✅ \tab  \tab ✅ \tab  \tab ✅ \cr
+   EWT \tab ✅ \tab ✅ \tab ✅ \tab ✅ \tab ✅ \tab ✅ \cr
+   LMA \tab ✅ \tab ✅ \tab ✅ \tab ✅ \tab  \tab  \cr
+   PROT \tab  \tab  \tab  \tab  \tab ✅ \tab ✅ \cr
+   CBC \tab  \tab  \tab  \tab  \tab ✅ \tab ✅ \cr
+   N \tab ✅ \tab ✅ \tab ✅ \tab ✅ \tab ✅ \tab ✅ \cr
+}
 }

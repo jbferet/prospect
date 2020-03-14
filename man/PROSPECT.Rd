@@ -4,15 +4,23 @@
 \alias{PROSPECT}
 \title{core function running PROSPECT}
 \usage{
-PROSPECT(SpecPROSPECT, Input_PROSPECT = NULL, N = 1.5, CHL = 40,
-  CAR = 8, ANT = 0, BROWN = 0, EWT = 0.01, LMA = 0.008,
-  PROT = 0, CBC = 0, alpha = 40)
+PROSPECT(
+  SpecPROSPECT,
+  N = 1.5,
+  CHL = 40,
+  CAR = 8,
+  ANT = 0,
+  BROWN = 0,
+  EWT = 0.01,
+  LMA = 0.008,
+  PROT = 0,
+  CBC = 0,
+  alpha = 40
+)
 }
 \arguments{
 \item{SpecPROSPECT}{list. Includes optical constants
 refractive index, specific absorption coefficients and corresponding spectral bands}
-
-\item{Input_PROSPECT}{dataframe. full list of PROSPECT input parameters. Default = Set to NULL}
 
 \item{N}{numeric. Leaf structure parameter}
 
@@ -33,6 +41,8 @@ refractive index, specific absorption coefficients and corresponding spectral ba
 \item{CBC}{numeric. NonProtCarbon-based constituent content (g.cm-2)}
 
 \item{alpha}{numeric. Solid angle for incident light at surface of leaf (simulation of roughness)}
+
+\item{Input_PROSPECT}{dataframe. full list of PROSPECT input parameters. Default = Set to NULL}
 }
 \value{
 leaf directional-hemisphrical reflectance and transmittance
