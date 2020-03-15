@@ -231,7 +231,7 @@ PROSPECT_LUT <- function(SpecPROSPECT, Input_PROSPECT = NULL, N = NULL, CHL = NU
   # run PROSPECT for nbSamples
   LUT_Refl <- LUT_Tran <- matrix(0, nrow = length(SpecPROSPECT$lambda), ncol = nbSamples)
   for (i in 1:nbSamples) {
-    LUT_tmp <- PROSPECT(SpecPROSPECT, Input_PROSPECT[i, ])
+    LUT_tmp <- do.call(PROSPECT, c(list(SpecPROSPECT = SpecPROSPECT), Input_PROSPECT[i, ]))
     LUT_Refl[, i] <- LUT_tmp$Reflectance
     LUT_Tran[, i] <- LUT_tmp$Transmittance
   }
