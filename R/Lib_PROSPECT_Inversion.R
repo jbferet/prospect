@@ -46,7 +46,7 @@
 #' | CBC      |                                        |                                        |                                        |                                        |`r emojifont::emoji('white_check_mark')`|`r emojifont::emoji('white_check_mark')`|
 #' | N        |`r emojifont::emoji('white_check_mark')`|`r emojifont::emoji('white_check_mark')`|`r emojifont::emoji('white_check_mark')`|`r emojifont::emoji('white_check_mark')`|`r emojifont::emoji('white_check_mark')`|`r emojifont::emoji('white_check_mark')`|
 #'
-#'
+#' Argument `x0` is expecting a default value for each of the parameters as well as an `alpha` value.
 #' @importFrom pracma fmincon
 #' @export
 #' @md
@@ -67,17 +67,17 @@ Invert_PROSPECT <- function(SpecPROSPECT, Refl = NULL, Tran = NULL,
 
   # define PROSPECT input parameters
   if (PROSPECT_version == "5") {
-    allParms <- c("CHL", "CAR", "EWT", "LMA", "N")
+    allParms <- c("CHL", "CAR", "EWT", "LMA", "N", "alpha")
   } else if (PROSPECT_version == "5B") {
-    allParms <- c("CHL", "CAR", "BROWN", "EWT", "LMA", "N")
+    allParms <- c("CHL", "CAR", "BROWN", "EWT", "LMA", "N", "alpha")
   } else if (PROSPECT_version == "D") {
-    allParms <- c("CHL", "CAR", "ANT", "EWT", "LMA", "N")
+    allParms <- c("CHL", "CAR", "ANT", "EWT", "LMA", "N", "alpha")
   } else if (PROSPECT_version == "DB") {
-    allParms <- c("CHL", "CAR", "ANT", "BROWN", "EWT", "LMA", "N")
+    allParms <- c("CHL", "CAR", "ANT", "BROWN", "EWT", "LMA", "N", "alpha")
   } else if (PROSPECT_version == "PRO") {
-    allParms <- c("CHL", "CAR", "ANT", "EWT", "PROT", "CBC", "N")
+    allParms <- c("CHL", "CAR", "ANT", "EWT", "PROT", "CBC", "N", "alpha")
   } else if (PROSPECT_version == "PROB") {
-    allParms <- c("CHL", "CAR", "ANT", "BROWN", "EWT", "PROT", "CBC", "N")
+    allParms <- c("CHL", "CAR", "ANT", "BROWN", "EWT", "PROT", "CBC", "N", "alpha")
   } else {
     stop('PROSPECT_version not available. Choice is limited to "5", "5B", "D", "DB", "PRO", "PROB".')
   }
