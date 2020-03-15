@@ -53,15 +53,15 @@ Note that the `alpha` parameter is also available as input, and corresponds to t
 
 Many simplications can be identified, and alternative versions of the model have been developed through the years in order to increase the realism of the model. Among the many simplifications:
 
-* The refractive index identifcal for all leaves. It should theoretically change with leaf properties
+* the refractive index is the same for all leaves. It should theoretically change with leaf properties
 
-* The leaf anatomy is not differentiated between an adaxial and an abaxial face
+* the leaf anatomy is not differentiated between an adaxial and an abaxial face
 
 * the leaf surface, which is defined my many properties in real life (presence of waxes, hairs, ...) is identical among leaves in PROSPECT
 
 * ...
 
-The current version of the model implemented in `prospect` is __PROSPECT-PRO__, which includes the following biochemical constituents (defined as _C<sub>i</sub>_ in Fig. 1):
+The current version of the model implemented in package `prospect` is __PROSPECT-PRO__, which includes the following biochemical constituents (defined as _C<sub>i</sub>_ in Fig. 1):
 
 * Chlorophyll a + b `CHL`
 * Carotenoids `CAR`
@@ -79,11 +79,11 @@ The specific absoprtion coefficients corresponding to these constituents are rec
 
 # `prospect`: forward and inverse mode
 
-In the forward mode, PROSPECT simulates leaf optical propertes based on a set of input parameters corresponding to the biochemical constituents and the N structure parameter.
+In the forward mode, PROSPECT simulates leaf optical properties, i.e. reflectance and transmittance, based on a set of input parameters corresponding to the biochemical constituents and the N structure parameter.
 
-The performances of PROSPECT for the simulation of teh leaf optical properties are based on the proper calibration of the optical constants, more particularly the specific absorption coefficients corresponding to each biochemical constituent. 
+The performances of PROSPECT for the simulation of the leaf optical properties are based on the proper calibration of the optical constants, more particularly the specific absorption coefficients corresponding to each biochemical constituent. 
 
-In the inverse mode, an algorithm is used to derive the input parameters from the leaf optical properties.
+In the inverse mode, an algorithm is used to estimate the biochemical constituents from the leaf optical properties.
 
 See the following pages of the tutorial for an illustration of how to use `prospect` in forward and inverse mode.
 
