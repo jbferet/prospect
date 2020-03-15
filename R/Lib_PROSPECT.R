@@ -17,7 +17,6 @@
 #'
 #' @param SpecPROSPECT list. Includes optical constants
 #' refractive index, specific absorption coefficients and corresponding spectral bands
-#' @param Input_PROSPECT dataframe. full list of PROSPECT input parameters. Default = Set to NULL
 #' @param N numeric. Leaf structure parameter
 #' @param CHL numeric. Chlorophyll content (microg.cm-2)
 #' @param CAR numeric. Carotenoid content (microg.cm-2)

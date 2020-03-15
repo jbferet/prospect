@@ -103,28 +103,30 @@ Invert_PROSPECT  <- function(SpecPROSPECT, Refl = NULL, Tran = NULL,
 
 #' Function handling error during inversion
 #'
-#' @param xinit numeric. Vector of input variables to estimate
+#' @param x0 numeric. Vector of input variables to estimate
 #' @param MeritFunction  character. name of the function to be used as merit function
 #' @param SpecPROSPECT list. Includes optical constants
 #' refractive index, specific absorption coefficients and corresponding spectral bands
 #' @param Refl  numeric. measured reflectance data
 #' @param Tran  numeric. measured Transmittance data
-#' @param InPROSPECT dataframe. set of PROSPECT input variables
-#' @param Vars2Estimate  numeric. location of variables from Input_PROSPECT
+#' @param Parms2Estimate  character vector. Parameters to estimate
 #' to be estimated through inversion
 #' @param lb numeric. Lower bound
 #' @param ub numeric. Upper bound
 #'
 #' @return fc estimates of the parameters
+#' @details
+#' This function is based on \code{\link[pracma]{fmincon}}.
+#' @importFrom pracma fmincon
 #' @export
 
 tryInversion <- function(x0, MeritFunction, SpecPROSPECT, Refl, Tran, Parms2Estimate, lb, ub) {
   res <- tryCatch(
     {
       res   = fmincon(x0 = as.numeric(x0[Parms2Estimate]), fn = MeritFunction, gr = NULL,
-                      SpecPROSPECT=SpecPROSPECT,Refl=Refl,Tran=Tran,
-                      Input_PROSPECT = x0, Parms2Estimate=Parms2Estimate,
-                      method = "SQP",A = NULL, b = NULL, Aeq = NULL, beq = NULL,
+                      SpecPROSPECT = SpecPROSPECT, Refl = Refl, Tran = Tran,
+                      Input_PROSPECT = x0, Parms2Estimate = Parms2Estimate,
+                      method = "SQP", A = NULL, b = NULL, Aeq = NULL, beq = NULL,
                       lb = as.numeric(lb), ub = as.numeric(ub), hin = NULL, heq = NULL,tol = 1e-15,
                       maxfeval = 2000, maxiter = 1000)
     },
@@ -136,7 +138,7 @@ tryInversion <- function(x0, MeritFunction, SpecPROSPECT, Refl, Tran, Parms2Esti
       message("NA values will be set for this sample")
       # Choose a return value in case of error
       res <- list()
-      res$par <- NA*xinit
+      res$par <- NA*c(1:length(Parms2Estimate))
       return(res)
     },
     finally={
@@ -149,13 +151,13 @@ tryInversion <- function(x0, MeritFunction, SpecPROSPECT, Refl, Tran, Parms2Esti
 
 #' Merit function for PROSPECT inversion
 #'
-#' @param xinit numeric. Vector of input variables to estimate
+#' @param x numeric. Vector of input variables to estimate
 #' @param SpecPROSPECT list. Includes optical constants
 #' refractive index, specific absorption coefficients and corresponding spectral bands
 #' @param Refl  numeric. measured reflectance data
 #' @param Tran  numeric. measured Transmittance data
 #' @param Input_PROSPECT dataframe. set of PROSPECT input variables
-#' @param WhichVars2Estimate  numeric. location of variables from Input_PROSPECT
+#' @param Parms2Estimate  numeric. location of variables from Input_PROSPECT
 #' to be estimated through inversion
 #'
 #' @return fc estimates of the parameters

@@ -41,8 +41,6 @@ refractive index, specific absorption coefficients and corresponding spectral ba
 \item{CBC}{numeric. NonProtCarbon-based constituent content (g.cm-2)}
 
 \item{alpha}{numeric. Solid angle for incident light at surface of leaf (simulation of roughness)}
-
-\item{Input_PROSPECT}{dataframe. full list of PROSPECT input parameters. Default = Set to NULL}
 }
 \value{
 leaf directional-hemisphrical reflectance and transmittance

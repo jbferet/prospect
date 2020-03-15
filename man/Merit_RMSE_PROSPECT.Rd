@@ -14,6 +14,8 @@ Merit_RMSE_PROSPECT(
 )
 }
 \arguments{
+\item{x}{numeric. Vector of input variables to estimate}
+
 \item{SpecPROSPECT}{list. Includes optical constants
 refractive index, specific absorption coefficients and corresponding spectral bands}
 
@@ -23,9 +25,7 @@ refractive index, specific absorption coefficients and corresponding spectral ba
 
 \item{Input_PROSPECT}{dataframe. set of PROSPECT input variables}
 
-\item{xinit}{numeric. Vector of input variables to estimate}
-
-\item{WhichVars2Estimate}{numeric. location of variables from Input_PROSPECT
+\item{Parms2Estimate}{numeric. location of variables from Input_PROSPECT
 to be estimated through inversion}
 }
 \value{
