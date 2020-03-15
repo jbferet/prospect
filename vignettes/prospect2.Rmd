@@ -26,7 +26,7 @@ knitr::opts_chunk$set(
   comment = "#>",
   eval=TRUE,
   results='asis',
-  cache = FALSE
+  cache = TRUE
 )
 
 #Figure and Table Caption Numbering, for HTML do it manually
@@ -87,7 +87,7 @@ The function `PROSPECT` runs PROSPECT for individual samples and expects the fol
 `PROSPECT` returns a list containing directional-hemispherical reflectance and transmittance (`reflectance` and `transmittance`) corresponding to the input variables, and the corresponding wavelengths in the list element `wvl`.
 
 ### Run PROSPECT using default parameters over the full range from 400 nm to 2500 nm
-```{r prospect direct mode default, eval=F}
+```{r prospect direct mode default}
 library(prospect)
 LRT_default <- PROSPECT(SpecPROSPECT)
 ```
@@ -121,7 +121,7 @@ Still, __we recommend using PROSPECT-PRO and selecting the constituents of inter
 The only difference between PROSPECT-PRO and PROSPECT-D is that LMA is divided into proteins and CBC. Therefore, the default values in `prospect` correspond to calling PROSPECT-D, as `PROT` and `CBC` are set to 0. 
 Keep in mind that either `LMA` or `PROT` and `CBC` should be set to 0. A message will be displayed if it is not the case:
 
-```{r message mix PROSPECT-D and PROSPECT-PRO}
+```{r message mix PROSPECT-D and PROSPECT-PRO, eval=F}
 'PROT and/or CBC are not set to 0
 LMA is not set to 0 neither, which is physically incorrect
 (LMA = PROT + CBC)
