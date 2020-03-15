@@ -20,7 +20,11 @@ LazyData: true
 Roxygen: list(markdown = TRUE)
 RoxygenNote: 7.1.0
 Suggests: knitr,
-    rmarkdown
+    rmarkdown,
+    ggplot2,
+    magrittr,
+    plyr,
+    dplyr
 Imports: 
     expint,
     pracma
