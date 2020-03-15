@@ -150,8 +150,7 @@ The resulting leaf optical properties are, indeed, very similar:
 
 library(ggplot2)
 library(magrittr)
-library(data.table)
-  
+
 # LR1mT_PRO$T = 1 - LR1mT_PRO$T
 LR1mT_D = as.data.frame(LRT_D) %>% 
   dplyr::mutate(Transmittance = 1-Transmittance) %>%
