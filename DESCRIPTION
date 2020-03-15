@@ -24,7 +24,8 @@ Suggests: knitr,
     ggplot2,
     magrittr,
     plyr,
-    dplyr
+    dplyr,
+    reshape2
 Imports: 
     expint,
     pracma
