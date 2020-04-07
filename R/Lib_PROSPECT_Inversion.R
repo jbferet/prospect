@@ -182,6 +182,41 @@ CostVal_RMSE  <- function(RT,Refl,Tran) {
   return(fc)
 }
 
+
+#' Merit function for PROSPECT inversionm using absorptance instead of Reflectance and Transmittance
+#'
+#' @param xinit numeric. Vector of input variables to estimate
+#' @param SpecPROSPECT list. Includes optical constants
+#' refractive index, specific absorption coefficients and corresponding spectral bands
+#' @param Abs numeric. measured Transmittance data
+#' @param Input_PROSPECT dataframe. set of PROSPECT input variables
+#' @param WhichVars2Estimate  numeric. location of variables from Input_PROSPECT
+#' to be estimated through inversion
+#'
+#' @return fc estimates of the parameters
+#' @export
+Merit_RMSE_PROSPECT_ABS <- function(xinit,SpecPROSPECT,Abs,Input_PROSPECT,WhichVars2Estimate) {
+
+  xinit[xinit<0] = 0
+  Input_PROSPECT[WhichVars2Estimate] = xinit
+  RT = PROSPECT(SpecPROSPECT = SpecPROSPECT,Input_PROSPECT = Input_PROSPECT)
+  fc = CostVal_RMSE_ABS(RT,Abs)
+  return(fc)
+}
+
+
+#' Value of the cost criterion to minimize during PROSPECT inversion
+#' @param RT  list. Simulated reflectance and transmittance
+#' @param Abs  numeric. Absorptance on which PROSPECT ins inverted
+#'
+#' @return fc sum of squared difference between simulated and measured leaf optical properties
+#' @export
+CostVal_RMSE_ABS  <- function(RT,Abs) {
+
+  fc=sqrt(sum((Abs-(1-RT$Reflectance-RT$Transmittance)**2)/length(RT$Reflectance)))
+  return(fc)
+}
+
 #' This function adapts SpecPROSPECT accordingly to experimental data
 #' or to a spectral domain defined by UserDomain
 #' @param SpecPROSPECT list. Includes optical constants
