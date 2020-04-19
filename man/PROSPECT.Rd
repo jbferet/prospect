@@ -2,17 +2,17 @@
 % Please edit documentation in R/Lib_PROSPECT.R
 \name{PROSPECT}
 \alias{PROSPECT}
-\title{core function running PROSPECT}
+\title{core function running PROSPECT
+This function allows simulations using PROSPECT-D or PROSPECT-PRO depending on
+the parameterization.}
 \usage{
-PROSPECT(SpecPROSPECT, Input_PROSPECT = NULL, N = 1.5, CHL = 40,
-  CAR = 8, ANT = 0, BROWN = 0, EWT = 0.01, LMA = 0.008,
-  PROT = 0, CBC = 0, alpha = 40)
+PROSPECT(SpecPROSPECT, N = 1.5, CHL = 40, CAR = 8, ANT = 0,
+  BROWN = 0, EWT = 0.01, LMA = 0.008, PROT = 0, CBC = 0,
+  alpha = 40)
 }
 \arguments{
 \item{SpecPROSPECT}{list. Includes optical constants
 refractive index, specific absorption coefficients and corresponding spectral bands}
-
-\item{Input_PROSPECT}{dataframe. full list of PROSPECT input parameters. Default = Set to NULL}
 
 \item{N}{numeric. Leaf structure parameter}
 
@@ -39,4 +39,6 @@ leaf directional-hemisphrical reflectance and transmittance
 }
 \description{
 core function running PROSPECT
+This function allows simulations using PROSPECT-D or PROSPECT-PRO depending on
+the parameterization.
 }
