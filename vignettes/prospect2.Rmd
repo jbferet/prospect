@@ -13,7 +13,7 @@ output:
     toc_depth: 2
 vignette: >
   \usepackage[utf8]{inputenc}
-  %\VignetteIndexEntry{3. Inverse mode: iterative optimization}
+  %\VignetteIndexEntry{2. Inverse mode: iterative optimization}
   %\VignetteEncoding{UTF-8}
   %\VignetteEngine{knitr::rmarkdown}
 ---
