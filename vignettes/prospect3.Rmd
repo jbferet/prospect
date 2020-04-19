@@ -1,5 +1,5 @@
 ---
-title: "3. Inverse mode: iterative optimization"
+title: "3. Inverse mode: Illustration with ANGERS"
 author: "Jean-Baptiste Féret, Florian de Boissieu"
 date: "`r Sys.Date()`"
 output:
@@ -13,7 +13,7 @@ output:
     toc_depth: 2
 vignette: >
   \usepackage[utf8]{inputenc}
-  %\VignetteIndexEntry{3. Inverse mode: iterative optimization}
+  %\VignetteIndexEntry{4. Inverse mode: Illustration with LOPEX}
   %\VignetteEncoding{UTF-8}
   %\VignetteEngine{knitr::rmarkdown}
 ---
@@ -26,90 +26,123 @@ knitr::opts_chunk$set(
 )
 ```
 
-# Running `prospect` in inverse mode
 
-`PROSPECT` can be inverted using iterative optimization, by calling the function `Invert_PROSPECT`. This iterative optimization is based on the function [`fmincon` included in the package `pracma`](https://rdrr.io/cran/pracma/man/fmincon.html).
+# Download ANGERS datasets
 
-By default, the merit function used for the inversion minimizes RMSE bewen simulated and measured leaf optical properties.
-However, users can define their own merit function with associated criterion to minimize by defining their own merit function and adding it as input variable, such as `MeritFunction = MyOwnMeritFunction`
+The ANGERS dataset is available online and can be downloaded directly wih an R script.
+This dataset includes both reflectance and transmittance data, as well as a set of mesured chemical constituents, including `CHL`,`CAR`,`EWT`, and `LMA`.
 
-## Input variables
-The function `Invert_PROSPECT` requires either reflectance, or transmittance, or both.
-User can define which input variables of `PROSPECT` should be estimated during inversion, and which ones should be set to a given value (0 or user's choice).
-The list of input variables for inversion is :
 
-* `SpecPROSPECT`: data frame including the refractive index and specific absorption ceofficients, defined for a given spectral range (max range: 400 nm - 2500 nm). simulation and inversion on different spectral domains can be peformed by adapting the information in `SpecPROSPECT`
-* `Refl`: numeric: individual leaf reflectance corresponding to the spectral domain defined in `SpecPROSPECT`. Set to `NULL` if inversion on transmittance only
-* `Tran`: numeric: individual leaf transmittance corresponding to the spectral domain defined in `SpecPROSPECT`. Set to `NULL` if inversion on reflectance only
-* `Parms2Estimate` list. Parameters to estimate. Set to 'ALL' by default. 
-    * The leaf structure parameter `N` is systematically estimated, unless defined in `ParmSet`. 
-    * `alpha` is systematically set to its default value, unless defined in `Parms2Estimate` along with all other variables to be estimated. Keep in mind that most published results use `alpha` with its default value.
-* `ParmSet` list of PROSPECT parameters which should be set to a given value
-* `PROSPECT_version` character. corresponds to the PROSPECT version. should be one of the following versions: '5', '5B', 'D', 'DB', 'PRO', 'PROB'. Use the vesion ending with 'B' if you want to estimate brown pigments. Versions '5' and '5B' are actually based on the specific absorption coefficients of chlorophylls and carotenoids, and the refractive index from PROSPECT-D. `ANT` is then set to 0 during inversion...
-* `MeritFunction` character. name of the function to be used as merit function with given criterion to minimize (default = RMSE)
-
-## Output variables
-`Invert_PROSPECT` returns a list containing estimated values of PROSPECT input parameters
-
-## A few examples
-
-###   run PROSPECT-D inversion 
-```{r prospect inverse mode 1}
-# simulate leaf optical properties
-CHL <- 45;      CAR <- 10;      ANT <- 0.2
-EWT <- 0.012;   LMA <- 0.010;   N   <- 1.3
-LRT_D <- PROSPECT(SpecPROSPECT,CHL=CHL,CAR=CAR,ANT=ANT,EWT=EWT,LMA=LMA,N=N)
-
-# invert PROSPECT with simulated leaf optical properties
-OutPROSPECT    = Invert_PROSPECT(SpecPROSPECT,Refl = LRT_D$Reflectance,Tran = LRT_D$Transmittance,
-                             Parms2Estimate = 'ALL',ParmSet = NULL,
-                             PROSPECT_version = 'D',MeritFunction = 'Merit_RMSE_PROSPECT')
+```{r get ANGERS}
+# Libraries required 
+library(prospect)
+library(data.table)
+# repository where data are stored
+gitlab_Rep <- 'https://gitlab.com/jbferet/myshareddata/raw/master/LOP/'
+# Datasets
+dbName <- 'ANGERS'
+# files available
+fileName <- list('DataBioch.txt','ReflectanceData.txt','TransmittanceData.txt')
+# download LOPEX data
+DataBioch <- Refl <- Tran <- list()
+DataBioch <- fread(paste(gitlab_Rep,dbName,'/',fileName[[1]],sep=''))
+Refl<- fread(paste(gitlab_Rep,dbName,'/',fileName[[2]],sep=''))
+Tran <- fread(paste(gitlab_Rep,dbName,'/',fileName[[3]],sep=''))
+# Get the wavelengths corresponding to the reflectance and transmittance measurements  
+lambda <- unlist(Refl[,1], use.names=FALSE)
+Refl <- matrix(unlist(Refl[,-1], use.names=FALSE),nrow = length(lambda))
+Tran <- matrix(unlist(Tran[,-1], use.names=FALSE),nrow = length(lambda))
+# Get the number of samples
+nbSamples <- ncol(Refl)
 ```
 
-###   run PROSPECT-D inversion to estimate EWT and LMA using their optimal spectral domain 
-See [Féret et al. (2019) https://doi.org/10.1016/j.rse.2018.11.002](https://www.sciencedirect.com/science/article/abs/pii/S0034425718305030) for more information on optimal spectral domains.
+# Inversion of PROSPECT-D using full spectral information
 
-```{r prospect inverse mode 2}
+Once the datasets are imported, PROSPECT-D can be inverted using the full spectral domain available, corresponding to the domain from 400 nm to 2450 nm.  
+CAB, CAR, ANT, EWT, and LMA will be estimated. 
 
-# simulate leaf optical properties
-CHL <- 45;      CAR <- 10;      ANT <- 0.2
-EWT <- 0.012;   LMA <- 0.010;   N   <- 1.3
-LRT_D <- PROSPECT(SpecPROSPECT,CHL=CHL,CAR=CAR,ANT=ANT,EWT=EWT,LMA=LMA,N=N)
-
-# define optimal domain for leaf constituents
-OptDomain = list()
-OptDomain$EWT = c(1700,2400)
-OptDomain$LMA = c(1700,2400)
-
-Parms2Estimate <- c('EWT','LMA') # N is estimated as well by default, pigments do not influence SWIR domain
-# Fit spectral data to match PROSPECT with user optical properties
-SubData = FitSpectralData(SpecPROSPECT=SpecPROSPECT,lambda=SpecPROSPECT$lambda,Refl=LRT_D$Reflectance,
-                          Tran=LRT_D$Transmittance,UserDomain = OptDomain$EWT)
+```{r Invert PROSPECT-D Full}
+# Estimate all parameters for PROSPECT-D
+Parms2Estimate  = 'ALL'
+CHL_ALL <- CAR_ALL <- ANT_ALL <- EWT_ALL <- LMA_ALL <- N_ALL <- c()
+InitValues <- data.frame(CHL=40, CAR=10, ANT=0.1, BROWN=0, EWT=0.01, LMA=0.01, N=1.5)
+# Adjust spectral domain for SpecPROSPECT to fit leaf optical properties 
+SubData <- FitSpectralData(SpecPROSPECT=SpecPROSPECT,lambda=lambda,Refl, 
+                           Tran =Tran,UserDomain = c(lambda[1],lambda[length(lambda)]))
 SubSpecPROSPECT = SubData$SpecPROSPECT
 Sublambda       = SubData$lambda
 SubRefl         = SubData$Refl
 SubTran         = SubData$Tran
 
-# Invert PROSPECT with optimal spectral information
-res= Invert_PROSPECT(SubSpecPROSPECT,Refl = SubRefl,Tran = SubTran,PROSPECT_version = 'D',
-                     Parms2Estimate = Parms2Estimate)
-EWT_mod    = res$EWT
-LMA_mod    = res$LMA
-Nstruct_mod= res$N
+
+print('PROSPECT inversion using full spectral range')
+for (i in 1:nbSamples[[1]]){
+  print(i)
+  res <- Invert_PROSPECT(SpecPROSPECT, Refl = Refl[,i], Tran = Tran[,i], 
+                         PROSPECT_version = 'D',Parms2Estimate = Parms2Estimate, 
+                         InitValues = InitValues)
+  CHL_ALL[i] <- res$CHL
+  CAR_ALL[i] <- res$CAR
+  ANT_ALL[i] <- res$ANT
+  EWT_ALL[i] <- res$EWT
+  LMA_ALL[i] <- res$LMA
+  N_ALL[i] <- res$N
+}
 
 ```
 
-###   run PROSPECT-PRO inversion
-```{r prospect inverse mode 3}
-# simulate leaf optical properties
-CHL <- 45;      CAR <- 10;      ANT <- 0.2
-EWT <- 0.012;   LMA <- 0.000;   N   <- 1.3;
-PROT <- 0.001;  CBC <- 0.010;
-LRT_PRO <- PROSPECT(SpecPROSPECT,CHL=CHL,CAR=CAR,ANT=ANT,EWT=EWT,LMA=LMA,N=N,PROT=PROT,CBC = CBC)
+## Results: estimation of `CHL`, `CAR`, `EWT` and `LMA`
 
-# invert PROSPECT with simulated leaf optical properties
-OutPROSPECT    = Invert_PROSPECT(SpecPROSPECT,Refl = LRT_PRO$Reflectance,Tran = LRT_PRO$Transmittance,
-                             Parms2Estimate = 'ALL',ParmSet = NULL,
-                             PROSPECT_version = 'PRO',MeritFunction = 'Merit_RMSE_PROSPECT')
+The results obtained with `prospect` are consistent with results obtained with the Matlab function fmincon, although slightly longer to process.
+
+<p float="left">
+  <img src="../man/figures/CHL_Rall.png" width="50%" />
+  <img src="../man/figures/CAR_Rall.png" width="50%" />
+</p>
+<p float="left">
+  <img src="../man/figures/EWT_Rall.png" width="50%" />
+  <img src="../man/figures/LMA_Rall.png" width="50%" />
+</p>
+<center>
+  Fig. 1. Estimation of `CHL`, `CAR`, `EWT` and `LMA` from ANGERS using PROSPECT-D inversion and full spectral information available.
+</center> 
+<p>&nbsp;</p>
+
+
+# Inversion of PROSPECT-D using optimal spectral domains
+
+PROSPECT-D can be inverted using the optimal spectral domain defined for each of the constituents. 
+CAB, CAR, ANT, EWT, and LMA can be estimated. However, no optimal spectral domain has been investigated for ANT so far, so the VNIR domain from 400 nm to 800 nm is used in this case...
+
+```{r Invert PROSPECT-D Opt}
+# Estimate all parameters for PROSPECT-D 
+Parms2Estimate  = c('CHL','CAR','ANT','EWT','LMA')
+# Parms2Estimate  = c('LMA')
+InitValues <- data.frame(CHL=40, CAR=8, ANT=0.1, BROWN=0, EWT=0.01, LMA=0.01, N=1.5)
+print('PROSPECT inversion using optimal setting')
+ParmEst <- Invert_PROSPECT_OPT(SpecPROSPECT, lambda=lambda, Refl = Refl, 
+                               Tran = Tran, PROSPECT_version = 'D',
+                               Parms2Estimate = Parms2Estimate, InitValues = InitValues)
+CHL_OPT <- ParmEst$CHL
+CAR_OPT <- ParmEst$CAR
+ANT_OPT <- ParmEst$ANT
+EWT_OPT <- ParmEst$EWT
+LMA_OPT <- ParmEst$LMA
 ```
+
+## Results: estimation of `CHL`, `CAR`, `EWT` and `LMA`
+
+<p float="left">
+  <img src="../man/figures/CHL_R.png" width="50%" />
+  <img src="../man/figures/CAR_R.png" width="50%" />
+</p>
+<p float="left">
+  <img src="../man/figures/EWT_R.png" width="50%" />
+  <img src="../man/figures/LMA_R.png" width="50%" />
+</p>
+<center>
+  Fig. 2. Estimation of `CHL`, `CAR`, `EWT` and `LMA` from ANGERS using PROSPECT-D inversion and optimal subdomains for each of these constituents. 
+</center> 
+<p>&nbsp;</p>
+
 

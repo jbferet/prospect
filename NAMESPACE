@@ -2,10 +2,12 @@
 
 export(Complete_Input_PROSPECT)
 export(CostVal_RMSE)
+export(CostVal_RMSE_ABS)
 export(FitSpectralData)
 export(Get_Nprior)
 export(Invert_PROSPECT)
 export(Merit_RMSE_PROSPECT)
+export(Merit_RMSE_PROSPECT_ABS)
 export(PROSPECT)
 export(PROSPECT_LUT)
 export(Warn_MissingInput)

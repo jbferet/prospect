@@ -1,5 +1,5 @@
 ---
-title: "1. introduction to `prospect`"
+title: "1. Running PROSPECT in forward mode"
 author: "Jean-Baptiste Féret, Florian de Boissieu"
 date: "`r Sys.Date()`"
 output:
@@ -13,7 +13,7 @@ output:
     toc_depth: 2
 vignette: >
   \usepackage[utf8]{inputenc}
-  %\VignetteIndexEntry{1. introduction}
+  %\VignetteIndexEntry{2. Forward mode}
   %\VignetteEncoding{UTF-8}
   %\VignetteEngine{knitr::rmarkdown}
 ---
@@ -26,73 +26,180 @@ knitr::opts_chunk$set(
 )
 ```
 
-# Brief introduction & useful links to go further
+<style>
+  .col2 {
+    columns: 2 180px;         /* number of columns and width in pixels*/
+    -webkit-columns: 2 180px; /* chrome, safari */
+    -moz-columns: 2 180px;    /* firefox */
+  }
+</style>
 
-This tutorial summarizes the different functionalities of the R package `prospect` based on the eponym leaf physical model. 
 
-This tutorial does not aim at detailling the principles of PROSPECT or comparing it to other models, as: 
+# Running `prospect` in forward mode
 
-* The comprehensive description of the model and the physical principes it relies on can be found in the original paper from [Jacquemoud & Baret (1990)](https://www.sciencedirect.com/science/article/abs/pii/003442579090100Z "Jacquemoud & Baret, RSE 1990")
-* [this website](http://photobiology.info/Jacq_Ustin.html) and [this one](http://teledetection.ipgp.jussieu.fr/opticleaf/models.htm) provide a lot of information on this topic
-* [this website](http://opticleaf.ipgp.fr/) gathers references and important links for anyone interested in leaf optical properties and physical modeling
+### Input variables
+The function `PROSPECT` runs PROSPECT for individual samples and expects the following input variables.
 
-PROSPECT aims at simulating leaf optical properties __(directional-hemispherical reflectance and transmittance)__ in the optical domain from 400 nm to 2500 nm based on their biophysical properties, including a limited number of biochemical constituents and a unique structure parameter, `N`. PROSPECT is based on a simple representation derived from the __extended plate model__ ([Allen et al., 1970](https://www.osapublishing.org/josa/abstract.cfm?uri=josa-60-4-542)).
+* `SpecPROSPECT`: dataframe including the refractive index and specific absorption ceofficients, defined for a given spectral range (max range: 400 nm - 2500 nm). simulation and inversion on different spectral domains can be peformed by adapting the information in `SpecPROSPECT`
+* The biochemical and biophysical input variables of PROSPECT are :
+
+<div class="col2">
+
+  *  `N` (default = 1.5)
+  *  `CHL` (default = 40.0  $\mu g.cm^2$)
+  *  `CAR` (default = 8.0  $\mu g.cm^2$)
+  *  `ANT` (default = 0.0  $\mu g.cm^2$)
+  *  `BROWN` (default = 0.0 arbitrary units)
+  *  `EWT` (default = 0.01  $g.cm^2$)
+  *  `LMA` (default = 0.008  $g.cm^2$)
+  *  `PROT` (default = 0.0  $g.cm^2$)
+  *  `CBC` (default = 0.0  $g.cm^2$)
+  *  `alpha` (default = 40.0 degrees)
+
+</div>
+
+
+### Output variables
+`PROSPECT` returns a list containing directional-hemispherical reflectance and transmittance (`reflectance` and `transmittance`) corresponding to the input variables, and the corresponding wavelengths in the list element `wvl`.
+
+### run PROSPECT using default parameters over the full range from 400 nm to 2500 nm
+```{r prospect direct mode default}
+library(prospect)
+LRT_default <- PROSPECT(SpecPROSPECT)
+```
+
+###   run PROSPECT using user defined set of parameters over the full range from 400 nm to 2500 nm
+Default values are set for undeclared parameters
+```{r prospect direct mode VSWIR}
+LRT_VSWIR <- PROSPECT(SpecPROSPECT,N = 1.4,CHL = 30,CAR = 6,EWT = 0.02,LMA = 0.01)
+```
+
+###   run PROSPECT using user defined spectral domain
+Following the same definition of the input parameters, user only has to adjust the spectral range from `SpecPROSPECT`.
+`SpecPROSPECT$lambda` contains the spectral bands for the different optical constants. 
+
+```{r prospect direct mode VNIR}
+# define the spectral range for simulations in the VNIR from 400 to 1000 nm
+# identify closest spectral bands to the boundaries 
+# (please adjust if you need strict inclusion / excusion of bands)
+wvlRange = list()
+wvlRange$lb <- which(abs(SpecPROSPECT$lambda-400)==min(abs(SpecPROSPECT$lambda-400)))
+wvlRange$ub <- which(abs(SpecPROSPECT$lambda-1000)==min(abs(SpecPROSPECT$lambda-1000)))
+SpecPROSPECT_VNIR <- SpecPROSPECT[wvlRange$lb:wvlRange$ub,]
+LRT_VNIR <- PROSPECT(SpecPROSPECT_VNIR,N = 1.4,CHL = 30,CAR = 6,EWT = 0.02,LMA = 0.01)
+```
+
+# Comparison between PROSPECT-PRO and PROSPECT-D
+
+PROSPECT-PRO is the latest official version released. However, you may not be interested in all these input biochemical constituents. 
+
+Still, __we recommend using PROSPECT-PRO and selecting the constituents of interest, performances should correspond to your expectations__.
+
+#### PROSPECT-D
+The only difference between PROSPECT-PRO and PROSPECT-D is that LMA is divided into proteins and CBC. Therefore, the default values in `prospect` correspond to calling PROSPECT-D, as `PROT` and `CBC` are set to 0. 
+Keep in mind that either `LMA` or `PROT` and `CBC` should be set to 0. A message will be displayed if it is not the case:
+
+```{r message mix PROSPECT-D and PROSPECT-PRO}
+'PROT and/or CBC are not set to 0
+LMA is not set to 0 neither, which is physically incorrect
+(LMA = PROT + CBC)
+We assume that PROSPECT-PRO was called and set LMA to 0
+Please correct input parameters LMA, PROT and/or CBC if needed'
+```
+
+Here is an example to run PROSPECT-D:
+```{r run PROSPECT-D}
+CHL <- 45;      CAR <- 10;      ANT <- 0.2
+EWT <- 0.012;   LMA <- 0.010;   N   <- 1.3
+LRT_D <- PROSPECT(SpecPROSPECT,CHL=CHL,CAR=CAR,ANT=ANT,EWT=EWT,LMA=LMA,N=N)
+```
+
+and another one with PROSPECT-PRO, which should lead to very similar leaf optics: 
+```{r run PROSPECT-PRO}
+CHL <- 45;      CAR <- 10;      ANT <- 0.2
+EWT <- 0.012;   LMA <- 0.000;   N   <- 1.3
+PROT <- 0.001;  CBC <- 0.009;
+Input_PROSPECT <- data.frame('CHL'=CHL,'CAR'=CAR,'ANT'=ANT,'EWT'=EWT,'LMA'=LMA,'PROT'=PROT,'CBC'=CBC,'N'=N)
+LRT_PRO <- PROSPECT(SpecPROSPECT,CHL=CHL,CAR=CAR,ANT=ANT,EWT=EWT,LMA=LMA,PROT=PROT,CBC=CBC,N=N)
+```
+
+The resulting leaf optical properties are, indeed, very similar:
+<p>&nbsp;</p>
+<center>
+  <img align="bottom" width="50%" height="50%" src="../man/figures/compare_PROSPECT.png">
+</center> 
+<center>
+  Fig. 1. Comparison between PROSPECT-D and PROSPECT-PRO, stoichiometry respected
+</center> 
+<p>&nbsp;</p>
+
+
+while using proteins only instead of proteins + CBC to simulate LMA leads to different results: 
+```{r run PROSPECT-PRO2}
+CHL <- 45;      CAR <- 10;      ANT <- 0.2
+EWT <- 0.012;   LMA <- 0.000;   N   <- 1.3
+PROT <- 0.010;  CBC <- 0.000;
+Input_PROSPECT <- data.frame('CHL'=CHL,'CAR'=CAR,'ANT'=ANT,'EWT'=EWT,'LMA'=LMA,'PROT'=PROT,'CBC'=CBC,'N'=N)
+LRT_PRO2 <- PROSPECT(SpecPROSPECT,CHL=CHL,CAR=CAR,ANT=ANT,EWT=EWT,LMA=LMA,PROT=PROT,CBC=CBC,N=N)
+```
 
 
 <p>&nbsp;</p>
 <center>
-  <img align="bottom" width="100%" height="100%" src="../man/figures/PROSPECT_representation_Full_Crop.png">
+  <img align="bottom" width="50%" height="50%" src="../man/figures/compare_PROSPECT2.png">
 </center> 
-<p>&nbsp;</p>
 <center>
-  Fig. 1. Representation of a leaf according to PROSPECT and corresponding leaf optical properties obtained as output
+  Fig. 2. Comparison between PROSPECT-D and PROSPECT-PRO, Proteins only, no CBC
 </center> 
 <p>&nbsp;</p>
 
-Note that the `alpha` parameter is also available as input, and corresponds to the maximum incidence angle relative to the normal defining the solid angle of incident light at the surface of leaf (aims at including surface roughness, default value = 40 degrees).
 
-Many simplications can be identified, and alternative versions of the model have been developed through the years in order to increase the realism of the model. Among the many simplifications:
+On the other hand, using CBC only instead of proteins + CBC to simulate LMA leads to very similar results compared to simulation with PROSPECT-D. 
 
-* The refractive index identifcal for all leaves. It should theoretically change with leaf properties
+This is explained by the low proportion of poteins compared to CBC in he total comntribution to LMA, and the very similar specific absorption coefficient between LMA and CBC. This also highlights the challenges for the proper estimation of proteines from LOP.
 
-* The leaf anatomy is not differentiated between an adaxial and an abaxial face
+```{r run PROSPECT-PRO3}
+CHL <- 45;      CAR <- 10;      ANT <- 0.2
+EWT <- 0.012;   LMA <- 0.000;   N   <- 1.3
+PROT <- 0.000;  CBC <- 0.010;
+Input_PROSPECT <- data.frame('CHL'=CHL,'CAR'=CAR,'ANT'=ANT,'EWT'=EWT,'LMA'=LMA,'PROT'=PROT,'CBC'=CBC,'N'=N)
+LRT_PRO3 <- PROSPECT(SpecPROSPECT,CHL=CHL,CAR=CAR,ANT=ANT,EWT=EWT,LMA=LMA,PROT=PROT,CBC=CBC,N=N)
+```
 
-* the leaf surface, which is defined my many properties in real life (presence of waxes, hairs, ...) is identical among leaves in PROSPECT
-
-* ...
-
-The current version of the model implemented in `prospect` is __PROSPECT-PRO__, which includes the following biochemical constituents (defined as _C<sub>i</sub>_ in Fig. 1):
-
-* Chlorophyll a + b `CHL`
-* Carotenoids `CAR`
-* Anthocyanins `ANT`
-* Prown pigments `BROWN`
-* Equivalent water thickness `EWT`
-* proteins `PROT`
-* carbon-based consituents `CBC` (constituents of dry matter other than proteins)
-
-If you want to use __PROSPECT-D__ instead of __PROSPECT-PRO__, please define a value for `LMA` (Leaf mass per area) and set `PROT` and `CBC` to 0, or leave no value (default value = 0) 
-
-
-
-The specific absoprtion coefficients corresponding to these constituents are recorded in the variable `SpecPROSPECT` available when loading the package `prospect`.
-
-# `prospect`: forward and inverse mode
-
-In the forward mode, PROSPECT simulates leaf optical propertes based on a set of input parameters corresponding to the biochemical constituents and the N structure parameter.
-
-The performances of PROSPECT for the simulation of teh leaf optical properties are based on the proper calibration of the optical constants, more particularly the specific absorption coefficients corresponding to each biochemical constituent. 
-
-In the inverse mode, an algorithm is used to derive the input parameters from the leaf optical properties.
-
-See the following pages of the tutorial for an illustration of how to use `prospect` in forward and inverse mode.
 
 <p>&nbsp;</p>
 <center>
-  <img align="bottom" width="100%" height="100%" src="../man/figures/PROSPECT_DirectInverse_crop.png">
+  <img align="bottom" width="50%" height="50%" src="../man/figures/compare_PROSPECT3.png">
 </center> 
-<p>&nbsp;</p>
 <center>
-  Fig. 2. Forward and inverse modes of PROSPECT
+  Fig. 3. Comparison between PROSPECT-D and PROSPECT-PRO, CBC only, no Proteins
 </center> 
 <p>&nbsp;</p>
+
+
+### Run previous versions from PROSPECT-PRO
+
+If you want to run previous versions of PROSPECT:
+
+*  __We do not recommend using PROSPECT-4 or PROSPECT-5__, as the calibration of the refractive index along with specific absorption coefficients for chlorophyls and carotenoids resulted in artifacts in the VIS domain. 
+
+*  However if you are not interested in anthocyanins, the default value for `ANT` is 0.0, so simulating leaf optics without `ANT` should do the job. 
+
+*  If you do not want to differentiate chlorophylls and carotenoids, we recommend that you use PROSPECT-PRO and set `CAR` as a constant fraction of `CHL`.
+
+# Computing a Look-Up-Table with `prospect`
+
+Look-Up-Tables (LUT) are widely used in order to infer leaf charactristics from PROSPECT, based on minimization techniques. The function `PROSPECT_LUT` allows computation of a LUT directly based on a list of input parameters.
+
+The following example produces a LUT with the function `PROSPECT_LUT` of `prospect`. Undefined parameters are set to their default value; Vectors of values are expected to be the same length.
+
+```{r prospect LUT}
+CHL <- 100*runif(1000)
+CAR <- 25*runif(1000)
+ANT <- 2*runif(1000)
+EWT <- 0.04*runif(1000)
+LMA <- 0.02*runif(1000)
+N   <- 1+2*runif(1000)
+Input_PROSPECT <- data.frame('CHL'=CHL,'CAR'=CAR,'ANT'=ANT,'EWT'=EWT,'LMA'=LMA,'N'=N)
+LUT <- PROSPECT_LUT(SpecPROSPECT,Input_PROSPECT)
+```
