@@ -59,7 +59,7 @@ Invert_PROSPECT <- function(SpecPROSPECT, Refl = NULL, Tran = NULL,
                             PROSPECT_version = "D",
                             MeritFunction = "Merit_RMSE_PROSPECT",
                             xlub = data.frame(
-                              CHL = c(1e-4, 150), CAR = c(1e-4, 25), ANT = c(0, 20),
+                              CHL = c(1e-4, 150), CAR = c(1e-4, 25), ANT = c(0, 50),
                               BROWN = c(0, 1), EWT = c(1e-7, .08), LMA = c(1e-6, .04),
                               PROT = c(1e-7, .005), CBC = c(1e-6, .04), N = c(.5, 4),
                               alpha = c(10, 90)),
