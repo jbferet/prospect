@@ -613,7 +613,8 @@ Invert_PROSPECT_OPT <- function(SpecPROSPECT, lambda, Refl = NULL, Tran = NULL,
           Sublambda       = SubData$lambda
           SubRefl         = SubData$Refl
           SubTran         = SubData$Tran
-          Parms2EstimateBis <- c('EWT', 'PROT', 'CBC')
+          # Parms2EstimateBis <- c('EWT', 'PROT', 'CBC')
+          Parms2EstimateBis <- c('EWT', 'LMA')
           # Invert PROSPECT with optimal spectral information
           for (i in 1:nbSamples){
             print(i)

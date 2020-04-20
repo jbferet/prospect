@@ -27,15 +27,12 @@ knitr::opts_chunk$set(
 ```
 
 
-# Introduction
+# Prior estimation of N
 The `N` structure parameter is usually estimated based on the inversion of PROSPECT using reflectance and transmittance information for spectral bands corresponding to minimum absorption, maximum reflectance, and maximum transmittance. 
 
 [Qiu et al. (2018)](https://doi.org/10.1109/TGRS.2018.2791930 "Qiu et al., TGRS 2018") reported a strong correlation between the N parameter and the ratio between reflectance and transmittance measured in the NIR at 800 nm. Taking advantage of this correlation to estimate N requires measuring both leaf reflectance and transmittance, in line with the original method used to compute N from leaf optical properties. However, absorptance in the NIR domain is usually very low: [Merzlyak et al. (2004)](https://doi.org/10.1016/j.jphotobiol.2004.03.003 "Merzlyak et al. (2004)") even suggest that absorptance in the domain ranging from 750 nm to 800 nm can be neglected. Thus assuming light in the NIR is primarily either reflected or transmitted as a function of leaf structure, information about reflectance only or transmittance only might be sufficient to accurately estimate the N parameter with moderate uncertainty, following the hypothesis that absorptance is negligible. 
 
 The estimation of N prior to PROSPECT inversion may therefore lead to improved estimation of leaf constituents when using optimal spectral subdomains with only reflectance or transmittance.
-
-
-# Prior estimation of N
 
 Here, we assume that absorptance is negligeible in specific spectral domains of the NIR. Therefore, the R/T ratio is equivalent to R/(1-R) and to (1-T)/T.
 Then, we can adjust the N ~ R/(1-R) and N ~ (1-T)/T relationship based on simulations, and apply this linear relationship on experimental to get estimates of N based on R only or T only. 
@@ -45,47 +42,263 @@ The function `Get_Nprior` aims at adjusting this linear relationship, based on t
 This estimated N value can then be used as prior information when inverting PROSPECT leaf chemical constituents.
 
 ```{r get prior estimate of N}
-# Prior estimation of N using R or T only
+# Libraries required 
+library(prospect)
+library(data.table)
+# repository where data are stored
+gitlab_Rep <- 'https://gitlab.com/jbferet/myshareddata/raw/master/LOP/'
+# Download ANGERS dataset
+dbName <- 'ANGERS'
+# files available
+fileName <- list('DataBioch.txt','ReflectanceData.txt','TransmittanceData.txt')
+DataBioch <- Refl <- Tran <- list()
+DataBioch <- fread(paste(gitlab_Rep,dbName,'/',fileName[[1]],sep=''))
+Refl<- fread(paste(gitlab_Rep,dbName,'/',fileName[[2]],sep=''))
+Tran <- fread(paste(gitlab_Rep,dbName,'/',fileName[[3]],sep=''))
+# Get the wavelengths corresponding to the reflectance and transmittance measurements  
+lambda <- unlist(Refl[,1], use.names=FALSE)
+Refl <- matrix(unlist(Refl[,-1], use.names=FALSE),nrow = length(lambda))
+Tran <- matrix(unlist(Tran[,-1], use.names=FALSE),nrow = length(lambda))
+# Get the number of samples
+nbSamples <- ncol(Refl)
 
-# invert specific constituents using optimal spectral domains
-# Use Reflectance only and prior estimation of N
-Nprior = Get_Nprior(SpecPROSPECT,lambda,Refl=Refl)
+# Prior estimation of N using R only
+Nprior_R = Get_Nprior(SpecPROSPECT,lambda,Refl=Refl)
+# Prior estimation of N using T only
+Nprior_T = Get_Nprior(SpecPROSPECT,lambda,Tran= Tran )
+
 ```
 
-# Inversion of PROSPECT using optimal spectral domains
+### Prior estimate of `N` based on R or T only vs. `N` estimate from iterative optimization over the full spectral domain
+See https://jbferet.gitlab.io/prospect/articles/prospect3.html to get estimation of N from inversion over the full spectral domain
+The value of N estimated from from either R or T is compared to `N` based on iterative optimization over the full spectral domain on figure 1. 
 
-the leaf chemical constituents can then be estimated based on PROSPECT inversion using optimal spectral domains and prior estimation of `N`.
 
-```{r invert using optimal spectral domains}
+<p float="left">
+  <img src="../man/figures/N_RTvsR.png" width="33%" />
+  <img src="../man/figures/N_RTvsT.png" width="33%" />
+  <img src="../man/figures/N_RvsT.png" width="33%" />
+</p>
+<center>
+  Fig. 1. Comparison between `N` estimated from PROSPECT inversion using R & T over the full spectral domain, and from PROSPECT inversion using either R or T and the method provided in the function `Get_Nprior`, for ANGERS dataset.
+</center> 
+<p>&nbsp;</p>
 
-# define optimal domain for leaf constituents
-# ref:  - Feret et al., RSE (2019) https://doi.org/10.1016/j.rse.2018.11.002
-#       - Spafford et al., (submitted)
-OptDomain = list('CHL' = c(700,720), 'CAR' = c(540,560),
-                 'EWT' = c(1700,2400), 'LMA' = c(1700,2400),
-                 'PROT' = c(2100,2200), 'CBC' = c(2100,2400))
-Parms2Estimate  = c('EWT','LMA')
-# Fit spectral data to match PROSPECT with user optical properties
-SubData = FitSpectralData(SpecPROSPECT=SpecPROSPECT,lambda=lambda,Refl=Refl,Tran=Tran,UserDomain = OptDomain$EWT)
+
+# PROSPECT inversion using prior estimation of N and only R or only T
+
+The estimation of leaf constituents based on reflectance or transmittance only, when no prior estimation of `N` is provided, is performed as follows:
+
+```{r Invert PROSPECT-D Full R or T only}
+# Estimate all parameters for PROSPECT-D
+Parms2Estimate  = 'ALL'
+CHL_R <- CAR_R <- EWT_R <- LMA_R <- N_R <- c()
+CHL_T <- CAR_T <- EWT_T <- LMA_T <- N_T <- c()
+InitValues <- data.frame(CHL=40, CAR=10, ANT=0.1, BROWN=0, EWT=0.01, LMA=0.01, N=1.5)
+# Adjust spectral domain for SpecPROSPECT to fit leaf optical properties 
+SubData <- FitSpectralData(SpecPROSPECT=SpecPROSPECT,lambda=lambda,Refl, 
+                           Tran =Tran,UserDomain = c(lambda[1],lambda[length(lambda)]))
 SubSpecPROSPECT = SubData$SpecPROSPECT
 Sublambda       = SubData$lambda
 SubRefl         = SubData$Refl
 SubTran         = SubData$Tran
 
-# Invert PROSPECT with optimal spectral information
-EWT_mod4    = LMA_mod4    = Nstruct_mod4= list()
-for (i in 1:ncol(SubRefl)){
+print('PROSPECT inversion using full spectral range')
+for (i in 1:nbSamples){
   print(i)
-  ParmSet = list('N'=c(Nprior[i])[[1]])
-  res= Invert_PROSPECT(SubSpecPROSPECT,Refl = SubRefl[,i],Tran = SubTran[,i],PROSPECT_version = 'D',Parms2Estimate = Parms2Estimate,ParmSet = ParmSet)
-  EWT_mod4[i]    = res$EWT
-  LMA_mod4[i]    = res$LMA
-  Nstruct_mod4[i]= res$N
+  res <- Invert_PROSPECT(SubSpecPROSPECT, Refl = SubRefl[,i], Tran = NULL, 
+                         PROSPECT_version = 'D',Parms2Estimate = Parms2Estimate, 
+                         InitValues = InitValues)
+  CHL_R[i] <- res$CHL
+  CAR_R[i] <- res$CAR
+  EWT_R[i] <- res$EWT
+  LMA_R[i] <- res$LMA
+  N_R[i] <- res$N
+
+  res <- Invert_PROSPECT(SubSpecPROSPECT, Refl = NULL, Tran = SubTran[,i], 
+                         PROSPECT_version = 'D',Parms2Estimate = Parms2Estimate, 
+                         InitValues = InitValues)
+  CHL_T[i] <- res$CHL
+  CAR_T[i] <- res$CAR
+  EWT_T[i] <- res$EWT
+  LMA_T[i] <- res$LMA
+  N_T[i] <- res$N
 }
-plot(Bioch[,5],EWT_mod4,xlim = c(0,0.06),ylim = c(0,0.06))
-plot(Bioch[,6],LMA_mod4,xlim = c(0,0.04),ylim = c(0,0.04))
-rmse(actual = c(matrix(Bioch[,6])),predicted = c(do.call(rbind,LMA_mod4)))
+
 ```
 
-# Results
+
+The performance of PROSPECT inversion when no prior estimation of `N` is provided and only R and T measured can be compared with the performances obtained when prior estimate of `N` is provided
+
+```{r Invert PROSPECT-D Full R or T only & prior N}
+# Estimate all parameters for PROSPECT-D
+Parms2Estimate <- c("CHL", "CAR", "ANT", "EWT", "LMA")
+CHL_R_Nprior <- CAR_R_Nprior <- EWT_R_Nprior <- LMA_R_Nprior <- c()
+CHL_T_Nprior <- CAR_T_Nprior <- EWT_T_Nprior <- LMA_T_Nprior <- c()
+# Adjust spectral domain for SpecPROSPECT to fit leaf optical properties 
+SubData <- FitSpectralData(SpecPROSPECT=SpecPROSPECT,lambda=lambda,Refl, 
+                           Tran =Tran,UserDomain = c(lambda[1],lambda[length(lambda)]))
+SubSpecPROSPECT = SubData$SpecPROSPECT
+Sublambda       = SubData$lambda
+SubRefl         = SubData$Refl
+SubTran         = SubData$Tran
+
+print('PROSPECT inversion using full spectral range')
+for (i in 1:nbSamples){
+  print(i)
+  InitValues <- data.frame(CHL=40, CAR=10, ANT=0.1, BROWN=0, EWT=0.01, 
+                           LMA=0.01, N=Nprior_R[i])
+  res <- Invert_PROSPECT(SpecPROSPECT = SubSpecPROSPECT, Refl = SubRefl[,i], Tran = NULL, 
+                         PROSPECT_version = 'D',Parms2Estimate = Parms2Estimate, 
+                         InitValues = InitValues)
+  CHL_R_Nprior[i] <- res$CHL
+  CAR_R_Nprior[i] <- res$CAR
+  EWT_R_Nprior[i] <- res$EWT
+  LMA_R_Nprior[i] <- res$LMA
+
+  InitValues <- data.frame(CHL=40, CAR=10, ANT=0.1, BROWN=0, EWT=0.01, 
+                           LMA=0.01, N=Nprior_T[i])
+  res <- Invert_PROSPECT(SubSpecPROSPECT, Refl = NULL, Tran = SubTran[,i], 
+                         PROSPECT_version = 'D',Parms2Estimate = Parms2Estimate, 
+                         InitValues = InitValues)
+  CHL_T_Nprior[i] <- res$CHL
+  CAR_T_Nprior[i] <- res$CAR
+  EWT_T_Nprior[i] <- res$EWT
+  LMA_T_Nprior[i] <- res$LMA
+}
+
+```
+
+Finally, the combination of prior estimation of `N` and optimal spectral domain for each constituent is also tested:
+
+```{r Invert PROSPECT-D Full R or T only & prior N & optimal subdomain}
+# Estimate all parameters for PROSPECT-D using R only
+Parms2Estimate  = c('CHL','CAR','ANT','EWT','LMA')
+InitValues <- data.frame(CHL=40, CAR=8, ANT=0.1, BROWN=0, EWT=0.01, LMA=0.01, N=1.5)
+print('PROSPECT inversion using optimal spectral setting and prior N')
+ParmEst <- Invert_PROSPECT_OPT(SpecPROSPECT = SubSpecPROSPECT, lambda=lambda, Refl = SubRefl, 
+                               Tran = NULL, PROSPECT_version = 'D',
+                               Parms2Estimate = Parms2Estimate, InitValues = InitValues)
+CHL_R_OPT <- ParmEst$CHL
+CAR_R_OPT <- ParmEst$CAR
+ANT_R_OPT <- ParmEst$ANT
+EWT_R_OPT <- ParmEst$EWT
+LMA_R_OPT <- ParmEst$LMA
+
+ParmEst <- Invert_PROSPECT_OPT(SpecPROSPECT = SubSpecPROSPECT, lambda=lambda, Refl = NULL, 
+                               Tran = SubTran, PROSPECT_version = 'D',
+                               Parms2Estimate = Parms2Estimate, InitValues = InitValues)
+CHL_T_OPT <- ParmEst$CHL
+CAR_T_OPT <- ParmEst$CAR
+ANT_T_OPT <- ParmEst$ANT
+EWT_T_OPT <- ParmEst$EWT
+LMA_T_OPT <- ParmEst$LMA
+```
+
+The comparison between PROSPECT inversion without prior `N`, with prior `N`, and with prior `N` and optimal spectral domain selection, when only R or T are used, is showed below:
+
+<p float="left">
+  <img src="../man/figures/CHL_R.png" width="33%" />
+  <img src="../man/figures/CHL_R_Nprior.png" width="33%" />
+  <img src="../man/figures/CHL_R_Nprior_OPT.png" width="33%" />
+</p>
+<p float="left">
+  <img src="../man/figures/CHL_T.png" width="33%" />
+  <img src="../man/figures/CHL_T_Nprior.png" width="33%" />
+  <img src="../man/figures/CHL_T_Nprior_OPT.png" width="33%" />
+</p>
+<center>
+  Fig. 2. Estimation of `CHL` from PROSPECT inversion, without prior `N` (left), with prior `N` (middle), and with prior `N` and optimal spectral domain selection (right), when using only R (top) or only T (bottom). Grey dots correspond to the estimation when inverting PROSPECT using  R & T over the full VSWIR spectral domain. 
+</center>
+<p>&nbsp;</p>
+
+<p float="left">
+  <img src="../man/figures/CAR_R.png" width="33%" />
+  <img src="../man/figures/CAR_R_Nprior.png" width="33%" />
+  <img src="../man/figures/CAR_R_Nprior_OPT.png" width="33%" />
+</p>
+<p float="left">
+  <img src="../man/figures/CAR_T.png" width="33%" />
+  <img src="../man/figures/CAR_T_Nprior.png" width="33%" />
+  <img src="../man/figures/CAR_T_Nprior_OPT.png" width="33%" />
+</p>
+<center>
+  Fig. 3. Estimation of `CAR` from PROSPECT inversion, without prior `N` (left), with prior `N` (middle), and with prior `N` and optimal spectral domain selection (right), when using only R (top) or only T (bottom). Grey dots correspond to the estimation when inverting PROSPECT using  R & T over the full VSWIR spectral domain.
+</center>
+<p>&nbsp;</p>
+
+<p float="left">
+  <img src="../man/figures/EWT_R.png" width="33%" />
+  <img src="../man/figures/EWT_R_Nprior.png" width="33%" />
+  <img src="../man/figures/EWT_R_Nprior_OPT.png" width="33%" />
+</p>
+<p float="left">
+  <img src="../man/figures/EWT_T.png" width="33%" />
+  <img src="../man/figures/EWT_T_Nprior.png" width="33%" />
+  <img src="../man/figures/EWT_T_Nprior_OPT.png" width="33%" />
+</p>
+<center>
+  Fig. 4. Estimation of `EWT` from PROSPECT inversion, without prior `N` (left), with prior `N` (middle), and with prior `N` and optimal spectral domain selection (right), when using only R (top) or only T (bottom). Grey dots correspond to the estimation when inverting PROSPECT using  R & T over the full VSWIR spectral domain.
+</center>
+<p>&nbsp;</p>
+
+<p float="left">
+  <img src="../man/figures/LMA_R.png" width="33%" />
+  <img src="../man/figures/LMA_R_Nprior.png" width="33%" />
+  <img src="../man/figures/LMA_R_Nprior_OPT.png" width="33%" />
+</p>
+<p float="left">
+  <img src="../man/figures/LMA_T.png" width="33%" />
+  <img src="../man/figures/LMA_T_Nprior.png" width="33%" />
+  <img src="../man/figures/LMA_T_Nprior_OPT.png" width="33%" />
+</p>
+<center>
+  Fig. 5. Estimation of `LMA` from PROSPECT inversion, without prior `N` (left), with prior `N` (middle), and with prior `N` and optimal spectral domain selection (right), when using only R (top) or only T (bottom). Grey dots correspond to the estimation when inverting PROSPECT using  R & T over the full VSWIR spectral domain.
+</center>
+<p>&nbsp;</p>
+
+
+
+
+
+
+<!-- invert specific constituents using optimal spectral domains -->
+<!-- Use Reflectance only and prior estimation of N -->
+
+<!-- # Inversion of PROSPECT using optimal spectral domains -->
+
+<!-- the leaf chemical constituents can then be estimated based on PROSPECT inversion using optimal spectral domains and prior estimation of `N`. -->
+
+<!-- ```{r invert using optimal spectral domains} -->
+
+<!-- # define optimal domain for leaf constituents -->
+<!-- # ref:  - Feret et al., RSE (2019) https://doi.org/10.1016/j.rse.2018.11.002 -->
+<!-- #       - Spafford et al., (submitted) -->
+<!-- OptDomain = list('CHL' = c(700,720), 'CAR' = c(540,560), -->
+<!--                  'EWT' = c(1700,2400), 'LMA' = c(1700,2400), -->
+<!--                  'PROT' = c(2100,2200), 'CBC' = c(2100,2400)) -->
+<!-- Parms2Estimate  = c('EWT','LMA') -->
+<!-- # Fit spectral data to match PROSPECT with user optical properties -->
+<!-- SubData = FitSpectralData(SpecPROSPECT=SpecPROSPECT,lambda=lambda,Refl=Refl,Tran=Tran,UserDomain = OptDomain$EWT) -->
+<!-- SubSpecPROSPECT = SubData$SpecPROSPECT -->
+<!-- Sublambda       = SubData$lambda -->
+<!-- SubRefl         = SubData$Refl -->
+<!-- SubTran         = SubData$Tran -->
+
+<!-- # Invert PROSPECT with optimal spectral information -->
+<!-- EWT_mod4    = LMA_mod4    = Nstruct_mod4= list() -->
+<!-- for (i in 1:ncol(SubRefl)){ -->
+<!--   print(i) -->
+<!--   ParmSet = list('N'=c(Nprior[i])[[1]]) -->
+<!--   res= Invert_PROSPECT(SubSpecPROSPECT,Refl = SubRefl[,i],Tran = SubTran[,i],PROSPECT_version = 'D',Parms2Estimate = Parms2Estimate,ParmSet = ParmSet) -->
+<!--   EWT_mod4[i]    = res$EWT -->
+<!--   LMA_mod4[i]    = res$LMA -->
+<!--   Nstruct_mod4[i]= res$N -->
+<!-- } -->
+<!-- plot(Bioch[,5],EWT_mod4,xlim = c(0,0.06),ylim = c(0,0.06)) -->
+<!-- plot(Bioch[,6],LMA_mod4,xlim = c(0,0.04),ylim = c(0,0.04)) -->
+<!-- rmse(actual = c(matrix(Bioch[,6])),predicted = c(do.call(rbind,LMA_mod4))) -->
+<!-- ``` -->
+
+<!-- # Results -->
 
