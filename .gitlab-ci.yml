@@ -14,8 +14,6 @@ cache:
 before_script:
   - apt-get update
   - apt-get install -y qpdf pandoc
-  - R -e 'install.packages("devtools")'
-  - R -e 'devtools::install_github("floriandeboissieu/pkgdown", ref = "patch-1")'
 
 stages:
 - check
@@ -44,4 +42,4 @@ pages:
 
   only:
   - master
-  
+
