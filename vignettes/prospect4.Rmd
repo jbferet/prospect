@@ -29,7 +29,7 @@ knitr::opts_chunk$set(
 
 # Download LOPEX datasets
 
-The leaf optical properties used in Feret et al. 2020 are available online and can be downloaded directly wih a R script. 
+The leaf optical properties used in Feret et al. 2020 are available online and can be downloaded directly wih an R script. 
 They corespond to the LOPEX dataset, split into 4 specific datasets:
 
 *  __LOPEX_DRY_CAL__ and __LOPEX_FRESH_CAL__ correspond to the dry and fresh samples extracted from the LOPEX dataset and used for the __calibration__ of __PROSPECT-PRO__
@@ -67,28 +67,37 @@ EWT, PROT and CBC will be estimated, and their optimal spectral domain defined b
 ```{r Invert PROSPECT-PRO}
 OptDomain = list('EWT' = c(1700,2400),'PROT' = c(2125,2175), 'CBC' = c(2025,2350))
 # ref: Feret et al., (RSE 2020)
-Parms2Estimate  = c('EWT','PROT','CBC')
+# 
+Parms2Estimate  = c('EWT','PROT','CBC','N')
 EWT_mod <- PROT_mod <- CBC_mod <- list()
+# perform PROSPECT inversion using the optimal spectral domains for EWT, PROT and CBC
+
 for (parm in Parms2Estimate){
-  for (db in dbName){
-    lambda <- unlist(Refl[[db]][,1], use.names=FALSE)
-    Refl_tmp <- matrix(unlist(Refl[[db]][,-1], use.names=FALSE),nrow = length(lambda))
-    Tran_tmp <- matrix(unlist(Tran[[db]][,-1], use.names=FALSE),nrow = length(lambda))
-    # Fit spectral data to match PROSPECT with user optical properties
-    SubData <- FitSpectralData(SpecPROSPECT=SpecPROSPECT,lambda=lambda,Refl=Refl_tmp,Tran=Tran_tmp,UserDomain = OptDomain[[parm]])
-    SubSpecPROSPECT = SubData$SpecPROSPECT
-    Sublambda       = SubData$lambda
-    SubRefl         = SubData$Refl
-    SubTran         = SubData$Tran
-    # Invert PROSPECT with optimal spectral information
-    for (i in 1:ncol(SubRefl)){
-      print(i)
-      res <- Invert_PROSPECT(SubSpecPROSPECT,Refl = SubRefl[,i],Tran = SubTran[,i],PROSPECT_version = 'PRO',Parms2Estimate = Parms2Estimate)
-      # only save results for variable of interest
-      if (parm=='EWT'){EWT_mod[[db]][i] <- res$EWT}
-      if (parm=='PROT'){PROT_mod[[db]][i] <- res$PROT}
-      if (parm=='CBC'){CBC_mod[[db]][i] <- res$CBC}
+  if (parm == 'EWT' | parm == 'PROT' | parm == 'CBC'){
+    for (db in dbName){
+      lambda <- unlist(Refl[[db]][,1], use.names=FALSE)
+      Refl_tmp <- matrix(unlist(Refl[[db]][,-1], use.names=FALSE),nrow = length(lambda))
+      Tran_tmp <- matrix(unlist(Tran[[db]][,-1], use.names=FALSE),nrow = length(lambda))
+      # Fit spectral data to match PROSPECT with user optical properties
+      SubData <- FitSpectralData(SpecPROSPECT=SpecPROSPECT,lambda=lambda,Refl=Refl_tmp,
+                                 Tran=Tran_tmp,UserDomain = OptDomain[[parm]])
+      SubSpecPROSPECT = SubData$SpecPROSPECT
+      Sublambda       = SubData$lambda
+      SubRefl         = SubData$Refl
+      SubTran         = SubData$Tran
+      # Invert PROSPECT with optimal spectral information
+      for (i in 1:ncol(SubRefl)){
+        print(i)
+        res <- Invert_PROSPECT(SubSpecPROSPECT,Refl = SubRefl[,i],
+                               Tran = SubTran[,i],PROSPECT_version = 'PRO',
+                               Parms2Estimate = Parms2Estimate)
+        # only save results for variable of interest
+        if (parm=='EWT'){EWT_mod[[db]][i] <- res$EWT}
+        if (parm=='PROT'){PROT_mod[[db]][i] <- res$PROT}
+        if (parm=='CBC'){CBC_mod[[db]][i] <- res$CBC}
+      }
     }
+    
   }
 }
 ```
@@ -113,14 +122,7 @@ The reults obtained here are very close to those obtained with Matlab, using the
 
 For the sake of comparison, the comparison of the results obtained with __Matlab__ and __R__ are presented in Fig. 2.
 
-* One sample shows underestimation of CBC with R, while it is correctly estimated with Matlab. This difference is reported for te estimation of LMA.
-
-* Inversion did not converge for the estimation of CBC with two dry samples with R, while it succeeded with Matlab
-
-* Inversion did not converge for the estimation of EWT with one dry sample with R, while it succeeded with Matlab
-
-Appart from the samples, __the performances are identical__. If inversion does not succeed, a message is displayed, but the process coan continue (values to be estimatd will then be set to NA).
-
+__the performances are identical__. The parameterization of the inversion may not be appropriate and fail to converge. In this case, the inversion returns `NA`s and the `Tolerance` parameter of the iterative optimization is adjusted to a higher value in order to converge. `Tolerance` is increased automatically as long as the convergence is not reached, to a certain extent. If convergence is not obtained for `Tolerance = 1e-2`, then the inversion returns `NA`s.
 
 <p float="left">
   <img src="../man/figures/Estimation_EWT_Compare_Matlab.png" width="50%" />
