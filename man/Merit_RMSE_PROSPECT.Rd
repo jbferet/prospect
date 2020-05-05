@@ -4,8 +4,14 @@
 \alias{Merit_RMSE_PROSPECT}
 \title{Merit function for PROSPECT inversion}
 \usage{
-Merit_RMSE_PROSPECT(x, SpecPROSPECT, Refl, Tran, Input_PROSPECT,
-  Parms2Estimate)
+Merit_RMSE_PROSPECT(
+  x,
+  SpecPROSPECT,
+  Refl,
+  Tran,
+  Input_PROSPECT,
+  Parms2Estimate
+)
 }
 \arguments{
 \item{x}{numeric. Vector of input variables to estimate}
