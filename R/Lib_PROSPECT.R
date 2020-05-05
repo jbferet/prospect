@@ -29,7 +29,7 @@
 #' @param LMA numeric. Leaf Mass per Area (g.cm-2)
 #' @param PROT numeric. protein content  (g.cm-2)
 #' @param CBC numeric. NonProtCarbon-based constituent content (g.cm-2)
-#' @param alpha numeric. Solid angle for incident light at surface of leaf (simulation of roughness)
+#' @param alpha numeric. Solid angle for incident light at surface of leaf
 #'
 #' @return leaf directional-hemisphrical reflectance and transmittance
 #' @importFrom expint expint
@@ -185,7 +185,7 @@ calctav <- function(alpha, nr) {
 #' @param LMA numeric. Leaf Mass per Area (g.cm-2)
 #' @param PROT numeric. protein content  (g.cm-2)
 #' @param CBC numeric. NonProtCarbon-based constituent content (g.cm-2)
-#' @param alpha numeric. Solid angle for incident light at surface of leaf (simulation of roughness)
+#' @param alpha numeric. Solid angle for incident light at surface of leaf
 #'
 #' @return list. LUT including leaf reflectance and transmittance
 #' @export

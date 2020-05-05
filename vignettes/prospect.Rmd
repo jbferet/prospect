@@ -36,7 +36,11 @@ This tutorial does not aim at detailling the principles of PROSPECT or comparing
 * [this website](http://photobiology.info/Jacq_Ustin.html) and [this one](http://teledetection.ipgp.jussieu.fr/opticleaf/models.htm) provide a lot of information on this topic
 * [this website](http://opticleaf.ipgp.fr/) gathers references and important links for anyone interested in leaf optical properties and physical modeling
 
-PROSPECT aims at simulating leaf optical properties __(directional-hemispherical reflectance and transmittance)__ in the optical domain from 400 nm to 2500 nm based on their biophysical properties, including a limited number of biochemical constituents and a unique structure parameter, `N`. PROSPECT is based on a simple representation derived from the __extended plate model__ ([Allen et al., 1970](https://www.osapublishing.org/josa/abstract.cfm?uri=josa-60-4-542)).
+PROSPECT aims at simulating leaf optical properties in the optical domain from 400 nm to 2500 nm based on their biophysical properties, including a limited number of biochemical constituents and a unique structure parameter, `N`. PROSPECT is based on a simple representation derived from the __extended plate model__ ([Allen et al., 1970](https://www.osapublishing.org/josa/abstract.cfm?uri=josa-60-4-542)).
+
+Leaf optical properties correspond to __conical-hemispherical reflectance and transmittance__, and are typically measured with an integrating sphere. These optical properties are often described as __directional-hemispherical reflectance and transmittance__, although such directional quantities are conceptual quantities (see [Schaepman-Strub et al. (2006)](https://www.sciencedirect.com/science/article/abs/pii/S0034425706001167?via%3Dihub "Schaepman-Strub, RSE 2006") for a comprehensive definition of optical measurements).
+
+Leaf reflectance measured with a leaf clip / contact probe (such as the device provided with the ASD FieldSpec spectroradiometer) does not correspond to  __conical-hemispherical reflectance__. Therefore comparing such reflectance with PROSPECT simulations (in forward and inverse mode) may lead to biased or uncertain results. See [Li et al. (2018)](https://www.sciencedirect.com/science/article/abs/pii/S0034425717305898?via%3Dihub "Li, RSE 2018") for alternative approaches taking advantage ofphysical modeling for the estimation of leaf chemistry from such reflectance measurements. 
 
 
 <p>&nbsp;</p>
@@ -81,7 +85,7 @@ The specific absoprtion coefficients corresponding to these constituents are rec
 
 In the forward mode, PROSPECT simulates leaf optical propertes based on a set of input parameters corresponding to the biochemical constituents and the N structure parameter.
 
-The performances of PROSPECT for the simulation of teh leaf optical properties are based on the proper calibration of the optical constants, more particularly the specific absorption coefficients corresponding to each biochemical constituent. 
+The performances of PROSPECT for the simulation of the leaf optical properties are based on the proper calibration of the optical constants, more particularly the specific absorption coefficients corresponding to each biochemical constituent. 
 
 In the inverse mode, an algorithm is used to derive the input parameters from the leaf optical properties.
 
@@ -96,3 +100,13 @@ See the following pages of the tutorial for an illustration of how to use `prosp
   Fig. 2. Forward and inverse modes of PROSPECT
 </center> 
 <p>&nbsp;</p>
+
+
+# `prospect`: Miscellaneous
+
+The package currently only includes a version of the model covering teh domain from 400 nm to 2500 nm. However, several valuable alternative versions exist, but are not available in the current version of the package:
+
+- [PROSPECT-VISIR](https://www.sciencedirect.com/science/article/abs/pii/S0034425710002841?via%3Dihub), modeling directional–hemispherical reflectance and transmittance of fresh and dry leaves from 0.4 μm to 5.7 μm.
+- [FLUSPECT](https://www.sciencedirect.com/science/article/abs/pii/S0034425718301573?via%3Dihub), radiative transfer model for leaf chlorophyll fluorescence.
+
+These models may be added in a future version of the package.
