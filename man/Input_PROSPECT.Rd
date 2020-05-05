@@ -4,8 +4,7 @@
 \name{Input_PROSPECT}
 \alias{Input_PROSPECT}
 \title{Outcomes of 10 combinations of input parameters for PROSPECT}
-\format{
-A data frame with 10 rows and 6 variables:
+\format{A data frame with 10 rows and 6 variables:
 \itemize{
 \item \emph{CHL}: Chlorophyll content
 \item \emph{CAR}: carotenoid content
@@ -13,8 +12,7 @@ A data frame with 10 rows and 6 variables:
 \item \emph{EWT}: Equivalent water thickness
 \item \emph{LMA}: Leaf Mass per Area
 \item \emph{N}: leaf structure parameter
-}
-}
+}}
 \usage{
 Input_PROSPECT
 }

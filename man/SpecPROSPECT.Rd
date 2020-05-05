@@ -4,8 +4,7 @@
 \name{SpecPROSPECT}
 \alias{SpecPROSPECT}
 \title{optical constants defined for PROSPECT}
-\format{
-A dataframe including 2101 rows and 10 columns
+\format{A dataframe including 2101 rows and 10 columns
 \itemize{
 \item \emph{lambda}: wavelength, between 400 nm and 2500 nm
 \item \emph{nrefrac}: refractive index
@@ -17,8 +16,7 @@ A dataframe including 2101 rows and 10 columns
 \item \emph{SAC_LMA}: specific absorption coefficient for LMA/dry matter
 \item \emph{SAC_PROT}: specific absorption coefficient for proteins
 \item \emph{SAC_CBC}: specific absorption coefficient for carbon-base constituents
-}
-}
+}}
 \usage{
 SpecPROSPECT
 }

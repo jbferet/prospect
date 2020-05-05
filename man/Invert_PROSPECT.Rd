@@ -5,20 +5,14 @@
 \title{Performs PROSPECT inversion using iterative optimization
 in order to define estimate a set of user defined parameters}
 \usage{
-Invert_PROSPECT(
-  SpecPROSPECT,
-  Refl = NULL,
-  Tran = NULL,
-  InitValues = data.frame(CHL = 40, CAR = 10, ANT = 0.1, BROWN = 0.01, EWT = 0.01, LMA
-    = 0.01, PROT = 0.001, CBC = 0.009, N = 1.5, alpha = 40),
-  Parms2Estimate = "ALL",
-  PROSPECT_version = "D",
-  MeritFunction = "Merit_RMSE_PROSPECT",
-  xlub = data.frame(CHL = c(1e-04, 150), CAR = c(1e-04, 25), ANT = c(0, 50), BROWN =
-    c(0, 1), EWT = c(1e-07, 0.08), LMA = c(1e-06, 0.04), PROT = c(1e-07, 0.005), CBC =
-    c(1e-06, 0.04), N = c(0.5, 4), alpha = c(10, 90)),
-  alphaEst = FALSE
-)
+Invert_PROSPECT(SpecPROSPECT, Refl = NULL, Tran = NULL,
+  InitValues = data.frame(CHL = 40, CAR = 10, ANT = 0.1, BROWN = 0.01,
+  EWT = 0.01, LMA = 0.01, PROT = 0.001, CBC = 0.009, N = 1.5, alpha = 40),
+  Parms2Estimate = "ALL", PROSPECT_version = "D",
+  MeritFunction = "Merit_RMSE_PROSPECT", xlub = data.frame(CHL =
+  c(1e-04, 150), CAR = c(1e-04, 25), ANT = c(0, 50), BROWN = c(0, 1), EWT =
+  c(1e-07, 0.08), LMA = c(1e-06, 0.04), PROT = c(1e-07, 0.005), CBC =
+  c(1e-06, 0.04), N = c(0.5, 4), alpha = c(10, 90)), alphaEst = FALSE)
 }
 \arguments{
 \item{SpecPROSPECT}{list. Includes optical constants
@@ -56,19 +50,19 @@ in order to define estimate a set of user defined parameters
 }
 \details{
 Six versions of prospect are available for inversion.
-The version is depending on the parameters taken into account:\tabular{ccccccc}{
-   Version \tab 5 \tab 5B \tab D \tab DB \tab PRO \tab PROB \cr
-   CHL \tab ✅ \tab ✅ \tab ✅ \tab ✅ \tab ✅ \tab ✅ \cr
-   CAR \tab ✅ \tab ✅ \tab ✅ \tab ✅ \tab ✅ \tab ✅ \cr
-   ANT \tab  \tab  \tab ✅ \tab ✅ \tab ✅ \tab ✅ \cr
-   BROWN \tab  \tab ✅ \tab  \tab ✅ \tab  \tab ✅ \cr
-   EWT \tab ✅ \tab ✅ \tab ✅ \tab ✅ \tab ✅ \tab ✅ \cr
-   LMA \tab ✅ \tab ✅ \tab ✅ \tab ✅ \tab  \tab  \cr
-   PROT \tab  \tab  \tab  \tab  \tab ✅ \tab ✅ \cr
-   CBC \tab  \tab  \tab  \tab  \tab ✅ \tab ✅ \cr
-   N \tab ✅ \tab ✅ \tab ✅ \tab ✅ \tab ✅ \tab ✅ \cr
-}
+The version is depending on the parameters taken into account:
 
+| Version  | 5                                       | 5B                                    | D                                      | DB                                     | PRO                                    | PROB
+| :------: |:--------------------------------------:|:--------------------------------------:|:--------------------------------------:|:--------------------------------------:|:--------------------------------------:|:---------------------------------------:|
+| CHL      |\code{r emojifont::emoji('white_check_mark')}|\code{r emojifont::emoji('white_check_mark')}|\code{r emojifont::emoji('white_check_mark')}|\code{r emojifont::emoji('white_check_mark')}|\code{r emojifont::emoji('white_check_mark')}|\code{r emojifont::emoji('white_check_mark')}|
+| CAR      |\code{r emojifont::emoji('white_check_mark')}|\code{r emojifont::emoji('white_check_mark')}|\code{r emojifont::emoji('white_check_mark')}|\code{r emojifont::emoji('white_check_mark')}|\code{r emojifont::emoji('white_check_mark')}|\code{r emojifont::emoji('white_check_mark')}|
+| ANT      |                                        |                                        |\code{r emojifont::emoji('white_check_mark')}|\code{r emojifont::emoji('white_check_mark')}|\code{r emojifont::emoji('white_check_mark')}|\code{r emojifont::emoji('white_check_mark')}|
+| BROWN    |                                        |\code{r emojifont::emoji('white_check_mark')}|                                        |\code{r emojifont::emoji('white_check_mark')}|                                        |\code{r emojifont::emoji('white_check_mark')}|
+| EWT      |\code{r emojifont::emoji('white_check_mark')}|\code{r emojifont::emoji('white_check_mark')}|\code{r emojifont::emoji('white_check_mark')}|\code{r emojifont::emoji('white_check_mark')}|\code{r emojifont::emoji('white_check_mark')}|\code{r emojifont::emoji('white_check_mark')}|
+| LMA      |\code{r emojifont::emoji('white_check_mark')}|\code{r emojifont::emoji('white_check_mark')}|\code{r emojifont::emoji('white_check_mark')}|\code{r emojifont::emoji('white_check_mark')}|                                        |
+| PROT     |                                        |                                        |                                        |                                        |\code{r emojifont::emoji('white_check_mark')}|\code{r emojifont::emoji('white_check_mark')}|
+| CBC      |                                        |                                        |                                        |                                        |\code{r emojifont::emoji('white_check_mark')}|\code{r emojifont::emoji('white_check_mark')}|
+| N        |\code{r emojifont::emoji('white_check_mark')}|\code{r emojifont::emoji('white_check_mark')}|\code{r emojifont::emoji('white_check_mark')}|\code{r emojifont::emoji('white_check_mark')}|\code{r emojifont::emoji('white_check_mark')}|\code{r emojifont::emoji('white_check_mark')}|
 
 Argument \code{InitValues} is expecting a default value for each of the parameters as well as an \code{alpha} value.
 }

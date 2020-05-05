@@ -5,20 +5,9 @@
 \title{computation of a LUT of leaf optical properties using a set of
 leaf chemical & structural parameters}
 \usage{
-PROSPECT_LUT(
-  SpecPROSPECT,
-  Input_PROSPECT = NULL,
-  N = NULL,
-  CHL = NULL,
-  CAR = NULL,
-  ANT = NULL,
-  BROWN = NULL,
-  EWT = NULL,
-  LMA = NULL,
-  PROT = NULL,
-  CBC = NULL,
-  alpha = NULL
-)
+PROSPECT_LUT(SpecPROSPECT, Input_PROSPECT = NULL, N = NULL,
+  CHL = NULL, CAR = NULL, ANT = NULL, BROWN = NULL, EWT = NULL,
+  LMA = NULL, PROT = NULL, CBC = NULL, alpha = NULL)
 }
 \arguments{
 \item{SpecPROSPECT}{dataframe. Includes optical constants
@@ -44,7 +33,7 @@ refractive index, specific absorption coefficients and corresponding spectral ba
 
 \item{CBC}{numeric. NonProtCarbon-based constituent content (g.cm-2)}
 
-\item{alpha}{numeric. Solid angle for incident light at surface of leaf (simulation of roughness)}
+\item{alpha}{numeric. Solid angle for incident light at surface of leaf}
 }
 \value{
 list. LUT including leaf reflectance and transmittance

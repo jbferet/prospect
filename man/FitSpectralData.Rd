@@ -5,13 +5,8 @@
 \title{This function adapts SpecPROSPECT accordingly to experimental data
 or to a spectral domain defined by UserDomain}
 \usage{
-FitSpectralData(
-  SpecPROSPECT,
-  lambda,
-  Refl = NULL,
-  Tran = NULL,
-  UserDomain = NULL
-)
+FitSpectralData(SpecPROSPECT, lambda, Refl = NULL, Tran = NULL,
+  UserDomain = NULL)
 }
 \arguments{
 \item{SpecPROSPECT}{list. Includes optical constants
