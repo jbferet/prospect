@@ -6,7 +6,7 @@
 \alias{prospect-package}
 \title{prospect: PROSPECT leaf radiative transfer model and inversion routines}
 \description{
-\if{html}{\figure{logo.png}{options: align='right' alt='logo' width='120'}}
+\if{html}{\figure{logo.png}{options: align='right'}}
 
 The package prospect includes PROSPECT-PRO, the latest version of the PROSPECT leaf model. It also includes 
               inversion routines based on iterative optimization in order to estimate leaf chemistry from spectroscopic measurements.
@@ -20,11 +20,11 @@ Useful links:
 
 }
 \author{
-\strong{Maintainer}: Jean-Baptiste Feret \email{jb.feret@teledetection.fr} (\href{https://orcid.org/0000-0002-0151-1334}{ORCID}) [copyright holder]
+\strong{Maintainer}: Jean-Baptiste Feret \email{jb.feret@teledetection.fr} (0000-0002-0151-1334) [copyright holder]
 
 Authors:
 \itemize{
-  \item Florian de Boissieu \email{florian.deboissieu@irstea.fr} (\href{https://orcid.org/0000-0002-2185-9952}{ORCID})
+  \item Florian de Boissieu \email{florian.deboissieu@irstea.fr} (0000-0002-2185-9952)
 }
 
 }
