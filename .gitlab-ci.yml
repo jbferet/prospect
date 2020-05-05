@@ -35,6 +35,7 @@ pages:
   stage: deploy
   script:
   - R -e 'devtools::install_cran("pkgdown")'
+  - R -e 'devtools::document()'
   - R -e 'pkgdown::build_site()'
   - mv docs public
   artifacts:
