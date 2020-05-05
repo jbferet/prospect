@@ -4,8 +4,16 @@
 \alias{tryInversion}
 \title{Function handling error during inversion}
 \usage{
-tryInversion(x0, MeritFunction, SpecPROSPECT, Refl, Tran, Parms2Estimate,
-  lb, ub)
+tryInversion(
+  x0,
+  MeritFunction,
+  SpecPROSPECT,
+  Refl,
+  Tran,
+  Parms2Estimate,
+  lb,
+  ub
+)
 }
 \arguments{
 \item{x0}{numeric. Vector of input variables to estimate}

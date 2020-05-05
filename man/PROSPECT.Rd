@@ -6,9 +6,19 @@
 This function allows simulations using PROSPECT-D or PROSPECT-PRO depending on
 the parameterization.}
 \usage{
-PROSPECT(SpecPROSPECT, N = 1.5, CHL = 40, CAR = 8, ANT = 0,
-  BROWN = 0, EWT = 0.01, LMA = 0.008, PROT = 0, CBC = 0,
-  alpha = 40)
+PROSPECT(
+  SpecPROSPECT,
+  N = 1.5,
+  CHL = 40,
+  CAR = 8,
+  ANT = 0,
+  BROWN = 0,
+  EWT = 0.01,
+  LMA = 0.008,
+  PROT = 0,
+  CBC = 0,
+  alpha = 40
+)
 }
 \arguments{
 \item{SpecPROSPECT}{list. Includes optical constants

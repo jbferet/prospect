@@ -5,10 +5,16 @@
 \title{This function uses optimal configuration identified by Spafford et al. (2020) to estimate leaf chemistry
 prior information on N is provided if only Reflectance or only Transmittance is available}
 \usage{
-Invert_PROSPECT_OPT(SpecPROSPECT, lambda, Refl = NULL, Tran = NULL,
-  PROSPECT_version = "D", Parms2Estimate = "ALL",
-  InitValues = data.frame(CHL = 40, CAR = 10, ANT = 0.1, BROWN = 0.01,
-  EWT = 0.01, LMA = 0.01, PROT = 0.001, CBC = 0.009, N = 1.5, alpha = 40))
+Invert_PROSPECT_OPT(
+  SpecPROSPECT,
+  lambda,
+  Refl = NULL,
+  Tran = NULL,
+  PROSPECT_version = "D",
+  Parms2Estimate = "ALL",
+  InitValues = data.frame(CHL = 40, CAR = 10, ANT = 0.1, BROWN = 0.01, EWT = 0.01, LMA
+    = 0.01, PROT = 0.001, CBC = 0.009, N = 1.5, alpha = 40)
+)
 }
 \arguments{
 \item{SpecPROSPECT}{list. Includes optical constants
