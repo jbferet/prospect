@@ -210,12 +210,15 @@ CostVal_RMSE <- function(RT, Refl, Tran) {
 #' @param lambda  numeric. Spectral bands corresponding to experimental data
 #' @param Refl  numeric. Measured reflectance data
 #' @param Tran  numeric. Measured Transmittance data
-#' @param UserDomain  numeric. Lower and upper bounds for domain of interest (optional)
+#' @param UserDomain  numeric. either Lower and upper bounds for domain of interest (optional)
+#' or list of spectral bands of interest
+#' @param UL_Bounds boolean. set to TRUE if UserDomain only includes lower and upper band,
+#' set to FALSE if UserDomain is a list of spectral bands (in nm)
 #'
 #' @return res list including spectral properties at the new resolution
 #' @importFrom utils tail
 #' @export
-FitSpectralData <- function(SpecPROSPECT, lambda, Refl = NULL, Tran = NULL, UserDomain = NULL) {
+FitSpectralData <- function(SpecPROSPECT, lambda, Refl = NULL, Tran = NULL, UserDomain = NULL, UL_Bounds = TRUE) {
   LowerPROSPECT <- SpecPROSPECT$lambda[1]
   UpperPROSPECT <- tail(SpecPROSPECT$lambda, n = 1)
   LowerLOP <- lambda[1]
@@ -252,8 +255,8 @@ FitSpectralData <- function(SpecPROSPECT, lambda, Refl = NULL, Tran = NULL, User
     }
     # if user specifies a spectral domain which is different from PROSPECT and user data
   } else if (!is.null(UserDomain)) {
-    LowerUser <- UserDomain[1]
-    UpperUser <- UserDomain[2]
+    LowerUser <- min(UserDomain)
+    UpperUser <- max(UserDomain)
     if (LowerLOP > LowerUser | UpperLOP < UpperUser | LowerPROSPECT > LowerUser | UpperPROSPECT < UpperUser) {
       if (LowerPROSPECT > LowerUser | UpperPROSPECT < UpperUser) {
         warning("________________________ WARNING _______________________")
@@ -313,6 +316,16 @@ FitSpectralData <- function(SpecPROSPECT, lambda, Refl = NULL, Tran = NULL, User
     if (ncol(Tran)==1){
       SubTran <- matrix(SubTran,ncol = 1)
     }
+  }
+  # in case a list of spectral bands has been provided, not only boundaries
+  if (!UL_Bounds & !is.null(UserDomain)){
+    # select spectral bands defined in UL_Bounds
+    spectralBands <- unique(as.integer(UserDomain))
+    SpectralLocation <- match(spectralBands,lambda)
+    SubRefl <- SubRefl[SpectralLocation,]
+    SubTran <- SubTran[SpectralLocation,]
+    Sublambda <- Sublambda[SpectralLocation]
+    SubSpecPROSPECT <- SubSpecPROSPECT[SpectralLocation,]
   }
   res <- list("SpecPROSPECT" = SubSpecPROSPECT, "lambda" = Sublambda, "Refl" = SubRefl, "Tran" = SubTran)
   return(res)
