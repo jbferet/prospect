@@ -10,7 +10,8 @@ FitSpectralData(
   lambda,
   Refl = NULL,
   Tran = NULL,
-  UserDomain = NULL
+  UserDomain = NULL,
+  UL_Bounds = TRUE
 )
 }
 \arguments{
@@ -23,7 +24,11 @@ refractive index, specific absorption coefficients and corresponding spectral ba
 
 \item{Tran}{numeric. Measured Transmittance data}
 
-\item{UserDomain}{numeric. Lower and upper bounds for domain of interest (optional)}
+\item{UserDomain}{numeric. either Lower and upper bounds for domain of interest (optional)
+or list of spectral bands of interest}
+
+\item{UL_Bounds}{boolean. set to TRUE if UserDomain only includes lower and upper band,
+set to FALSE if UserDomain is a list of spectral bands (in nm)}
 }
 \value{
 res list including spectral properties at the new resolution
