@@ -132,7 +132,7 @@ Invert_PROSPECT <- function(SpecPROSPECT, Refl = NULL, Tran = NULL,
 #' @importFrom pracma fmincon
 #' @export
 
-tryInversion <- function(x0, MeritFunction, SpecPROSPECT, Refl, Tran, Parms2Estimate, lb, ub) {
+tryInversion <- function(x0, MeritFunction, SpecPROSPECT, Refl, Tran, Parms2Estimate, lb, ub, verbose = FALSE) {
 
   res <-list()
   res$par <- NA * c(1:length(Parms2Estimate))
@@ -151,7 +151,9 @@ tryInversion <- function(x0, MeritFunction, SpecPROSPECT, Refl, Tran, Parms2Esti
           )
         },
         error = function(cond) {
-          message('Adjusting Tolerance value for iterative optimization:  ',Tolerance)
+          if (verbose){
+            message('Adjusting Tolerance value for iterative optimization:  ',Tolerance)
+          }
           res <- list()
           res$par <- NA * c(1:length(Parms2Estimate))
           return(res)
