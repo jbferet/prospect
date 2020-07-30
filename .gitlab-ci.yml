@@ -13,7 +13,7 @@ cache:
 
 before_script:
   - apt-get update
-  - apt-get install -y qpdf pandoc libfreetype6-dev
+  - apt-get install -y qpdf pandoc libfreetype6-dev pkg-config
 
 stages:
 - check
