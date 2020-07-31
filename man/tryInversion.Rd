@@ -12,7 +12,8 @@ tryInversion(
   Tran,
   Parms2Estimate,
   lb,
-  ub
+  ub,
+  verbose = FALSE
 )
 }
 \arguments{
@@ -33,6 +34,8 @@ to be estimated through inversion}
 \item{lb}{numeric. Lower bound}
 
 \item{ub}{numeric. Upper bound}
+
+\item{verbose}{boolean. Set to TRUE if you want information about adjustment of tolerance during inversion.}
 }
 \value{
 fc estimates of the parameters

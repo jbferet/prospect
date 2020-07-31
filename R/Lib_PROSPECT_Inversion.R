@@ -125,6 +125,7 @@ Invert_PROSPECT <- function(SpecPROSPECT, Refl = NULL, Tran = NULL,
 #' to be estimated through inversion
 #' @param lb numeric. Lower bound
 #' @param ub numeric. Upper bound
+#' @param verbose boolean. Set to TRUE if you want information about adjustment of tolerance during inversion.
 #'
 #' @return fc estimates of the parameters
 #' @details
