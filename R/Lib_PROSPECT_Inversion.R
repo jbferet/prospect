@@ -866,3 +866,201 @@ Invert_PROSPECT_OPT <- function(SpecPROSPECT, lambda, Refl = NULL, Tran = NULL,
   }
   return(ParmEst)
 }
+
+
+#' Function performing optimal feature selection based on sequential forward feature slection
+#'
+#' @param Refl numeric. matrix of reflectances (n spectral bands x p samples)
+#' @param Tran numeric. matrix of transmittances (n spectral bands x p samples)
+#' @param lambda numeric. spectral bands corresponding to reflectance and transmittance measurements
+#' @param BiochTruth numeric. value of biophysical/biochemical parameter to estimate for each sample
+#' @param Target character. name of the parameter.
+#' Should be picked between "CHL", "CAR", "ANT", "BROWN", "EWT", "PROT", "CBC", "N"
+#' @param Parms2Estimate  character vector. Parameters to estimate (can be 'ALL')
+#' @param InitValues  data.frame. Default values of PROSPECT parameters. During optimization,
+#' they are used either as initialization values for parameters to estimate,
+#' or as fix values for other parameters.
+#' Parameters not compatible with PROSPECT_version are not taken into account.
+#' @param xlub data.frame. Boundaries of the parameters to estimate.
+#' The data.frame must have columns corresponding to \code{Parms2Estimate} first line being
+#' the lower boundaries and second line the upper boundaries.
+#' @param SpecPROSPECT list. Optical constants for a spectral domain broader than spectral_domain
+#' @param spectral_domain vector. defines minimum and maximum wavelengths of the spectral domain (in nm).
+#' Assumes 1nm spectral sampling
+#' @param spectral_width vector. width of individual spectral features (in nm)
+#' @param number_features vector. number of features to be identified
+#' @param PROSPECT_version  character. Version of prospect model used for the inversion: '5', '5B', 'D', 'DB', 'PRO', 'PROB',
+#' @param MeritFunction  character. name of the function to be used as merit function
+#' with given criterion to minimize (default = RMSE)
+#' @param alphaEst boolean. should alpha be estimated or not?
+#' @param verbose boolean. set to TRUE to display sample number to be inverted
+#' @param nbCPU numeric. defines number of CPU for multithread processing
+#'
+#' @param Continue boolean. set to TRUE if the function has already been run for a lower value of number_features
+#' @param AlreadyDone list. contains output of function optimal_features_SFS previouly run with lower value of number_features
+#' @return list containing :
+#' - SpectralFeatures = the Spectral Features identified as most relevant for estimation of Target (vector)
+#' - SpectralFeatures_List = the Spectral Features identified as most relevant for estimation of Target (list)
+#' - EstimatedParm = the estimated Target parameter for each additional spectral feature
+#' - RMSE = the minimum RMSE corresponding to the estimation of Target for each asditional spectral feature
+#' @importFrom future plan multiprocess sequential
+#' @importFrom future.apply future_lapply
+#' @export
+
+optimal_features_SFS <- function(Refl = NULL, Tran = NULL, lambda, BiochTruth, Target,
+                                 Parms2Estimate = "ALL",
+                                 InitValues = data.frame(
+                                   CHL = 40, CAR = 10, ANT = 0.1, BROWN = 0.01, EWT = 0.01,
+                                   LMA = 0.01, PROT = 0.001, CBC = 0.009, N = 1.5, alpha = 40),
+                                 xlub = data.frame(
+                                   CHL = c(1e-4, 150), CAR = c(1e-4, 25), ANT = c(0, 50),
+                                   BROWN = c(0, 1), EWT = c(1e-7, .08), LMA = c(1e-6, .04),
+                                   PROT = c(1e-7, .005), CBC = c(1e-6, .04), N = c(.5, 4),
+                                   alpha = c(10, 90)),
+                                 SpecPROSPECT, spectral_domain, spectral_width,
+                                 number_features,PROSPECT_version = 'D', MeritFunction = "Merit_RMSE_PROSPECT",
+                                 alphaEst = FALSE, verbose = FALSE,
+                                 nbCPU = 1,Continue = FALSE, AlreadyDone = NULL){
+
+  # split spectral_domain into subdomains based on spectral_width
+  FullDomain <- seq(spectral_domain[1],spectral_domain[2])
+  x <- seq_along(FullDomain)
+  subdomains <- split(FullDomain,ceiling(x/spectral_width))
+  nb_subdomains <- length(subdomains)
+
+  # spectral bands identified as optimal
+
+  if (Continue){
+    # number of features to start from
+    featStart <- length(AlreadyDone$RMSE)+1
+    Estimated_All <- AlreadyDone$EstimatedParm
+    Initial_Features_list <- AlreadyDone$SpectralFeatures_List
+    Initial_Features <- AlreadyDone$SpectralFeatures
+    minRMSE <- AlreadyDone$RMSE
+
+    # number of features to start from
+    for (i in 1:length(AlreadyDone$RMSE)){
+      for (j in length(subdomains):1){
+        if (AlreadyDone$SpectralFeatures_List[[i]][1] %in% subdomains[[j]]){
+          subdomains[[j]] = NULL
+        }
+      }
+    }
+  } else {
+    featStart <- 1
+    # for incremental number of spectral features from 1 to number_features
+    Estimated_All <- list()
+    Initial_Features_list <- list()
+    Initial_Features <- minRMSE <- c()
+  }
+
+  if (number_features>=featStart){
+    for (feat in featStart:number_features){
+      message(paste('Identify Feature #',feat))
+      Perf <- c()
+      # define the spectral domain to add as test
+      subD0 <- 0
+      # multiprocess of spectral species distribution and alpha diversity metrics
+      plan(multiprocess, workers = nbCPU) ## Parallelize using four cores
+      schedule <- ceiling(length(subdomains)/nbCPU)
+      Estimated_Parm <- future_lapply(subdomains,FUN = Invert_PROSPECT_subdomain,
+                                      Refl = Refl, Tran = Tran,
+                                      SpecPROSPECT = SpecPROSPECT, lambda = lambda, BiochTruth = BiochTruth,
+                                      Target = Target, Parms2Estimate  = Parms2Estimate, Initial_Features = Initial_Features,
+                                      PROSPECT_version = PROSPECT_version, MeritFunction = MeritFunction, alphaEst = alphaEst,
+                                      InitValues = InitValues, xlub = xlub,
+                                      verbose = FALSE, future.scheduling = schedule)
+      plan(sequential)
+      Perf <- c()
+      for (i in 1:length(Estimated_Parm)){
+        Perf <- c(Perf,Estimated_Parm[[i]]$Perf)
+      }
+      BestPerf <- which(Perf==min(Perf,na.rm = TRUE))
+      Estimated_All[[feat]] <- Estimated_Parm[[BestPerf[1]]]$Estimated
+      minRMSE <- c(minRMSE,min(Perf,na.rm = TRUE))
+      print(min(Perf,na.rm = TRUE))
+      message('Spectral domain identified:')
+      print(subdomains[[BestPerf[1]]])
+      Initial_Features <- c(Initial_Features,subdomains[[BestPerf[1]]])
+      Initial_Features_list[[feat]] <- subdomains[[BestPerf[1]]]
+      subdomains[[BestPerf[1]]] <- NULL
+    }
+  }
+  res <- list('SpectralFeatures'=Initial_Features,'SpectralFeatures_List'=Initial_Features_list,'EstimatedParm'=Estimated_All,'RMSE'=minRMSE)
+  return(res)
+}
+
+
+#' Function performing PROSPECT inversion on a spectral subset combining an
+#' initial feature subset (Initial_Features) and an additional feature subset (New_Features)
+#'
+#' @param New_Features spectral bands (in nm) to be added to the Initial_Features
+#' @param Refl numeric. matrix of reflectances (n spectral bands x p samples)
+#' @param Tran numeric. matrix of transmittances (n spectral bands x p samples)
+#' @param SpecPROSPECT list. Optical constants for a spectral domain broader than spectral_domain
+#' @param lambda numeric. spectral bands corresponding to reflectance and transmittance measurements
+#' @param BiochTruth numeric. value of biophysical/biochemical parameter to estimate for each sample
+#' @param Target character. name of the parameter.
+#' Should be picked between "CHL", "CAR", "ANT", "BROWN", "EWT", "PROT", "CBC", "N"
+#' @param Parms2Estimate  character vector. Parameters to estimate (can be 'ALL')
+#' @param Initial_Features Initial feature set (in nm)
+#' @param InitValues  data.frame. Default values of PROSPECT parameters. During optimization,
+#' they are used either as initialization values for parameters to estimate,
+#' or as fix values for other parameters.
+#' Parameters not compatible with PROSPECT_version are not taken into account.
+#' @param PROSPECT_version  character. Version of prospect model used for the inversion: '5', '5B', 'D', 'DB', 'PRO', 'PROB'
+#' @param alphaEst boolean. should alpha be estimated or not?
+#' @param MeritFunction  character. name of the function to be used as merit function
+#' with given criterion to minimize (default = RMSE)
+#' @param xlub data.frame. Boundaries of the parameters to estimate.
+#' The data.frame must have columns corresponding to \code{Parms2Estimate} first line being
+#' the lower boundaries and second line the upper boundaries.
+#' @param verbose boolean. set to TRUE to display sample number to be inverted
+#' @return list containing estimated value of the target and RMSE compared to measured value
+#' @importFrom pracma rmserr
+#' @export
+
+Invert_PROSPECT_subdomain <- function(New_Features, Refl, Tran, SpecPROSPECT, lambda, BiochTruth,
+                                      Target, Parms2Estimate, Initial_Features,
+                                      InitValues = data.frame(
+                                        CHL = 40, CAR = 10, ANT = 0.1, BROWN = 0.01, EWT = 0.01,
+                                        LMA = 0.01, PROT = 0.001, CBC = 0.009, N = 1.5, alpha = 40),
+                                      PROSPECT_version = "D", MeritFunction = "Merit_RMSE_PROSPECT", alphaEst = FALSE,
+                                      xlub = data.frame(
+                                        CHL = c(1e-4, 150), CAR = c(1e-4, 25), ANT = c(0, 50),
+                                        BROWN = c(0, 1), EWT = c(1e-7, .08), LMA = c(1e-6, .04),
+                                        PROT = c(1e-7, .005), CBC = c(1e-6, .04), N = c(.5, 4),
+                                        alpha = c(10, 90)),
+                                      verbose = FALSE){
+
+  SpectralDomain <- c(Initial_Features,New_Features)
+  # Fit spectral data to match PROSPECT with user optical properties
+  SubData <- FitSpectralData(SpecPROSPECT=SpecPROSPECT, lambda=lambda,
+                             Refl=Refl, Tran=Tran, UserDomain = SpectralDomain)
+  SubSpecPROSPECT = SubData$SpecPROSPECT
+  Sublambda       = SubData$lambda
+  SubRefl         = SubData$Refl
+  SubTran         = SubData$Tran
+  if (length(Sublambda)==1){
+    SubRefl         = matrix(SubRefl,ncol = 1)
+    SubTran         = matrix(SubTran,ncol = 1)
+  }
+  # Invert PROSPECT with optimal spectral information
+  Est <- c()
+  for (i in 1:ncol(SubRefl)){
+    if (verbose){
+      print(i)
+    }
+    res <- Invert_PROSPECT(SpecPROSPECT = SubSpecPROSPECT,Refl = SubRefl[,i],Tran = SubTran[,i],
+                           PROSPECT_version = PROSPECT_version,Parms2Estimate = Parms2Estimate,InitValues = InitValues,
+                           MeritFunction = MeritFunction, xlub = xlub, alphaEst = alphaEst)
+
+    # only save results for variable of interest
+    Est <- c(Est,res[[Target]])
+  }
+  Perf <- rmserr(BiochTruth,Est,summary = FALSE)$rmse
+  rm(Refl,Tran,SubRefl,SubTran)
+  gc()
+  my_list <- list("Estimated" =  Est,"Perf" =  Perf)
+  return(my_list)
+}
