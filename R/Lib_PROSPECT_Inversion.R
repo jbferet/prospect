@@ -324,7 +324,7 @@ FitSpectralData <- function(SpecPROSPECT, lambda, Refl = NULL, Tran = NULL, User
   if (!UL_Bounds & !is.null(UserDomain)){
     # select spectral bands defined in UL_Bounds
     spectralBands <- unique(as.integer(UserDomain))
-    SpectralLocation <- match(spectralBands,lambda)
+    SpectralLocation <- match(spectralBands,SubSpecPROSPECT$lambda)
     SubRefl <- SubRefl[SpectralLocation,]
     SubTran <- SubTran[SpectralLocation,]
     Sublambda <- Sublambda[SpectralLocation]

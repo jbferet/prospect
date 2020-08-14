@@ -119,8 +119,7 @@ and another one with PROSPECT-PRO, which should lead to very similar leaf optics
 CHL <- 45;      CAR <- 10;      ANT <- 0.2
 EWT <- 0.012;   LMA <- 0.000;   N   <- 1.3
 PROT <- 0.001;  CBC <- 0.009;
-Input_PROSPECT <- data.frame('CHL'=CHL,'CAR'=CAR,'ANT'=ANT,'EWT'=EWT,'LMA'=LMA,'PROT'=PROT,'CBC'=CBC,'N'=N)
-LRT_PRO <- PROSPECT(SpecPROSPECT,CHL=CHL,CAR=CAR,ANT=ANT,EWT=EWT,LMA=LMA,PROT=PROT,CBC=CBC,N=N)
+LRT_PRO <- PROSPECT(SpecPROSPECT,CHL=CHL,CAR=CAR,ANT=ANT,EWT=EWT,PROT=PROT,CBC=CBC,N=N)
 ```
 
 The resulting leaf optical properties are, indeed, very similar:
@@ -139,8 +138,7 @@ while using proteins only instead of proteins + CBC to simulate LMA leads to dif
 CHL <- 45;      CAR <- 10;      ANT <- 0.2
 EWT <- 0.012;   LMA <- 0.000;   N   <- 1.3
 PROT <- 0.010;  CBC <- 0.000;
-Input_PROSPECT <- data.frame('CHL'=CHL,'CAR'=CAR,'ANT'=ANT,'EWT'=EWT,'LMA'=LMA,'PROT'=PROT,'CBC'=CBC,'N'=N)
-LRT_PRO2 <- PROSPECT(SpecPROSPECT,CHL=CHL,CAR=CAR,ANT=ANT,EWT=EWT,LMA=LMA,PROT=PROT,CBC=CBC,N=N)
+LRT_PRO2 <- PROSPECT(SpecPROSPECT,CHL=CHL,CAR=CAR,ANT=ANT,EWT=EWT,PROT=PROT,CBC=CBC,N=N)
 ```
 
 
@@ -162,8 +160,7 @@ This is explained by the low proportion of poteins compared to CBC in he total c
 CHL <- 45;      CAR <- 10;      ANT <- 0.2
 EWT <- 0.012;   LMA <- 0.000;   N   <- 1.3
 PROT <- 0.000;  CBC <- 0.010;
-Input_PROSPECT <- data.frame('CHL'=CHL,'CAR'=CAR,'ANT'=ANT,'EWT'=EWT,'LMA'=LMA,'PROT'=PROT,'CBC'=CBC,'N'=N)
-LRT_PRO3 <- PROSPECT(SpecPROSPECT,CHL=CHL,CAR=CAR,ANT=ANT,EWT=EWT,LMA=LMA,PROT=PROT,CBC=CBC,N=N)
+LRT_PRO3 <- PROSPECT(SpecPROSPECT,CHL=CHL,CAR=CAR,ANT=ANT,EWT=EWT,PROT=PROT,CBC=CBC,N=N)
 ```
 
 
