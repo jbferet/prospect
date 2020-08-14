@@ -1036,7 +1036,7 @@ Invert_PROSPECT_subdomain <- function(New_Features, Refl, Tran, SpecPROSPECT, la
   SpectralDomain <- c(Initial_Features,New_Features)
   # Fit spectral data to match PROSPECT with user optical properties
   SubData <- FitSpectralData(SpecPROSPECT=SpecPROSPECT, lambda=lambda,
-                             Refl=Refl, Tran=Tran, UserDomain = SpectralDomain)
+                             Refl=Refl, Tran=Tran, UserDomain = SpectralDomain,UL_Bounds = FALSE)
   SubSpecPROSPECT = SubData$SpecPROSPECT
   Sublambda       = SubData$lambda
   SubRefl         = SubData$Refl
