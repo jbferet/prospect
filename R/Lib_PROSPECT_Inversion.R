@@ -29,6 +29,8 @@
 #' The data.frame must have columns corresponding to \code{Parms2Estimate} first line being
 #' the lower boundaries and second line the upper boundaries.
 #' @param alphaEst boolean. should alpha be estimated or not?
+#' @param verbose boolean. set true to get info about adjustment of tolerance or initialization
+#'
 #'
 #' @return OutPROSPECT estimated values corresponding to Parms2Estimate
 #' @details
@@ -58,12 +60,13 @@ Invert_PROSPECT <- function(SpecPROSPECT, Refl = NULL, Tran = NULL,
                             Parms2Estimate = "ALL",
                             PROSPECT_version = "D",
                             MeritFunction = "Merit_RMSE_PROSPECT",
+
                             xlub = data.frame(
                               CHL = c(1e-4, 150), CAR = c(1e-4, 25), ANT = c(0, 50),
-                              BROWN = c(0, 1), EWT = c(1e-7, .08), LMA = c(1e-6, .04),
-                              PROT = c(1e-7, .005), CBC = c(1e-6, .04), N = c(.5, 4),
+                              BROWN = c(0, 1), EWT = c(1e-8, 0.1), LMA = c(1e-6, .06),
+                              PROT = c(1e-7, .006), CBC = c(1e-6, .054), N = c(.5, 4),
                               alpha = c(10, 90)),
-                            alphaEst = FALSE) {
+                            alphaEst = FALSE,verbose = FALSE) {
 
   # define PROSPECT input parameters
   if (PROSPECT_version == "5") {
@@ -105,7 +108,7 @@ Invert_PROSPECT <- function(SpecPROSPECT, Refl = NULL, Tran = NULL,
   lb <- xlub[1, ]
   ub <- xlub[2, ]
   # run inversion procedure with standard parameterization
-  res <- tryInversion(InitValues, MeritFunction, SpecPROSPECT, Refl, Tran, Parms2Estimate, lb, ub)
+  res <- tryInversion(InitValues, MeritFunction, SpecPROSPECT, Refl, Tran, Parms2Estimate, lb, ub,verbose = verbose)
 
   names(res$par) = Parms2Estimate
   OutPROSPECT <- InitValues
@@ -162,6 +165,77 @@ tryInversion <- function(x0, MeritFunction, SpecPROSPECT, Refl, Tran, Parms2Esti
         finally = {
         }
       )
+    }
+  }
+  # test if one of the parameters to be estimated reached lower or upper bound
+  names(res$par) = Parms2Estimate
+  reinit <- FALSE
+  attempt <- 0
+  for (parm in Parms2Estimate){
+    if (isTRUE(all.equal(res$par[[parm]], lb[[parm]]))){
+      reinit <- TRUE
+      x0[parm] <- 0.5*(x0[parm]+lb[[parm]])
+    }
+    if (isTRUE(all.equal(res$par[[parm]], ub[[parm]]))){
+      reinit <- TRUE
+      x0[parm] <- 0.5*(x0[parm]+ub[[parm]])
+    }
+  }
+  if (is.na(as.numeric(res$par[[1]]))){
+    for (parm in Parms2Estimate){
+      # x0[parm] <- 0.5*(x0[parm]+ub[[parm]])
+      x0[parm] <- lb[[parm]]+runif(1)*(ub[[parm]]-lb[[parm]])
+    }
+    reinit=TRUE
+  }
+  # if lower or upper band reached, perform new inversion with readjusted initial values
+  while (reinit==TRUE & attempt<2){
+    # print(res$par)
+    attempt <- attempt+1
+    if (verbose){
+      message('lower or upper bound reached for one or several parameters to estimate')
+      message('re-run inversion with updated initial values to attempt proper convergence')
+    }
+    res <-list()
+    res$par <- NA * c(1:length(Parms2Estimate))
+    for (i in seq(-14,-2,1)){
+      Tolerance = 10**(i)
+      if (is.na(res$par[1])){
+        res <- tryCatch(
+          {
+            res <- fmincon(
+              x0 = as.numeric(x0[Parms2Estimate]), fn = MeritFunction, gr = NULL,
+              SpecPROSPECT = SpecPROSPECT, Refl = Refl, Tran = Tran,
+              Input_PROSPECT = x0, Parms2Estimate = Parms2Estimate,
+              method = "SQP", A = NULL, b = NULL, Aeq = NULL, beq = NULL,
+              lb = as.numeric(lb), ub = as.numeric(ub), hin = NULL, heq = NULL, tol = Tolerance,
+              maxfeval = 2000, maxiter = 1000
+            )
+          },
+          error = function(cond) {
+            if (verbose){
+              message('Adjusting Tolerance value for iterative optimization:  ',Tolerance)
+            }
+            res <- list()
+            res$par <- NA * c(1:length(Parms2Estimate))
+            return(res)
+          },
+          finally = {
+          }
+        )
+      }
+    }
+    names(res$par) = Parms2Estimate
+    reinit <- FALSE
+    for (parm in Parms2Estimate){
+      if (isTRUE(all.equal(res$par[[parm]], lb[[parm]]))){
+        reinit <- TRUE
+        x0[parm] <- 0.5*(x0[parm]+lb[[parm]])
+      }
+      if (isTRUE(all.equal(res$par[[parm]], ub[[parm]]))){
+        reinit <- TRUE
+        x0[parm] <- 0.5*(x0[parm]+ub[[parm]])
+      }
     }
   }
   return(res)
@@ -221,7 +295,7 @@ CostVal_RMSE <- function(RT, Refl, Tran) {
 #' @return res list including spectral properties at the new resolution
 #' @importFrom utils tail
 #' @export
-FitSpectralData <- function(SpecPROSPECT, lambda, Refl = NULL, Tran = NULL, UserDomain = NULL, UL_Bounds = TRUE) {
+FitSpectralData <- function(SpecPROSPECT, lambda, Refl = NULL, Tran = NULL, UserDomain = NULL, UL_Bounds = FALSE) {
   LowerPROSPECT <- SpecPROSPECT$lambda[1]
   UpperPROSPECT <- tail(SpecPROSPECT$lambda, n = 1)
   LowerLOP <- lambda[1]
@@ -518,6 +592,11 @@ Invert_PROSPECT_OPT <- function(SpecPROSPECT, lambda, Refl = NULL, Tran = NULL,
     ParmEst$N = Nprior
     for (parm in Parms2Estimate){
       ParmEst[[parm]] = c()
+      if (length(OptDomain[[parm]])==2){
+        UL_Bounds <- TRUE
+      } else {
+        UL_Bounds <- FALSE
+      }
       if (parm == "ANT"){
         message('Currently no optimal estimation for anthocyanins')
         message('PROSPECT inversion will be performed using full spectral information')
@@ -526,7 +605,7 @@ Invert_PROSPECT_OPT <- function(SpecPROSPECT, lambda, Refl = NULL, Tran = NULL,
         message('from ', OptDomain[[parm]][1],' nm to ', OptDomain[[parm]][2],' nm')
         message('')
         # Fit spectral data to match PROSPECT with user optical properties
-        SubData <- FitSpectralData(SpecPROSPECT=SpecPROSPECT,lambda=lambda,Refl=Refl,Tran=Tran,UserDomain = OptDomain[[parm]])
+        SubData <- FitSpectralData(SpecPROSPECT=SpecPROSPECT,lambda=lambda,Refl=Refl,Tran=Tran,UserDomain = OptDomain[[parm]],UL_Bounds = UL_Bounds)
         SubSpecPROSPECT = SubData$SpecPROSPECT
         Sublambda       = SubData$lambda
         SubRefl         = SubData$Refl
@@ -548,7 +627,7 @@ Invert_PROSPECT_OPT <- function(SpecPROSPECT, lambda, Refl = NULL, Tran = NULL,
         message('from ', OptDomain[[parm]][1],' nm to ', OptDomain[[parm]][2],' nm')
         message('')
         # Fit spectral data to match PROSPECT with user optical properties
-        SubData <- FitSpectralData(SpecPROSPECT=SpecPROSPECT,lambda=lambda,Refl=Refl,Tran=Tran,UserDomain = OptDomain[[parm]])
+        SubData <- FitSpectralData(SpecPROSPECT=SpecPROSPECT,lambda=lambda,Refl=Refl,Tran=Tran,UserDomain = OptDomain[[parm]],UL_Bounds = UL_Bounds)
         SubSpecPROSPECT = SubData$SpecPROSPECT
         Sublambda       = SubData$lambda
         SubRefl         = SubData$Refl
@@ -570,7 +649,7 @@ Invert_PROSPECT_OPT <- function(SpecPROSPECT, lambda, Refl = NULL, Tran = NULL,
         message('from ', OptDomain[[parm]][1],' nm to ', OptDomain[[parm]][2],' nm')
         message('')
         # Fit spectral data to match PROSPECT with user optical properties
-        SubData <- FitSpectralData(SpecPROSPECT=SpecPROSPECT,lambda=lambda,Refl=Refl,Tran=Tran,UserDomain = OptDomain[[parm]])
+        SubData <- FitSpectralData(SpecPROSPECT=SpecPROSPECT,lambda=lambda,Refl=Refl,Tran=Tran,UserDomain = OptDomain[[parm]],UL_Bounds = UL_Bounds)
         SubSpecPROSPECT = SubData$SpecPROSPECT
         Sublambda       = SubData$lambda
         SubRefl         = SubData$Refl
@@ -592,7 +671,7 @@ Invert_PROSPECT_OPT <- function(SpecPROSPECT, lambda, Refl = NULL, Tran = NULL,
         message('from ', OptDomain[[parm]][1],' nm to ', OptDomain[[parm]][2],' nm')
         message('')
         # Fit spectral data to match PROSPECT with user optical properties
-        SubData <- FitSpectralData(SpecPROSPECT=SpecPROSPECT,lambda=lambda,Refl=Refl,Tran=Tran,UserDomain = OptDomain[[parm]])
+        SubData <- FitSpectralData(SpecPROSPECT=SpecPROSPECT,lambda=lambda,Refl=Refl,Tran=Tran,UserDomain = OptDomain[[parm]],UL_Bounds = UL_Bounds)
         SubSpecPROSPECT = SubData$SpecPROSPECT
         Sublambda       = SubData$lambda
         SubRefl         = SubData$Refl
@@ -624,7 +703,7 @@ Invert_PROSPECT_OPT <- function(SpecPROSPECT, lambda, Refl = NULL, Tran = NULL,
           message('')
         } else {
           # Fit spectral data to match PROSPECT with user optical properties
-          SubData <- FitSpectralData(SpecPROSPECT=SpecPROSPECT,lambda=lambda,Refl=Refl,Tran=Tran,UserDomain = OptDomain[[parm]])
+          SubData <- FitSpectralData(SpecPROSPECT=SpecPROSPECT,lambda=lambda,Refl=Refl,Tran=Tran,UserDomain = OptDomain[[parm]],UL_Bounds = UL_Bounds)
           SubSpecPROSPECT = SubData$SpecPROSPECT
           Sublambda       = SubData$lambda
           SubRefl         = SubData$Refl
@@ -648,7 +727,7 @@ Invert_PROSPECT_OPT <- function(SpecPROSPECT, lambda, Refl = NULL, Tran = NULL,
         message('from ', OptDomain[[parm]][1],' nm to ', OptDomain[[parm]][2],' nm')
         message('')
         # Fit spectral data to match PROSPECT with user optical properties
-        SubData <- FitSpectralData(SpecPROSPECT=SpecPROSPECT,lambda=lambda,Refl=Refl,Tran=Tran,UserDomain = OptDomain[[parm]])
+        SubData <- FitSpectralData(SpecPROSPECT=SpecPROSPECT,lambda=lambda,Refl=Refl,Tran=Tran,UserDomain = OptDomain[[parm]],UL_Bounds = UL_Bounds)
         SubSpecPROSPECT = SubData$SpecPROSPECT
         Sublambda       = SubData$lambda
         SubRefl         = SubData$Refl
@@ -670,7 +749,7 @@ Invert_PROSPECT_OPT <- function(SpecPROSPECT, lambda, Refl = NULL, Tran = NULL,
         message('from ', OptDomain[[parm]][1],' nm to ', OptDomain[[parm]][2],' nm')
         message('')
         # Fit spectral data to match PROSPECT with user optical properties
-        SubData <- FitSpectralData(SpecPROSPECT=SpecPROSPECT,lambda=lambda,Refl=Refl,Tran=Tran,UserDomain = OptDomain[[parm]])
+        SubData <- FitSpectralData(SpecPROSPECT=SpecPROSPECT,lambda=lambda,Refl=Refl,Tran=Tran,UserDomain = OptDomain[[parm]],UL_Bounds = UL_Bounds)
         SubSpecPROSPECT = SubData$SpecPROSPECT
         Sublambda       = SubData$lambda
         SubRefl         = SubData$Refl
@@ -693,6 +772,11 @@ Invert_PROSPECT_OPT <- function(SpecPROSPECT, lambda, Refl = NULL, Tran = NULL,
     ParmEst$N = Nprior
     for (parm in Parms2Estimate){
       ParmEst[[parm]] = c()
+      if (length(OptDomain[[parm]])==2){
+        UL_Bounds <- TRUE
+      } else {
+        UL_Bounds <- FALSE
+      }
       if (parm == "ANT"){
         message('Currently no optimal estimation for anthocyanins')
         message('PROSPECT inversion will be performed using full spectral information')
@@ -701,7 +785,7 @@ Invert_PROSPECT_OPT <- function(SpecPROSPECT, lambda, Refl = NULL, Tran = NULL,
         message('from ', OptDomain[[parm]][1],' nm to ', OptDomain[[parm]][2],' nm')
         message('')
         # Fit spectral data to match PROSPECT with user optical properties
-        SubData <- FitSpectralData(SpecPROSPECT=SpecPROSPECT,lambda=lambda,Refl=Refl,Tran=Tran,UserDomain = OptDomain[[parm]])
+        SubData <- FitSpectralData(SpecPROSPECT=SpecPROSPECT,lambda=lambda,Refl=Refl,Tran=Tran,UserDomain = OptDomain[[parm]],UL_Bounds = UL_Bounds)
         SubSpecPROSPECT = SubData$SpecPROSPECT
         Sublambda       = SubData$lambda
         SubRefl         = SubData$Refl
@@ -723,7 +807,7 @@ Invert_PROSPECT_OPT <- function(SpecPROSPECT, lambda, Refl = NULL, Tran = NULL,
         message('from ', OptDomain[[parm]][1],' nm to ', OptDomain[[parm]][2],' nm')
         message('')
         # Fit spectral data to match PROSPECT with user optical properties
-        SubData <- FitSpectralData(SpecPROSPECT=SpecPROSPECT,lambda=lambda,Refl=Refl,Tran=Tran,UserDomain = OptDomain[[parm]])
+        SubData <- FitSpectralData(SpecPROSPECT=SpecPROSPECT,lambda=lambda,Refl=Refl,Tran=Tran,UserDomain = OptDomain[[parm]],UL_Bounds = UL_Bounds)
         SubSpecPROSPECT = SubData$SpecPROSPECT
         Sublambda       = SubData$lambda
         SubRefl         = SubData$Refl
@@ -748,7 +832,7 @@ Invert_PROSPECT_OPT <- function(SpecPROSPECT, lambda, Refl = NULL, Tran = NULL,
         message('from ', OptDomain[[parm]][1],' nm to ', OptDomain[[parm]][2],' nm')
         message('')
         # Fit spectral data to match PROSPECT with user optical properties
-        SubData <- FitSpectralData(SpecPROSPECT=SpecPROSPECT,lambda=lambda,Refl=Refl,Tran=Tran,UserDomain = OptDomain[[parm]])
+        SubData <- FitSpectralData(SpecPROSPECT=SpecPROSPECT,lambda=lambda,Refl=Refl,Tran=Tran,UserDomain = OptDomain[[parm]],UL_Bounds = UL_Bounds)
         SubSpecPROSPECT = SubData$SpecPROSPECT
         Sublambda       = SubData$lambda
         SubRefl         = SubData$Refl
@@ -770,7 +854,7 @@ Invert_PROSPECT_OPT <- function(SpecPROSPECT, lambda, Refl = NULL, Tran = NULL,
         message('from ', OptDomain[[parm]][1],' nm to ', OptDomain[[parm]][2],' nm')
         message('')
         # Fit spectral data to match PROSPECT with user optical properties
-        SubData <- FitSpectralData(SpecPROSPECT=SpecPROSPECT,lambda=lambda,Refl=Refl,Tran=Tran,UserDomain = OptDomain[[parm]])
+        SubData <- FitSpectralData(SpecPROSPECT=SpecPROSPECT,lambda=lambda,Refl=Refl,Tran=Tran,UserDomain = OptDomain[[parm]],UL_Bounds = UL_Bounds)
         SubSpecPROSPECT = SubData$SpecPROSPECT
         Sublambda       = SubData$lambda
         SubRefl         = SubData$Refl
@@ -802,7 +886,7 @@ Invert_PROSPECT_OPT <- function(SpecPROSPECT, lambda, Refl = NULL, Tran = NULL,
           message('')
         } else {
           # Fit spectral data to match PROSPECT with user optical properties
-          SubData <- FitSpectralData(SpecPROSPECT=SpecPROSPECT,lambda=lambda,Refl=Refl,Tran=Tran,UserDomain = OptDomain[[parm]])
+          SubData <- FitSpectralData(SpecPROSPECT=SpecPROSPECT,lambda=lambda,Refl=Refl,Tran=Tran,UserDomain = OptDomain[[parm]],UL_Bounds = UL_Bounds)
           SubSpecPROSPECT = SubData$SpecPROSPECT
           Sublambda       = SubData$lambda
           SubRefl         = SubData$Refl
@@ -825,7 +909,7 @@ Invert_PROSPECT_OPT <- function(SpecPROSPECT, lambda, Refl = NULL, Tran = NULL,
         message('from ', OptDomain[[parm]][1],' nm to ', OptDomain[[parm]][2],' nm')
         message('')
         # Fit spectral data to match PROSPECT with user optical properties
-        SubData <- FitSpectralData(SpecPROSPECT=SpecPROSPECT,lambda=lambda,Refl=Refl,Tran=Tran,UserDomain = OptDomain[[parm]])
+        SubData <- FitSpectralData(SpecPROSPECT=SpecPROSPECT,lambda=lambda,Refl=Refl,Tran=Tran,UserDomain = OptDomain[[parm]],UL_Bounds = UL_Bounds)
         SubSpecPROSPECT = SubData$SpecPROSPECT
         Sublambda       = SubData$lambda
         SubRefl         = SubData$Refl
@@ -847,7 +931,7 @@ Invert_PROSPECT_OPT <- function(SpecPROSPECT, lambda, Refl = NULL, Tran = NULL,
         message('from ', OptDomain[[parm]][1],' nm to ', OptDomain[[parm]][2],' nm')
         message('')
         # Fit spectral data to match PROSPECT with user optical properties
-        SubData <- FitSpectralData(SpecPROSPECT=SpecPROSPECT,lambda=lambda,Refl=Refl,Tran=Tran,UserDomain = OptDomain[[parm]])
+        SubData <- FitSpectralData(SpecPROSPECT=SpecPROSPECT,lambda=lambda,Refl=Refl,Tran=Tran,UserDomain = OptDomain[[parm]],UL_Bounds = UL_Bounds)
         SubSpecPROSPECT = SubData$SpecPROSPECT
         Sublambda       = SubData$lambda
         SubRefl         = SubData$Refl
@@ -912,10 +996,11 @@ optimal_features_SFS <- function(Refl = NULL, Tran = NULL, lambda, BiochTruth, T
                                  InitValues = data.frame(
                                    CHL = 40, CAR = 10, ANT = 0.1, BROWN = 0.01, EWT = 0.01,
                                    LMA = 0.01, PROT = 0.001, CBC = 0.009, N = 1.5, alpha = 40),
+
                                  xlub = data.frame(
                                    CHL = c(1e-4, 150), CAR = c(1e-4, 25), ANT = c(0, 50),
-                                   BROWN = c(0, 1), EWT = c(1e-7, .08), LMA = c(1e-6, .04),
-                                   PROT = c(1e-7, .005), CBC = c(1e-6, .04), N = c(.5, 4),
+                                   BROWN = c(0, 1), EWT = c(1e-8, 0.1), LMA = c(1e-6, .06),
+                                   PROT = c(1e-7, .006), CBC = c(1e-6, .054), N = c(.5, 4),
                                    alpha = c(10, 90)),
                                  SpecPROSPECT, spectral_domain, spectral_width,
                                  number_features,PROSPECT_version = 'D', MeritFunction = "Merit_RMSE_PROSPECT",
@@ -958,8 +1043,6 @@ optimal_features_SFS <- function(Refl = NULL, Tran = NULL, lambda, BiochTruth, T
     for (feat in featStart:number_features){
       message(paste('Identify Feature #',feat))
       Perf <- c()
-      # define the spectral domain to add as test
-      subD0 <- 0
       # multiprocess of spectral species distribution and alpha diversity metrics
       plan(multiprocess, workers = nbCPU) ## Parallelize using four cores
       schedule <- ceiling(length(subdomains)/nbCPU)
@@ -968,8 +1051,7 @@ optimal_features_SFS <- function(Refl = NULL, Tran = NULL, lambda, BiochTruth, T
                                       SpecPROSPECT = SpecPROSPECT, lambda = lambda, BiochTruth = BiochTruth,
                                       Target = Target, Parms2Estimate  = Parms2Estimate, Initial_Features = Initial_Features,
                                       PROSPECT_version = PROSPECT_version, MeritFunction = MeritFunction, alphaEst = alphaEst,
-                                      InitValues = InitValues, xlub = xlub,
-                                      verbose = FALSE, future.scheduling = schedule)
+                                      InitValues = InitValues, xlub = xlub, verbose = FALSE, future.scheduling = schedule)
       plan(sequential)
       Perf <- c()
       for (i in 1:length(Estimated_Parm)){
@@ -1028,8 +1110,8 @@ Invert_PROSPECT_subdomain <- function(New_Features, Refl, Tran, SpecPROSPECT, la
                                       PROSPECT_version = "D", MeritFunction = "Merit_RMSE_PROSPECT", alphaEst = FALSE,
                                       xlub = data.frame(
                                         CHL = c(1e-4, 150), CAR = c(1e-4, 25), ANT = c(0, 50),
-                                        BROWN = c(0, 1), EWT = c(1e-7, .08), LMA = c(1e-6, .04),
-                                        PROT = c(1e-7, .005), CBC = c(1e-6, .04), N = c(.5, 4),
+                                        BROWN = c(0, 1), EWT = c(1e-8, 0.1), LMA = c(1e-6, .06),
+                                        PROT = c(1e-7, .006), CBC = c(1e-6, .054), N = c(.5, 4),
                                         alpha = c(10, 90)),
                                       verbose = FALSE){
 

@@ -11,7 +11,7 @@ FitSpectralData(
   Refl = NULL,
   Tran = NULL,
   UserDomain = NULL,
-  UL_Bounds = TRUE
+  UL_Bounds = FALSE
 )
 }
 \arguments{

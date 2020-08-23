@@ -15,9 +15,10 @@ Invert_PROSPECT(
   PROSPECT_version = "D",
   MeritFunction = "Merit_RMSE_PROSPECT",
   xlub = data.frame(CHL = c(1e-04, 150), CAR = c(1e-04, 25), ANT = c(0, 50), BROWN =
-    c(0, 1), EWT = c(1e-07, 0.08), LMA = c(1e-06, 0.04), PROT = c(1e-07, 0.005), CBC =
-    c(1e-06, 0.04), N = c(0.5, 4), alpha = c(10, 90)),
-  alphaEst = FALSE
+    c(0, 1), EWT = c(1e-08, 0.1), LMA = c(1e-06, 0.06), PROT = c(1e-07, 0.006), CBC =
+    c(1e-06, 0.054), N = c(0.5, 4), alpha = c(10, 90)),
+  alphaEst = FALSE,
+  verbose = FALSE
 )
 }
 \arguments{
@@ -46,6 +47,8 @@ The data.frame must have columns corresponding to \code{Parms2Estimate} first li
 the lower boundaries and second line the upper boundaries.}
 
 \item{alphaEst}{boolean. should alpha be estimated or not?}
+
+\item{verbose}{boolean. set true to get info about adjustment of tolerance or initialization}
 }
 \value{
 OutPROSPECT estimated values corresponding to Parms2Estimate
