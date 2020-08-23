@@ -27,14 +27,22 @@ for (db in dbName){
 }
 
 # output directory
-Results_Dir <- '../04_VALIDATION_PROSPECT_PRO_ALLDB_R1/RESULTS'
+Results_Dir <- 'RESULTS'
 dir.create(Results_Dir,showWarnings = FALSE)
 
 # invert PROSPECT-PRO for the estimation of EWT, Proteins and CBC based on
-# optimal spectral domain identified by Feret et al. (RSE 2018)
-OptDomain <- seq(1700,2400)
+# optimal spectral features identified by Feret et al. (RSE 2020)
 Parms2Estimate  <- c('EWT','PROT','CBC','N')
 Estimated_LeafChem <- list()
+
+# OptDomain <- c(seq(1700,1799),seq(1860,1879),seq(2020,2399))
+load('Optimal_CBC_VAL.RData')
+MinRMSE <- which(ListRes_CBC$RMSE == min(ListRes_CBC$RMSE))
+OptDomain <- c()
+for (i in 1:MinRMSE){
+  OptDomain <- c(OptDomain,ListRes_CBC$SpectralFeatures_List[[i]])
+}
+OptDomain = sort(OptDomain)
 
 for (db in dbName){
   Estimated_LeafChem[[db]] <- list()
@@ -49,20 +57,46 @@ for (db in dbName){
   SubTran <- SubData$Tran
   nbsamples <- ncol(SubRefl)
   # Invert PROSPECT with optimal spectral information
-  for (parm in Parms2Estimate){
-    Estimated_LeafChem[[db]][[parm]] = matrix(NA,ncol = 1,nrow = nbsamples)
-  }
+  Estimated_LeafChem[[db]]$CBC = matrix(NA,ncol = 1,nrow = nbsamples)
   for (i in 1:nbsamples){
     print(i)
     res <- Invert_PROSPECT(SubSpecPROSPECT,Refl = SubRefl[,i],Tran = SubTran[,i],PROSPECT_version = 'PRO',Parms2Estimate = Parms2Estimate)
     # only save results for variable of interest
-    for (parm in Parms2Estimate){
-      Estimated_LeafChem[[db]][[parm]][i,1] <- res[[parm]]
-    }
+    Estimated_LeafChem[[db]]$CBC[i,1] <- res$CBC
   }
   # save results in a text file
-  for (parm in Parms2Estimate){
-    fileName <- file.path(Results_Dir,paste(parm,'_',db,'.txt',sep = ''))
-    write.table(x = Estimated_LeafChem[[db]][[parm]],file = fileName,quote = FALSE,row.names = FALSE,col.names = FALSE)
-  }
+  fileName <- file.path(Results_Dir,paste('CBC_',db,'.txt',sep = ''))
+  write.table(x = Estimated_LeafChem[[db]]$CBC,file = fileName,quote = FALSE,row.names = FALSE,col.names = FALSE)
 }
+
+load('Optimal_PROT_VAL.RData')
+MinRMSE <- which(ListRes_PROT$RMSE == min(ListRes_PROT$RMSE))
+OptDomain <- c()
+for (i in 1:MinRMSE){
+  OptDomain <- c(OptDomain,ListRes_PROT$SpectralFeatures_List[[i]])
+}
+OptDomain = sort(OptDomain)
+for (db in dbName){
+  lambda <- unlist(Refl[[db]][,1], use.names=FALSE)
+  Refl_tmp <- matrix(unlist(Refl[[db]][,-1], use.names=FALSE),nrow = length(lambda))
+  Tran_tmp <- matrix(unlist(Tran[[db]][,-1], use.names=FALSE),nrow = length(lambda))
+  # Fit spectral data to match PROSPECT with user optical properties
+  SubData <- FitSpectralData(SpecPROSPECT=SpecPROSPECT,lambda=lambda,Refl=Refl_tmp,Tran=Tran_tmp,UserDomain = OptDomain,UL_Bounds = FALSE)
+  SubSpecPROSPECT <- SubData$SpecPROSPECT
+  Sublambda <- SubData$lambda
+  SubRefl <- SubData$Refl
+  SubTran <- SubData$Tran
+  nbsamples <- ncol(SubRefl)
+  # Invert PROSPECT with optimal spectral information
+  Estimated_LeafChem[[db]]$PROT = matrix(NA,ncol = 1,nrow = nbsamples)
+  for (i in 1:nbsamples){
+    print(i)
+    res <- Invert_PROSPECT(SubSpecPROSPECT,Refl = SubRefl[,i],Tran = SubTran[,i],PROSPECT_version = 'PRO',Parms2Estimate = Parms2Estimate)
+    # only save results for variable of interest
+    Estimated_LeafChem[[db]]$PROT[i,1] <- res$PROT
+  }
+  # save results in a text file
+  fileName <- file.path(Results_Dir,paste('PROT_',db,'.txt',sep = ''))
+  write.table(x = Estimated_LeafChem[[db]]$PROT,file = fileName,quote = FALSE,row.names = FALSE,col.names = FALSE)
+}
+
