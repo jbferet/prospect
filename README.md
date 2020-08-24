@@ -38,6 +38,6 @@ A tutorial vignette is available [here](https://jbferet.gitlab.io/prospect/artic
 
 If you use **prospect**, please cite the following references:
 
-Féret, J.-B., Berger, K., de Boissieu, F. & Malenovský 2020. Estimation of leaf protein and carbon-based constituent content from optical properties with the PROSPECT-PRO model. Remote Sensing of Environment.
+Féret, J.-B., Berger, K., de Boissieu, F. & Malenovský (submitted). PROSPECT-PRO for estimating content of nitrogen-containing leaf proteins and other carbon-based constituents. https://arxiv.org/abs/2003.11961 
 
 Féret, J.-B., Gitelson, A.A., Noble, S.D. & Jacquemoud, S. 2017. PROSPECT-D: Towards modeling leaf optical properties through a complete lifecycle. Remote Sensing of Environment. 193, 204–215. http://dx.doi.org/10.1016/j.rse.2017.03.004
