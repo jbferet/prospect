@@ -27,7 +27,7 @@ for (db in dbName){
 }
 
 # output directory
-Results_Dir <- '../04_VALIDATION_PROSPECT_PRO_ALLDB_R1/RESULTS'
+Results_Dir <- 'RESULTS'
 dir.create(Results_Dir,showWarnings = FALSE)
 
 # invert PROSPECT-PRO for the estimation of EWT, Proteins and CBC based on
@@ -62,7 +62,7 @@ for (db in dbName){
   }
   # save results in a text file
   for (parm in Parms2Estimate){
-    fileName <- file.path(Results_Dir,paste(parm,'_',db,'.txt',sep = ''))
+    fileName <- file.path(Results_Dir,paste(parm,'_',db,'1700_2400nm.txt',sep = ''))
     write.table(x = Estimated_LeafChem[[db]][[parm]],file = fileName,quote = FALSE,row.names = FALSE,col.names = FALSE)
   }
 }

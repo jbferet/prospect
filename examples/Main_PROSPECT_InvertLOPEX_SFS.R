@@ -65,7 +65,7 @@ for (db in dbName){
     Estimated_LeafChem[[db]]$CBC[i,1] <- res$CBC
   }
   # save results in a text file
-  fileName <- file.path(Results_Dir,paste('CBC_',db,'.txt',sep = ''))
+  fileName <- file.path(Results_Dir,paste('CBC_',db,'_Optimal.txt',sep = ''))
   write.table(x = Estimated_LeafChem[[db]]$CBC,file = fileName,quote = FALSE,row.names = FALSE,col.names = FALSE)
 }
 
@@ -96,7 +96,7 @@ for (db in dbName){
     Estimated_LeafChem[[db]]$PROT[i,1] <- res$PROT
   }
   # save results in a text file
-  fileName <- file.path(Results_Dir,paste('PROT_',db,'.txt',sep = ''))
+  fileName <- file.path(Results_Dir,paste('PROT_',db,'_Optimal.txt',sep = ''))
   write.table(x = Estimated_LeafChem[[db]]$PROT,file = fileName,quote = FALSE,row.names = FALSE,col.names = FALSE)
 }
 
