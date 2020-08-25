@@ -522,16 +522,18 @@ Invert_PROSPECT_OPT <- function(SpecPROSPECT, lambda, Refl = NULL, Tran = NULL,
                                 )) {
 
   # define optimal domain for the different constituents
-  OptDomain_RT <- list('CHL' = c(700,720), 'CAR' = c(520,560), 'ANT' = c(400,800),
-                      'EWT' = c(1700,2400), 'LMA' = c(1700,2400), 'PROT' = c(2125,2175),
-                      'CBC' = c(2025,2350))
-  OptDomain_R <- list('CHL' = c(700,720), 'CAR' = c(400,800), 'ANT' = c(400,800),
-                      'EWT' = c(1200,2400), 'LMA' = c(1700,2400), 'PROT' = c(2125,2175),
-                      'CBC' = c(2025,2350))
-  OptDomain_T <- list('CHL' = c(700,720), 'CAR' = c(520,560), 'ANT' = c(400,800),
-                      'EWT' = c(1700,2400), 'LMA' = c(1700,2400), 'PROT' = c(2125,2175),
-                      'CBC' = c(2025,2350))
+  OptDomain_RT <- list('CHL' = seq(700,720), 'CAR' = seq(520,560), 'ANT' = seq(400,800),
+                      'EWT' = seq(1700,2400), 'LMA' = seq(1700,2400), 'PROT' = c(seq(2100,2139),seq(2160,2179)),
+                      'CBC' = c(seq(1480,1499),seq(1560,1579),seq(1760,1799),seq(2040,2059),seq(2120,2139),
+                                seq(2160,2239),seq(2260,2279),seq(2340,2359),seq(2380,2399)))
+  # OptDomain_R <- list('CHL' = c(700,720), 'CAR' = c(400,800), 'ANT' = c(400,800),
+  #                     'EWT' = c(1200,2400), 'LMA' = c(1700,2400), 'PROT' = c(2125,2175),
+  #                     'CBC' = c(2025,2350))
+  # OptDomain_T <- list('CHL' = c(700,720), 'CAR' = c(520,560), 'ANT' = c(400,800),
+  #                     'EWT' = c(1700,2400), 'LMA' = c(1700,2400), 'PROT' = c(2125,2175),
+  #                     'CBC' = c(2025,2350))
 
+  OptDomain_R <- OptDomain_T <- OptDomain_RT
   # adjust depending on avalibility of R and T
   if (is.null(Refl)){
     OptDomain <- OptDomain_T
