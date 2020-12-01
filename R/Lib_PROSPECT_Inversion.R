@@ -428,8 +428,13 @@ Get_Nprior <- function(SpecPROSPECT, lambda, Refl = NULL, Tran = NULL) {
   OptWL_T$SWIR <- 1121
   # if prior information based on Reflectance
   if (is.null(Tran)) {
+    # if required spectral bands in the original data
     if (OptWL_R$SWIR %in% SpecPROSPECT$lambda) {
       OptWL <- OptWL_R$SWIR
+    # else if close to spectral bands of original data
+    } else if (!OptWL_R$SWIR %in% SpecPROSPECT$lambda & min(abs(OptWL_R$SWIR-SpecPROSPECT$lambda))<10) {
+      OptWL <- SpecPROSPECT$lambda[which(abs(OptWL_R$SWIR-SpecPROSPECT$lambda)==min(abs(OptWL_R$SWIR-SpecPROSPECT$lambda)))]
+    # else if NIR band available
     } else if (!OptWL_R$SWIR %in% SpecPROSPECT$lambda & OptWL_R$NIR %in% SpecPROSPECT$lambda) {
       warning("________________________ WARNING _______________________")
       warning("The optimal prior estimation of N using Reflectance only")
@@ -437,6 +442,15 @@ Get_Nprior <- function(SpecPROSPECT, lambda, Refl = NULL, Tran = NULL) {
       warning("The reflectance does not include this spectral band")
       warning("Using reflectance at 800 nm instead")
       OptWL <- OptWL_R$NIR
+    # else if close to NIR band available
+    } else if (!OptWL_R$NIR %in% SpecPROSPECT$lambda & min(abs(OptWL_R$NIR-SpecPROSPECT$lambda))<10) {
+      warning("________________________ WARNING _______________________")
+      warning("The optimal prior estimation of N using Reflectance only")
+      warning("requires information at 1131nm.")
+      warning("The reflectance does not include this spectral band")
+      warning("Using reflectance at 800 nm instead")
+      OptWL <- SpecPROSPECT$lambda[which(abs(OptWL_R$NIR-SpecPROSPECT$lambda)==min(abs(OptWL_R$NIR-SpecPROSPECT$lambda)))]
+      # else if NIR band available
     } else if (!OptWL_R$SWIR %in% SpecPROSPECT$lambda & !OptWL_R$NIR %in% SpecPROSPECT$lambda) {
       warning("________________________ WARNING _______________________")
       warning("The spectral information of the reflectance provided here")
@@ -448,6 +462,8 @@ Get_Nprior <- function(SpecPROSPECT, lambda, Refl = NULL, Tran = NULL) {
   } else if (is.null(Refl)) {
     if (OptWL_T$SWIR %in% SpecPROSPECT$lambda) {
       OptWL <- OptWL_T$SWIR
+    } else if (!OptWL_T$SWIR %in% SpecPROSPECT$lambda & min(abs(OptWL_T$SWIR-SpecPROSPECT$lambda))<10) {
+      OptWL <- SpecPROSPECT$lambda[which(abs(OptWL_T$SWIR-SpecPROSPECT$lambda)==min(abs(OptWL_T$SWIR-SpecPROSPECT$lambda)))]
     } else if (!OptWL_T$SWIR %in% SpecPROSPECT$lambda & OptWL_T$NIR %in% SpecPROSPECT$lambda) {
       warning("________________________ WARNING _______________________")
       warning("The optimal prior estimation of N using Transmittance only")
@@ -455,6 +471,13 @@ Get_Nprior <- function(SpecPROSPECT, lambda, Refl = NULL, Tran = NULL) {
       warning("The Transmittance does not include this spectral band")
       warning("Using Transmittance at 753 nm instead")
       OptWL <- OptWL_T$NIR
+    } else if (!OptWL_T$NIR %in% SpecPROSPECT$lambda & min(abs(OptWL_T$NIR-SpecPROSPECT$lambda))<10) {
+      warning("________________________ WARNING _______________________")
+      warning("The optimal prior estimation of N using Reflectance only")
+      warning("requires information at 1131nm.")
+      warning("The reflectance does not include this spectral band")
+      warning("Using reflectance at 800 nm instead")
+      OptWL <- SpecPROSPECT$lambda[which(abs(OptWL_T$NIR-SpecPROSPECT$lambda)==min(abs(OptWL_T$NIR-SpecPROSPECT$lambda)))]
     } else if (!OptWL_T$SWIR %in% SpecPROSPECT$lambda & !OptWL_T$NIR %in% SpecPROSPECT$lambda) {
       warning("________________________ WARNING _______________________")
       warning("The spectral information of the Transmittance provided here")
