@@ -29,8 +29,12 @@ A tutorial vignette is available [here](https://jbferet.gitlab.io/prospect/artic
 
 # 3 Citation
 
-If you use **prospect**, please cite the following references:
+If you use **prospect**, please cite the following references for PROSPECT-PRO and PROSPECT-D:
 
-Féret, J.-B., Berger, K., de Boissieu, F. & Malenovský (submitted). PROSPECT-PRO for estimating content of nitrogen-containing leaf proteins and other carbon-based constituents. https://arxiv.org/abs/2003.11961 
+Féret, J.-B., Berger, K., de Boissieu, F. & Malenovský, Z. (2021). PROSPECT-PRO for estimating content of nitrogen-containing leaf proteins and other carbon-based constituents. Remote Sensing of Environment. 252, 112173.  https://doi.org/10.1016/j.rse.2020.112173
 
-Féret, J.-B., Gitelson, A.A., Noble, S.D. & Jacquemoud, S. 2017. PROSPECT-D: Towards modeling leaf optical properties through a complete lifecycle. Remote Sensing of Environment. 193, 204–215. http://dx.doi.org/10.1016/j.rse.2017.03.004
+Féret, J.-B., Gitelson, A.A., Noble, S.D. & Jacquemoud, S. (2017). PROSPECT-D: Towards modeling leaf optical properties through a complete lifecycle. Remote Sensing of Environment. 193, 204–215. http://dx.doi.org/10.1016/j.rse.2017.03.004
+
+The inversion of PROSPECT using only directional-hemispherical reflectance or directional-hemispherical transmittance, and prior estimation of N is explained here: 
+
+Spafford, L., le Maire, G., MacDougall, A., de Boissieu, F. & Féret, J.-B. (2021). Spectral subdomains and prior estimation of leaf structure improves PROSPECT inversion on reflectance or transmittance alone. Remote Sensing of Environment. 252, 112176.  https://doi.org/10.1016/j.rse.2020.112176
