@@ -387,11 +387,17 @@ FitSpectralData <- function(SpecPROSPECT, lambda, Refl = NULL, Tran = NULL, User
     if (ncol(Refl)==1){
       SubRefl <- matrix(SubRefl,ncol = 1)
     }
+    if (length(LowerBand_LOP:UpperBand_LOP)==1){
+      SubRefl <- matrix(SubRefl,nrow = 1)
+    }
   }
   if (!is.null(Tran)) {
     SubTran <- Tran[LowerBand_LOP:UpperBand_LOP, ]
     if (ncol(Tran)==1){
       SubTran <- matrix(SubTran,ncol = 1)
+    }
+    if (length(LowerBand_LOP:UpperBand_LOP)==1){
+      SubTran <- matrix(SubTran,nrow = 1)
     }
   }
   # in case a list of spectral bands has been provided, not only boundaries
@@ -399,8 +405,13 @@ FitSpectralData <- function(SpecPROSPECT, lambda, Refl = NULL, Tran = NULL, User
     # select spectral bands defined in UL_Bounds
     spectralBands <- unique(as.integer(UserDomain))
     SpectralLocation <- match(spectralBands,SubSpecPROSPECT$lambda)
-    SubRefl <- SubRefl[SpectralLocation,]
-    SubTran <- SubTran[SpectralLocation,]
+    SpectralLocation <- SpectralLocation[which(!is.na(SpectralLocation))]
+    if (!is.null(SubRefl)){
+      SubRefl <- SubRefl[SpectralLocation,]
+    }
+    if (!is.null(SubTran)){
+      SubTran <- SubTran[SpectralLocation,]
+    }
     Sublambda <- Sublambda[SpectralLocation]
     SubSpecPROSPECT <- SubSpecPROSPECT[SpectralLocation,]
   }
