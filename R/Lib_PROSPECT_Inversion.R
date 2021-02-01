@@ -108,7 +108,10 @@ Invert_PROSPECT <- function(SpecPROSPECT, Refl = NULL, Tran = NULL,
   lb <- xlub[1, ]
   ub <- xlub[2, ]
   # run inversion procedure with standard parameterization
-  res <- tryInversion(InitValues, MeritFunction, SpecPROSPECT, Refl, Tran, Parms2Estimate, lb, ub,verbose = verbose)
+  res <- tryInversion(x0 = InitValues, MeritFunction = MeritFunction,
+                      SpecPROSPECT = SpecPROSPECT,
+                      Refl = Refl, Tran = Tran, Parms2Estimate = Parms2Estimate,
+                      lb = lb, ub = ub,verbose = verbose)
 
   names(res$par) = Parms2Estimate
   OutPROSPECT <- InitValues
@@ -383,8 +386,12 @@ FitSpectralData <- function(SpecPROSPECT, lambda, Refl = NULL, Tran = NULL, User
   }
   SubRefl <- SubTran <- NULL
   if (!is.null(Refl)) {
-    SubRefl <- Refl[LowerBand_LOP:UpperBand_LOP, ]
-    if (ncol(Refl)==1){
+    if (!is.null(ncol(Refl))){
+      SubRefl <- matrix(Refl[LowerBand_LOP:UpperBand_LOP, ],nrow =length(seq(LowerBand_LOP,UpperBand_LOP)))
+    } else{
+      SubRefl <- matrix(Refl[LowerBand_LOP:UpperBand_LOP],ncol = 1)
+    }
+    if (ncol(SubRefl)==1){
       SubRefl <- matrix(SubRefl,ncol = 1)
     }
     if (length(LowerBand_LOP:UpperBand_LOP)==1){
@@ -392,8 +399,12 @@ FitSpectralData <- function(SpecPROSPECT, lambda, Refl = NULL, Tran = NULL, User
     }
   }
   if (!is.null(Tran)) {
-    SubTran <- Tran[LowerBand_LOP:UpperBand_LOP, ]
-    if (ncol(Tran)==1){
+    if (!is.null(ncol(Tran))){
+      SubTran <- matrix(Tran[LowerBand_LOP:UpperBand_LOP, ],nrow =length(seq(LowerBand_LOP,UpperBand_LOP)))
+    } else{
+      SubTran <- matrix(Tran[LowerBand_LOP:UpperBand_LOP],ncol=1)
+    }
+    if (ncol(SubTran)==1){
       SubTran <- matrix(SubTran,ncol = 1)
     }
     if (length(LowerBand_LOP:UpperBand_LOP)==1){
@@ -541,6 +552,7 @@ Get_Nprior <- function(SpecPROSPECT, lambda, Refl = NULL, Tran = NULL) {
 #' See details.
 #' @param Parms2Estimate  character vector. Parameters to estimate (can be 'ALL')
 #' @param InitValues  data.frame. Default values of PROSPECT parameters. During optimization,
+#' @param verbose  boolean. set to TRUE to display sample number to be inverted
 #' they are used either as initialization values for parameters to estimate,
 #' or as fix values for other parameters.
 #' Parameters not compatible with PROSPECT_version are not taken into account.
@@ -552,8 +564,8 @@ Invert_PROSPECT_OPT <- function(SpecPROSPECT, lambda, Refl = NULL, Tran = NULL,
                                 PROSPECT_version = 'D',Parms2Estimate = 'ALL',
                                 InitValues = data.frame(
                                   CHL = 40, CAR = 10, ANT = 0.1, BROWN = 0.01, EWT = 0.01,
-                                  LMA = 0.01, PROT = 0.001, CBC = 0.009, N = 1.5, alpha = 40
-                                )) {
+                                  LMA = 0.01, PROT = 0.001, CBC = 0.009, N = 1.5, alpha = 40),
+                                verbose = FALSE) {
 
   # define optimal domain for the different constituents
   OptDomain_RT <- list('CHL' = seq(700,720), 'CAR' = seq(520,560), 'ANT' = seq(400,800),
@@ -622,7 +634,10 @@ Invert_PROSPECT_OPT <- function(SpecPROSPECT, lambda, Refl = NULL, Tran = NULL,
   if (is.null(Refl) | is.null(Tran)){
     # compute prior estimate of N
     message('computing prior estimation of N as both R & T are not provided')
-    Nprior <- Get_Nprior(SpecPROSPECT, lambda, Refl = Refl, Tran = Tran)
+    Nprior <- Get_Nprior(SpecPROSPECT = SpecPROSPECT,
+                         lambda = lambda,
+                         Refl = Refl,
+                         Tran = Tran)
     # estimation of chlorophylls: Prior N and optimal spectral domain
     ParmEst = list()
     ParmEst$N = Nprior
@@ -653,7 +668,7 @@ Invert_PROSPECT_OPT <- function(SpecPROSPECT, lambda, Refl = NULL, Tran = NULL,
           print(i)
           InitValues <- data.frame(CHL=40, CAR=10, ANT=ANTinit, BROWN=0, EWT=0.01, LMA=0.01, N=Nprior[i])
           res <- Invert_PROSPECT(SubSpecPROSPECT, Refl = SubRefl[,i], Tran = SubTran[,i], PROSPECT_version = PROSPECT_version,
-                                 Parms2Estimate = Parms2EstimateBis, InitValues = InitValues)
+                                 Parms2Estimate = Parms2EstimateBis, InitValues = InitValues,verbose = verbose)
           ParmEst[[parm]][i] = res$ANT
         }
       }
@@ -797,15 +812,15 @@ Invert_PROSPECT_OPT <- function(SpecPROSPECT, lambda, Refl = NULL, Tran = NULL,
           InitValues <- data.frame(CHL=0, CAR=0, ANT=0, BROWN=0, EWT=0.01, LMA=0.00, PROT=0.001, CBC=0.009, N=Nprior[i])
           res <- Invert_PROSPECT(SubSpecPROSPECT, Refl = SubRefl[,i], Tran = SubTran[,i], PROSPECT_version = PROSPECT_versionPRO,
                                  Parms2Estimate = Parms2EstimateBis, InitValues = InitValues)
-          ParmEst[[parm]][i] = res$PROT
+          ParmEst[[parm]][i] = res$CBC
         }
       }
     }
   # if reflectance and transmittance are available
   } else {
-    Nprior <- Get_Nprior(SpecPROSPECT, lambda, Refl = NULL, Tran = Tran)
     ParmEst = list()
-    ParmEst$N = Nprior
+    # Nprior <- Get_Nprior(SpecPROSPECT, lambda, Refl = NULL, Tran = Tran)
+    # ParmEst$N = Nprior
     for (parm in Parms2Estimate){
       ParmEst[[parm]] = c()
       if (length(OptDomain[[parm]])==2){
@@ -831,7 +846,7 @@ Invert_PROSPECT_OPT <- function(SpecPROSPECT, lambda, Refl = NULL, Tran = NULL,
         # Invert PROSPECT with optimal spectral information
         for (i in 1:nbSamples){
           print(i)
-          InitValues <- data.frame(CHL=40, CAR=10, ANT=ANTinit, BROWN=0, EWT=0.01, LMA=0.01, N=Nprior[i])
+          InitValues <- data.frame(CHL=40, CAR=10, ANT=ANTinit, BROWN=0, EWT=0.01, LMA=0.01, N=1.5)
           res <- Invert_PROSPECT(SubSpecPROSPECT, Refl = SubRefl[,i], Tran = SubTran[,i], PROSPECT_version = PROSPECT_version,
                                  Parms2Estimate = Parms2EstimateBis, InitValues = InitValues)
           ParmEst[[parm]][i] = res$ANT
@@ -856,7 +871,7 @@ Invert_PROSPECT_OPT <- function(SpecPROSPECT, lambda, Refl = NULL, Tran = NULL,
         # Invert PROSPECT with optimal spectral information
         for (i in 1:nbSamples){
           print(i)
-          InitValues <- data.frame(CHL=40, CAR=10, ANT=ANTinit, BROWN=0, EWT=0.01, LMA=0.01, N=Nprior[i])
+          InitValues <- data.frame(CHL=40, CAR=10, ANT=ANTinit, BROWN=0, EWT=0.01, LMA=0.01, N=1.5)
           res <- Invert_PROSPECT(SubSpecPROSPECT, Refl = SubRefl[,i], Tran = SubTran[,i], PROSPECT_version = PROSPECT_version,
                                  Parms2Estimate = Parms2EstimateBis, InitValues = InitValues)
           ParmEst[[parm]][i] = res$CHL
@@ -878,7 +893,7 @@ Invert_PROSPECT_OPT <- function(SpecPROSPECT, lambda, Refl = NULL, Tran = NULL,
         # Invert PROSPECT with optimal spectral information
         for (i in 1:nbSamples){
           print(i)
-          InitValues <- data.frame(CHL=40, CAR=10, ANT=ANTinit, BROWN=0, EWT=0.01, LMA=0.01, N=Nprior[i])
+          InitValues <- data.frame(CHL=40, CAR=10, ANT=ANTinit, BROWN=0, EWT=0.01, LMA=0.01, N=1.5)
           res <- Invert_PROSPECT(SubSpecPROSPECT, Refl = SubRefl[,i], Tran = SubTran[,i], PROSPECT_version = PROSPECT_version,
                                  Parms2Estimate = Parms2EstimateBis, InitValues = InitValues)
           ParmEst[[parm]][i] = res$CAR
@@ -901,9 +916,9 @@ Invert_PROSPECT_OPT <- function(SpecPROSPECT, lambda, Refl = NULL, Tran = NULL,
         for (i in 1:nbSamples){
           print(i)
           if (!PROSPECT_version =='PRO'){
-            InitValues <- data.frame(CHL=0, CAR=0, ANT=0, BROWN=0, EWT=0.01, LMA=0.01, N=Nprior[i])
+            InitValues <- data.frame(CHL=0, CAR=0, ANT=0, BROWN=0, EWT=0.01, LMA=0.01, N=1.5)
           } else if (!PROSPECT_version =='PRO'){
-            InitValues <- data.frame(CHL=0, CAR=0, ANT=0, BROWN=0, EWT=0.01, LMA=0.00, PROT=0.001, PROT=0.009, N=Nprior[i])
+            InitValues <- data.frame(CHL=0, CAR=0, ANT=0, BROWN=0, EWT=0.01, LMA=0.00, PROT=0.001, PROT=0.009, N=1.5)
           }
           res <- Invert_PROSPECT(SubSpecPROSPECT, Refl = SubRefl[,i], Tran = SubTran[,i], PROSPECT_version = PROSPECT_version,
                                  Parms2Estimate = Parms2EstimateBis, InitValues = InitValues)
@@ -931,7 +946,7 @@ Invert_PROSPECT_OPT <- function(SpecPROSPECT, lambda, Refl = NULL, Tran = NULL,
           # Invert PROSPECT with optimal spectral information
           for (i in 1:nbSamples){
             print(i)
-            InitValues <- data.frame(CHL=0, CAR=0, ANT=0, BROWN=0, EWT=0.01, LMA=0.01, N=Nprior[i])
+            InitValues <- data.frame(CHL=0, CAR=0, ANT=0, BROWN=0, EWT=0.01, LMA=0.01, N=1.5)
             res <- Invert_PROSPECT(SubSpecPROSPECT, Refl = SubRefl[,i], Tran = SubTran[,i], PROSPECT_version = PROSPECT_version,
                                    Parms2Estimate = Parms2EstimateBis, InitValues = InitValues)
             ParmEst[[parm]][i] = res$LMA
@@ -945,7 +960,8 @@ Invert_PROSPECT_OPT <- function(SpecPROSPECT, lambda, Refl = NULL, Tran = NULL,
         message('from ', OptDomain[[parm]][1],' nm to ', OptDomain[[parm]][2],' nm')
         message('')
         # Fit spectral data to match PROSPECT with user optical properties
-        SubData <- FitSpectralData(SpecPROSPECT=SpecPROSPECT,lambda=lambda,Refl=Refl,Tran=Tran,UserDomain = OptDomain[[parm]],UL_Bounds = UL_Bounds)
+        SubData <- FitSpectralData(SpecPROSPECT=SpecPROSPECT,lambda=lambda,
+                                   Refl=Refl,Tran=Tran,UserDomain = OptDomain[[parm]],UL_Bounds = UL_Bounds)
         SubSpecPROSPECT = SubData$SpecPROSPECT
         Sublambda       = SubData$lambda
         SubRefl         = SubData$Refl
@@ -954,8 +970,10 @@ Invert_PROSPECT_OPT <- function(SpecPROSPECT, lambda, Refl = NULL, Tran = NULL,
         # Invert PROSPECT with optimal spectral information
         for (i in 1:nbSamples){
           print(i)
-          InitValues <- data.frame(CHL=0, CAR=0, ANT=0, BROWN=0, EWT=0.01, LMA=0.00, PROT=0.001, CBC=0.009, N=Nprior[i])
-          res <- Invert_PROSPECT(SubSpecPROSPECT, Refl = SubRefl[,i], Tran = SubTran[,i], PROSPECT_version = PROSPECT_versionPRO,
+          InitValues <- data.frame(CHL=0, CAR=0, ANT=0, BROWN=0, EWT=0.01, LMA=0.00, PROT=0.001, CBC=0.009, N=1.5)
+          res <- Invert_PROSPECT(SpecPROSPECT = SubSpecPROSPECT,
+                                 Refl = SubRefl[,i], Tran = SubTran[,i],
+                                 PROSPECT_version = PROSPECT_versionPRO,
                                  Parms2Estimate = Parms2EstimateBis, InitValues = InitValues)
           ParmEst[[parm]][i] = res$PROT
         }
@@ -967,7 +985,8 @@ Invert_PROSPECT_OPT <- function(SpecPROSPECT, lambda, Refl = NULL, Tran = NULL,
         message('from ', OptDomain[[parm]][1],' nm to ', OptDomain[[parm]][2],' nm')
         message('')
         # Fit spectral data to match PROSPECT with user optical properties
-        SubData <- FitSpectralData(SpecPROSPECT=SpecPROSPECT,lambda=lambda,Refl=Refl,Tran=Tran,UserDomain = OptDomain[[parm]],UL_Bounds = UL_Bounds)
+        SubData <- FitSpectralData(SpecPROSPECT=SpecPROSPECT,lambda=lambda,
+                                   Refl=Refl,Tran=Tran,UserDomain = OptDomain[[parm]],UL_Bounds = UL_Bounds)
         SubSpecPROSPECT = SubData$SpecPROSPECT
         Sublambda       = SubData$lambda
         SubRefl         = SubData$Refl
@@ -976,10 +995,10 @@ Invert_PROSPECT_OPT <- function(SpecPROSPECT, lambda, Refl = NULL, Tran = NULL,
         # Invert PROSPECT with optimal spectral information
         for (i in 1:nbSamples){
           print(i)
-          InitValues <- data.frame(CHL=0, CAR=0, ANT=0, BROWN=0, EWT=0.01, LMA=0.00, PROT=0.001, CBC=0.009, N=Nprior[i])
+          InitValues <- data.frame(CHL=0, CAR=0, ANT=0, BROWN=0, EWT=0.01, LMA=0.00, PROT=0.001, CBC=0.009, N=1.5)
           res <- Invert_PROSPECT(SubSpecPROSPECT, Refl = SubRefl[,i], Tran = SubTran[,i], PROSPECT_version = PROSPECT_versionPRO,
                                  Parms2Estimate = Parms2EstimateBis, InitValues = InitValues)
-          ParmEst[[parm]][i] = res$PROT
+          ParmEst[[parm]][i] = res$CBC
         }
       }
     }
