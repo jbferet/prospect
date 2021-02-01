@@ -13,7 +13,8 @@ Invert_PROSPECT_OPT(
   PROSPECT_version = "D",
   Parms2Estimate = "ALL",
   InitValues = data.frame(CHL = 40, CAR = 10, ANT = 0.1, BROWN = 0.01, EWT = 0.01, LMA
-    = 0.01, PROT = 0.001, CBC = 0.009, N = 1.5, alpha = 40)
+    = 0.01, PROT = 0.001, CBC = 0.009, N = 1.5, alpha = 40),
+  verbose = FALSE
 )
 }
 \arguments{
@@ -31,7 +32,9 @@ See details.}
 
 \item{Parms2Estimate}{character vector. Parameters to estimate (can be 'ALL')}
 
-\item{InitValues}{data.frame. Default values of PROSPECT parameters. During optimization,
+\item{InitValues}{data.frame. Default values of PROSPECT parameters. During optimization,}
+
+\item{verbose}{boolean. set to TRUE to display sample number to be inverted
 they are used either as initialization values for parameters to estimate,
 or as fix values for other parameters.
 Parameters not compatible with PROSPECT_version are not taken into account.}
