@@ -653,7 +653,7 @@ Invert_PROSPECT_OPT <- function(SpecPROSPECT, lambda, Refl = NULL, Tran = NULL,
         message('PROSPECT inversion will be performed using full spectral information')
         message('Optimal estimation of ',parm)
         message('Using Prior N value and optimal spectral subdomain (nm) :')
-        message('from ', OptDomain[[parm]][1],' nm to ', OptDomain[[parm]][2],' nm')
+        message('from ', OptDomain[[parm]][1],' nm to ', OptDomain[[parm]][length(OptDomain[[parm]])],' nm')
         message('')
         # Fit spectral data to match PROSPECT with user optical properties
         SubData <- FitSpectralData(SpecPROSPECT=SpecPROSPECT,lambda=lambda,Refl=Refl,Tran=Tran,UserDomain = OptDomain[[parm]],UL_Bounds = UL_Bounds)
@@ -675,7 +675,7 @@ Invert_PROSPECT_OPT <- function(SpecPROSPECT, lambda, Refl = NULL, Tran = NULL,
       if (parm == "CHL"){
         message('Optimal estimation of ',parm)
         message('Using Prior N value and optimal spectral subdomain (nm) :')
-        message('from ', OptDomain[[parm]][1],' nm to ', OptDomain[[parm]][2],' nm')
+        message('from ', OptDomain[[parm]][1],' nm to ', OptDomain[[parm]][length(OptDomain[[parm]])],' nm')
         message('')
         # Fit spectral data to match PROSPECT with user optical properties
         SubData <- FitSpectralData(SpecPROSPECT=SpecPROSPECT,lambda=lambda,Refl=Refl,Tran=Tran,UserDomain = OptDomain[[parm]],UL_Bounds = UL_Bounds)
@@ -697,7 +697,7 @@ Invert_PROSPECT_OPT <- function(SpecPROSPECT, lambda, Refl = NULL, Tran = NULL,
       if (parm == "CAR"){
         message('Optimal estimation of ',parm)
         message('Using Prior N value and optimal spectral subdomain (nm) :')
-        message('from ', OptDomain[[parm]][1],' nm to ', OptDomain[[parm]][2],' nm')
+        message('from ', OptDomain[[parm]][1],' nm to ', OptDomain[[parm]][length(OptDomain[[parm]])],' nm')
         message('')
         # Fit spectral data to match PROSPECT with user optical properties
         SubData <- FitSpectralData(SpecPROSPECT=SpecPROSPECT,lambda=lambda,Refl=Refl,Tran=Tran,UserDomain = OptDomain[[parm]],UL_Bounds = UL_Bounds)
@@ -719,7 +719,7 @@ Invert_PROSPECT_OPT <- function(SpecPROSPECT, lambda, Refl = NULL, Tran = NULL,
       if (parm == "EWT"){
         message('Optimal estimation of ',parm)
         message('Using Prior N value and optimal spectral subdomain (nm) :')
-        message('from ', OptDomain[[parm]][1],' nm to ', OptDomain[[parm]][2],' nm')
+        message('from ', OptDomain[[parm]][1],' nm to ', OptDomain[[parm]][length(OptDomain[[parm]])],' nm')
         message('')
         # Fit spectral data to match PROSPECT with user optical properties
         SubData <- FitSpectralData(SpecPROSPECT=SpecPROSPECT,lambda=lambda,Refl=Refl,Tran=Tran,UserDomain = OptDomain[[parm]],UL_Bounds = UL_Bounds)
@@ -745,7 +745,7 @@ Invert_PROSPECT_OPT <- function(SpecPROSPECT, lambda, Refl = NULL, Tran = NULL,
       if (parm == "LMA"){
         message('Optimal estimation of ',parm)
         message('Using Prior N value and optimal spectral subdomain (nm) :')
-        message('from ', OptDomain[[parm]][1],' nm to ', OptDomain[[parm]][2],' nm')
+        message('from ', OptDomain[[parm]][1],' nm to ', OptDomain[[parm]][length(OptDomain[[parm]])],' nm')
         message('')
         if (PROSPECT_version == 'PRO'){
           message('LMA is not estimated directly using PROSPECT-PRO')
@@ -775,7 +775,7 @@ Invert_PROSPECT_OPT <- function(SpecPROSPECT, lambda, Refl = NULL, Tran = NULL,
         PROSPECT_versionPRO = 'PRO'
         message('Optimal estimation of ',parm)
         message('Using Prior N value and optimal spectral subdomain (nm) :')
-        message('from ', OptDomain[[parm]][1],' nm to ', OptDomain[[parm]][2],' nm')
+        message('from ', OptDomain[[parm]][1],' nm to ', OptDomain[[parm]][length(OptDomain[[parm]])],' nm')
         message('')
         # Fit spectral data to match PROSPECT with user optical properties
         SubData <- FitSpectralData(SpecPROSPECT=SpecPROSPECT,lambda=lambda,Refl=Refl,Tran=Tran,UserDomain = OptDomain[[parm]],UL_Bounds = UL_Bounds)
@@ -797,7 +797,7 @@ Invert_PROSPECT_OPT <- function(SpecPROSPECT, lambda, Refl = NULL, Tran = NULL,
         PROSPECT_versionPRO = 'PRO'
         message('Optimal estimation of ',parm)
         message('Using Prior N value and optimal spectral subdomain (nm) :')
-        message('from ', OptDomain[[parm]][1],' nm to ', OptDomain[[parm]][2],' nm')
+        message('from ', OptDomain[[parm]][1],' nm to ', OptDomain[[parm]][length(OptDomain[[parm]])],' nm')
         message('')
         # Fit spectral data to match PROSPECT with user optical properties
         SubData <- FitSpectralData(SpecPROSPECT=SpecPROSPECT,lambda=lambda,Refl=Refl,Tran=Tran,UserDomain = OptDomain[[parm]],UL_Bounds = UL_Bounds)
@@ -833,7 +833,7 @@ Invert_PROSPECT_OPT <- function(SpecPROSPECT, lambda, Refl = NULL, Tran = NULL,
         message('PROSPECT inversion will be performed using full spectral information')
         message('Optimal estimation of ',parm)
         message('Using optimal spectral subdomain (nm) :')
-        message('from ', OptDomain[[parm]][1],' nm to ', OptDomain[[parm]][2],' nm')
+        message('from ', OptDomain[[parm]][1],' nm to ', OptDomain[[parm]][length(OptDomain[[parm]])],' nm')
         message('')
         # Fit spectral data to match PROSPECT with user optical properties
         SubData <- FitSpectralData(SpecPROSPECT=SpecPROSPECT,lambda=lambda,Refl=Refl,Tran=Tran,UserDomain = OptDomain[[parm]],UL_Bounds = UL_Bounds)
@@ -855,7 +855,7 @@ Invert_PROSPECT_OPT <- function(SpecPROSPECT, lambda, Refl = NULL, Tran = NULL,
       if (parm == "CHL"){
         message('Optimal estimation of ',parm)
         message('Using Prior N value and optimal spectral subdomain (nm) :')
-        message('from ', OptDomain[[parm]][1],' nm to ', OptDomain[[parm]][2],' nm')
+        message('from ', OptDomain[[parm]][1],' nm to ', OptDomain[[parm]][length(OptDomain[[parm]])],' nm')
         message('')
         # Fit spectral data to match PROSPECT with user optical properties
         SubData <- FitSpectralData(SpecPROSPECT=SpecPROSPECT,lambda=lambda,Refl=Refl,Tran=Tran,UserDomain = OptDomain[[parm]],UL_Bounds = UL_Bounds)
@@ -880,7 +880,7 @@ Invert_PROSPECT_OPT <- function(SpecPROSPECT, lambda, Refl = NULL, Tran = NULL,
       if (parm == "CAR"){
         message('Optimal estimation of ',parm)
         message('Using Prior N value and optimal spectral subdomain (nm) :')
-        message('from ', OptDomain[[parm]][1],' nm to ', OptDomain[[parm]][2],' nm')
+        message('from ', OptDomain[[parm]][1],' nm to ', OptDomain[[parm]][length(OptDomain[[parm]])],' nm')
         message('')
         # Fit spectral data to match PROSPECT with user optical properties
         SubData <- FitSpectralData(SpecPROSPECT=SpecPROSPECT,lambda=lambda,Refl=Refl,Tran=Tran,UserDomain = OptDomain[[parm]],UL_Bounds = UL_Bounds)
@@ -902,7 +902,7 @@ Invert_PROSPECT_OPT <- function(SpecPROSPECT, lambda, Refl = NULL, Tran = NULL,
       if (parm == "EWT"){
         message('Optimal estimation of ',parm)
         message('Using Prior N value and optimal spectral subdomain (nm) :')
-        message('from ', OptDomain[[parm]][1],' nm to ', OptDomain[[parm]][2],' nm')
+        message('from ', OptDomain[[parm]][1],' nm to ', OptDomain[[parm]][length(OptDomain[[parm]])],' nm')
         message('')
         # Fit spectral data to match PROSPECT with user optical properties
         SubData <- FitSpectralData(SpecPROSPECT=SpecPROSPECT,lambda=lambda,Refl=Refl,Tran=Tran,UserDomain = OptDomain[[parm]],UL_Bounds = UL_Bounds)
@@ -928,7 +928,7 @@ Invert_PROSPECT_OPT <- function(SpecPROSPECT, lambda, Refl = NULL, Tran = NULL,
       if (parm == "LMA"){
         message('Optimal estimation of ',parm)
         message('Using Reflectance only, no prior N value and optimal spectral subdomain (nm) :')
-        message('from ', OptDomain[[parm]][1],' nm to ', OptDomain[[parm]][2],' nm')
+        message('from ', OptDomain[[parm]][1],' nm to ', OptDomain[[parm]][length(OptDomain[[parm]])],' nm')
         message('')
         if (PROSPECT_version == 'PRO'){
           message('LMA is not estimated directly using PROSPECT-PRO')
@@ -957,7 +957,7 @@ Invert_PROSPECT_OPT <- function(SpecPROSPECT, lambda, Refl = NULL, Tran = NULL,
         PROSPECT_versionPRO = 'PRO'
         message('Optimal estimation of ',parm)
         message('Using Prior N value and optimal spectral subdomain (nm) :')
-        message('from ', OptDomain[[parm]][1],' nm to ', OptDomain[[parm]][2],' nm')
+        message('from ', OptDomain[[parm]][1],' nm to ', OptDomain[[parm]][length(OptDomain[[parm]])],' nm')
         message('')
         # Fit spectral data to match PROSPECT with user optical properties
         SubData <- FitSpectralData(SpecPROSPECT=SpecPROSPECT,lambda=lambda,
@@ -982,7 +982,7 @@ Invert_PROSPECT_OPT <- function(SpecPROSPECT, lambda, Refl = NULL, Tran = NULL,
         PROSPECT_versionPRO = 'PRO'
         message('Optimal estimation of ',parm)
         message('Using Prior N value and optimal spectral subdomain (nm) :')
-        message('from ', OptDomain[[parm]][1],' nm to ', OptDomain[[parm]][2],' nm')
+        message('from ', OptDomain[[parm]][1],' nm to ', OptDomain[[parm]][length(OptDomain[[parm]])],' nm')
         message('')
         # Fit spectral data to match PROSPECT with user optical properties
         SubData <- FitSpectralData(SpecPROSPECT=SpecPROSPECT,lambda=lambda,
