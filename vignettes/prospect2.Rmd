@@ -97,7 +97,8 @@ InitValues <- data.frame(CHL=40, CAR=10, ANT=0.1, BROWN=0, EWT=0.01, LMA=0.01, N
 # define spectral subdomain from 400 nm to 800 nm
 SpectralSubDomain <- c(400,800)
 # adjust spectral domain
-SubData <- FitSpectralData(SpecPROSPECT=SpecPROSPECT,lambda=LRT_D$wvl,LRT_D$Reflectance, Tran = LRT_D$Transmittance,UserDomain = SpectralSubDomain)
+SubData <- FitSpectralData(SpecPROSPECT=SpecPROSPECT,lambda=LRT_D$wvl,LRT_D$Reflectance, Tran = LRT_D$Transmittance,
+                           UserDomain = SpectralSubDomain,UL_Bounds = TRUE)
 SubSpecPROSPECT = SubData$SpecPROSPECT
 Sublambda       = SubData$lambda
 SubRefl         = SubData$Refl
@@ -119,7 +120,8 @@ InitValues <- data.frame(CHL=40, CAR=10, ANT=0.1, BROWN=0, EWT=0.01, LMA=0.01, N
 # define spectral subdomain from 400 nm to 800 nm
 SpectralSubDomain <- c(400,800)
 # adjust spectral domain
-SubData <- FitSpectralData(SpecPROSPECT=SpecPROSPECT,lambda=LRT_D$wvl,LRT_D$Reflectance, Tran = LRT_D$Transmittance,UserDomain = SpectralSubDomain)
+SubData <- FitSpectralData(SpecPROSPECT=SpecPROSPECT,lambda=LRT_D$wvl,LRT_D$Reflectance, Tran = LRT_D$Transmittance,
+                           UserDomain = SpectralSubDomain,UL_Bounds = TRUE)
 SubSpecPROSPECT = SubData$SpecPROSPECT
 Sublambda       = SubData$lambda
 SubRefl         = SubData$Refl
@@ -140,7 +142,8 @@ InitValues <- data.frame(CHL=0, CAR=0, ANT=0, BROWN=0, EWT=0.01, LMA=0.01, N=1.5
 # define spectral subdomain 
 SpectralSubDomain <- c(1700,2400)
 # adjust spectral domain
-SubData <- FitSpectralData(SpecPROSPECT=SpecPROSPECT,lambda=LRT_D$wvl,LRT_D$Reflectance, Tran = LRT_D$Transmittance,UserDomain = SpectralSubDomain)
+SubData <- FitSpectralData(SpecPROSPECT=SpecPROSPECT,lambda=LRT_D$wvl,LRT_D$Reflectance, Tran = LRT_D$Transmittance,
+                           UserDomain = SpectralSubDomain,UL_Bounds = TRUE)
 SubSpecPROSPECT = SubData$SpecPROSPECT
 Sublambda       = SubData$lambda
 SubRefl         = SubData$Refl
@@ -184,7 +187,8 @@ LRT_PRO <- PROSPECT(SpecPROSPECT,CHL=CHL,CAR=CAR,ANT=ANT,EWT=EWT,LMA=LMA,N=N,PRO
 # define spectral subdomain 
 SpectralSubDomain <- c(2125,2175)
 # adjust spectral domain
-SubData <- FitSpectralData(SpecPROSPECT=SpecPROSPECT,lambda=LRT_D$wvl,LRT_D$Reflectance, Tran = LRT_D$Transmittance,UserDomain = SpectralSubDomain)
+SubData <- FitSpectralData(SpecPROSPECT=SpecPROSPECT,lambda=LRT_D$wvl,LRT_D$Reflectance, Tran = LRT_D$Transmittance,
+                           UserDomain = SpectralSubDomain,UL_Bounds = TRUE)
 SubSpecPROSPECT = SubData$SpecPROSPECT
 Sublambda       = SubData$lambda
 SubRefl         = SubData$Refl

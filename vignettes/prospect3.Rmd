@@ -67,7 +67,7 @@ CHL_ALL <- CAR_ALL <- ANT_ALL <- EWT_ALL <- LMA_ALL <- N_ALL <- c()
 InitValues <- data.frame(CHL=40, CAR=10, ANT=0.1, BROWN=0, EWT=0.01, LMA=0.01, N=1.5)
 # Adjust spectral domain for SpecPROSPECT to fit leaf optical properties 
 SubData <- FitSpectralData(SpecPROSPECT=SpecPROSPECT,lambda=lambda,Refl, 
-                           Tran =Tran,UserDomain = c(lambda[1],lambda[length(lambda)]))
+                           Tran =Tran,UserDomain = c(lambda[1],lambda[length(lambda)]),UL_Bounds = TRUE)
 SubSpecPROSPECT = SubData$SpecPROSPECT
 Sublambda       = SubData$lambda
 SubRefl         = SubData$Refl
