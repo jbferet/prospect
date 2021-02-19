@@ -137,7 +137,7 @@ CHL_R_Nprior <- CAR_R_Nprior <- EWT_R_Nprior <- LMA_R_Nprior <- c()
 CHL_T_Nprior <- CAR_T_Nprior <- EWT_T_Nprior <- LMA_T_Nprior <- c()
 # Adjust spectral domain for SpecPROSPECT to fit leaf optical properties 
 SubData <- FitSpectralData(SpecPROSPECT=SpecPROSPECT,lambda=lambda,Refl, 
-                           Tran =Tran,UserDomain = c(lambda[1],lambda[length(lambda)]))
+                           Tran =Tran,UserDomain = c(lambda[1],lambda[length(lambda)]),UL_Bounds = TRUE)
 SubSpecPROSPECT = SubData$SpecPROSPECT
 Sublambda       = SubData$lambda
 SubRefl         = SubData$Refl
@@ -176,7 +176,7 @@ Finally, the combination of prior estimation of `N` and optimal spectral domain 
 Parms2Estimate  = c('CHL','CAR','ANT','EWT','LMA')
 InitValues <- data.frame(CHL=40, CAR=8, ANT=0.1, BROWN=0, EWT=0.01, LMA=0.01, N=1.5)
 print('PROSPECT inversion using optimal spectral setting and prior N')
-ParmEst <- Invert_PROSPECT_OPT(SpecPROSPECT = SubSpecPROSPECT, lambda=lambda, Refl = SubRefl, 
+ParmEst <- Invert_PROSPECT_OPT(SpecPROSPECT = SubSpecPROSPECT, lambda=Sublambda, Refl = SubRefl, 
                                Tran = NULL, PROSPECT_version = 'D',
                                Parms2Estimate = Parms2Estimate, InitValues = InitValues)
 CHL_R_OPT <- ParmEst$CHL
@@ -185,7 +185,7 @@ ANT_R_OPT <- ParmEst$ANT
 EWT_R_OPT <- ParmEst$EWT
 LMA_R_OPT <- ParmEst$LMA
 
-ParmEst <- Invert_PROSPECT_OPT(SpecPROSPECT = SubSpecPROSPECT, lambda=lambda, Refl = NULL, 
+ParmEst <- Invert_PROSPECT_OPT(SpecPROSPECT = SubSpecPROSPECT, lambda=Sublambda, Refl = NULL, 
                                Tran = SubTran, PROSPECT_version = 'D',
                                Parms2Estimate = Parms2Estimate, InitValues = InitValues)
 CHL_T_OPT <- ParmEst$CHL
