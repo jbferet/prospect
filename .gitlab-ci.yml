@@ -25,7 +25,7 @@ deps:
   stage: deps
   script:
   - mkdir -p $R_LIBS_USER $BUILD_LOGS_DIR
-  - R -e 'devtools::install_github("floriandeboissieu/pkgdown", ref = "patch-1", lib=Sys.getenv("R_LIBS_USER"))' # for gitlab link support
+  # - R -e 'devtools::install_github("floriandeboissieu/pkgdown", ref = "patch-1", lib=Sys.getenv("R_LIBS_USER"))' # for gitlab link support
   - R -e 'devtools::install_deps(lib=Sys.getenv("R_LIBS_USER"))'
 
 check:
@@ -37,8 +37,9 @@ check:
 pages:
   stage: deploy
   script:
+  - R -e 'devtools::install_cran("pkgdown")'
   - R -e 'devtools::document()'
-  - R -e 'pkgdown::build_site()'
+  - R -e 'pkgdown::build_site(new_process=F)'
   - mv docs public
   artifacts:
     paths:
