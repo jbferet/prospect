@@ -12,30 +12,31 @@ cache:
   - $R_LIBS_USER
 
 before_script:
+  - echo '.libPaths("'${R_LIBS_USER}'")' > .Rprofile
   - apt-get update
   - apt-get install -y qpdf pandoc libfreetype6-dev pkg-config
 
 stages:
+- deps
 - check
 - deploy
+
+deps:
+  stage: deps
+  script:
+  - mkdir -p $R_LIBS_USER $BUILD_LOGS_DIR
+  - R -e 'devtools::install_github("floriandeboissieu/pkgdown", ref = "patch-1", lib=Sys.getenv("R_LIBS_USER"))' # for gitlab link support
+  - R -e 'devtools::install_deps(lib=Sys.getenv("R_LIBS_USER"))'
 
 check:
   stage: check
   script:
-  - R -e 'print(Sys.getenv("R_LIBS_USER"))'
-  - mkdir -p $R_LIBS_USER $BUILD_LOGS_DIR
-  - R -e 'install.packages(c("devtools", "testthat", "roxygen2"))'
-  - R -e 'devtools::install_deps(dep = T)'
   - R -e 'devtools::check(check_dir = Sys.getenv("CHECK_DIR"), error_on = "error")'
-  - R -e 'if (length(devtools::check_failures(path = Sys.getenv("BUILD_LOGS_DIR"), note = FALSE, warning = FALSE)) > 0) stop()'
   - R -e 'devtools::install()'
-
 
 pages:
   stage: deploy
   script:
-  - R -e 'devtools::install_cran("pkgdown")'
-  - R -e 'devtools::install_deps(dep = T)'
   - R -e 'devtools::document()'
   - R -e 'pkgdown::build_site()'
   - mv docs public
