@@ -26,19 +26,24 @@ deps:
   script:
   - mkdir -p $R_LIBS_USER $BUILD_LOGS_DIR
   - R -e 'devtools::install_deps(lib=Sys.getenv("R_LIBS_USER"))'
+  only:
+    - scheduler
 
 check:
   stage: check
   script:
   - R -e 'devtools::check(check_dir = Sys.getenv("CHECK_DIR"), error_on = "error")'
   - R -e 'devtools::install()'
+  only:
+    - scheduler
 
 pages:
   stage: deploy
   script:
   - R -e 'devtools::install_github("r-lib/pkgdown")'
   - R -e 'devtools::document()'
-  - R -e 'pkgdown::build_site(new_process=F)'
+  - R -e 'pkgdown::build_site()'
+  - grep gitlab docs/reference/PROSPECT.html
   - mv docs public
   artifacts:
     paths:
