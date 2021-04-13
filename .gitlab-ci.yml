@@ -27,7 +27,8 @@ deps:
   - mkdir -p $R_LIBS_USER $BUILD_LOGS_DIR
   - R -e 'devtools::install_deps(lib=Sys.getenv("R_LIBS_USER"))'
   only:
-    - scheduler
+    - master
+    - schedules
 
 check:
   stage: check
@@ -35,7 +36,8 @@ check:
   - R -e 'devtools::check(check_dir = Sys.getenv("CHECK_DIR"), error_on = "error")'
   - R -e 'devtools::install()'
   only:
-    - scheduler
+    - master
+    - schedules
 
 pages:
   stage: deploy
