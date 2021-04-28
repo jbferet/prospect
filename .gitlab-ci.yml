@@ -16,6 +16,7 @@ before_script:
   - echo $R_LIBS_USER
   - mkdir -p $R_LIBS_USER $BUILD_LOGS_DIR
   - ls $R_LIBS_DIR
+  # remove previous R version libs
   - find $R_LIBS_DIR/* -maxdepth 0 ! -name $(basename $R_LIBS_USER) -type d -exec rm -r {} +
   - ls $R_LIBS_DIR
   - echo '.libPaths("'${R_LIBS_USER}'")' > .Rprofile
@@ -30,7 +31,7 @@ stages:
 deps:
   stage: deps
   script:
-  - R -e 'devtools::install_deps(lib = Sys.getenv("R_LIBS_USER"), dependencies = T)'
+  - R -e 'devtools::install_deps(dependencies = T)'
   only:
     - master
     - schedules
