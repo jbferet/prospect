@@ -3,15 +3,21 @@ image: thomaschln/r-devtools
 # gitlab-ci file copied from https://www.r-bloggers.com/developing-r-packages-with-usethis-and-gitlab-ci-part-iii/
 
 variables:
-  R_LIBS_USER: "$CI_PROJECT_DIR/ci/lib"
+  R_LIBS_DIR: "$CI_PROJECT_DIR/ci/lib"
   CHECK_DIR: "$CI_PROJECT_DIR/ci/logs"
   BUILD_LOGS_DIR: "$CI_PROJECT_DIR/ci/logs/$CI_PROJECT_NAME.Rcheck"
 
 cache:
   paths:
-  - $R_LIBS_USER
+  - $R_LIBS_DIR
 
 before_script:
+  - export R_LIBS_USER=$R_LIBS_DIR/$(R --version | sed -n 1p| sed -r 's/.*([0-9]\.[0-9]\.[0-9]).*/\1/')
+  - echo $R_LIBS_USER
+  - mkdir -p $R_LIBS_USER $BUILD_LOGS_DIR
+  - ls $R_LIBS_DIR
+  - find $R_LIBS_DIR/* -maxdepth 0 ! -name $(basename $R_LIBS_USER) -type d -exec rm -r {} +
+  - ls $R_LIBS_DIR
   - echo '.libPaths("'${R_LIBS_USER}'")' > .Rprofile
   - apt-get update
   - apt-get install -y qpdf pandoc libfreetype6-dev pkg-config
