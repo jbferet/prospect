@@ -1,6 +1,6 @@
 image: thomaschln/r-devtools
 
-# gitlab-ci file copied from https://www.r-bloggers.com/developing-r-packages-with-usethis-and-gitlab-ci-part-iii/
+# gitlab-ci file inspired from https://www.r-bloggers.com/developing-r-packages-with-usethis-and-gitlab-ci-part-iii/
 
 variables:
   R_LIBS_DIR: "$CI_PROJECT_DIR/ci/lib"
@@ -30,8 +30,7 @@ stages:
 deps:
   stage: deps
   script:
-  - mkdir -p $R_LIBS_USER $BUILD_LOGS_DIR
-  - R -e 'devtools::install_deps(lib=Sys.getenv("R_LIBS_USER"))'
+  - R -e 'devtools::install_deps(lib = Sys.getenv("R_LIBS_USER"), dependencies = T)'
   only:
     - master
     - schedules
