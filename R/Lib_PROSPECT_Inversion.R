@@ -137,6 +137,7 @@ Invert_PROSPECT <- function(SpecPROSPECT, Refl = NULL, Tran = NULL,
 #' @details
 #' This function is based on \code{\link[pracma]{fmincon}}.
 #' @importFrom pracma fmincon
+#' @import NlcOptim
 #' @export
 
 tryInversion <- function(x0, MeritFunction, SpecPROSPECT, Refl, Tran, Parms2Estimate, lb, ub, verbose = FALSE) {
