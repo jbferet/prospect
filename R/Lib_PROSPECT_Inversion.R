@@ -661,6 +661,10 @@ Invert_PROSPECT_OPT <- function(SpecPROSPECT, lambda, Refl = NULL, Tran = NULL,
         Sublambda       = SubData$lambda
         SubRefl         = SubData$Refl
         SubTran         = SubData$Tran
+        if (nbSamples==1){
+          SubRefl         = matrix(SubRefl,ncol = 1)
+          SubTran         = matrix(SubTran,ncol = 1)
+        }
         if (!PROSPECT_version =='5'){Parms2EstimateBis <- c('CHL', 'CAR', 'ANT')}
         else if (PROSPECT_version =='5'){Parms2EstimateBis <- c('CHL', 'CAR')}
         # Invert PROSPECT with optimal spectral information
@@ -683,6 +687,10 @@ Invert_PROSPECT_OPT <- function(SpecPROSPECT, lambda, Refl = NULL, Tran = NULL,
         Sublambda       = SubData$lambda
         SubRefl         = SubData$Refl
         SubTran         = SubData$Tran
+        if (nbSamples==1){
+          SubRefl         = matrix(SubRefl,ncol = 1)
+          SubTran         = matrix(SubTran,ncol = 1)
+        }
         if (!PROSPECT_version =='5'){Parms2EstimateBis <- c('CHL', 'CAR', 'ANT')}
         else if (PROSPECT_version =='5'){Parms2EstimateBis <- c('CHL', 'CAR')}
         # Invert PROSPECT with optimal spectral information
@@ -705,6 +713,10 @@ Invert_PROSPECT_OPT <- function(SpecPROSPECT, lambda, Refl = NULL, Tran = NULL,
         Sublambda       = SubData$lambda
         SubRefl         = SubData$Refl
         SubTran         = SubData$Tran
+        if (nbSamples==1){
+          SubRefl         = matrix(SubRefl,ncol = 1)
+          SubTran         = matrix(SubTran,ncol = 1)
+        }
         if (!PROSPECT_version =='5'){Parms2EstimateBis <- c('CHL', 'CAR', 'ANT')}
         else if (PROSPECT_version =='5'){Parms2EstimateBis <- c('CHL', 'CAR')}
         # Invert PROSPECT with optimal spectral information
@@ -727,6 +739,10 @@ Invert_PROSPECT_OPT <- function(SpecPROSPECT, lambda, Refl = NULL, Tran = NULL,
         Sublambda       = SubData$lambda
         SubRefl         = SubData$Refl
         SubTran         = SubData$Tran
+        if (nbSamples==1){
+          SubRefl         = matrix(SubRefl,ncol = 1)
+          SubTran         = matrix(SubTran,ncol = 1)
+        }
         if (!PROSPECT_version =='PRO'){Parms2EstimateBis <- c('EWT', 'LMA')}
         else if (PROSPECT_version =='PRO'){Parms2EstimateBis <- c('EWT', 'PROT', 'CBC')}
         # Invert PROSPECT with optimal spectral information
@@ -759,6 +775,10 @@ Invert_PROSPECT_OPT <- function(SpecPROSPECT, lambda, Refl = NULL, Tran = NULL,
           Sublambda       = SubData$lambda
           SubRefl         = SubData$Refl
           SubTran         = SubData$Tran
+          if (nbSamples==1){
+            SubRefl         = matrix(SubRefl,ncol = 1)
+            SubTran         = matrix(SubTran,ncol = 1)
+          }
           # Parms2EstimateBis <- c('EWT', 'PROT', 'CBC')
           Parms2EstimateBis <- c('EWT', 'LMA')
           # Invert PROSPECT with optimal spectral information
@@ -783,6 +803,10 @@ Invert_PROSPECT_OPT <- function(SpecPROSPECT, lambda, Refl = NULL, Tran = NULL,
         Sublambda       = SubData$lambda
         SubRefl         = SubData$Refl
         SubTran         = SubData$Tran
+        if (nbSamples==1){
+          SubRefl         = matrix(SubRefl,ncol = 1)
+          SubTran         = matrix(SubTran,ncol = 1)
+        }
         Parms2EstimateBis <- c('EWT', 'PROT', 'CBC')
         # Invert PROSPECT with optimal spectral information
         for (i in 1:nbSamples){
@@ -805,6 +829,10 @@ Invert_PROSPECT_OPT <- function(SpecPROSPECT, lambda, Refl = NULL, Tran = NULL,
         Sublambda       = SubData$lambda
         SubRefl         = SubData$Refl
         SubTran         = SubData$Tran
+        if (nbSamples==1){
+          SubRefl         = matrix(SubRefl,ncol = 1)
+          SubTran         = matrix(SubTran,ncol = 1)
+        }
         Parms2EstimateBis <- c('EWT', 'PROT', 'CBC')
         # Invert PROSPECT with optimal spectral information
         for (i in 1:nbSamples){
@@ -841,6 +869,10 @@ Invert_PROSPECT_OPT <- function(SpecPROSPECT, lambda, Refl = NULL, Tran = NULL,
         Sublambda       = SubData$lambda
         SubRefl         = SubData$Refl
         SubTran         = SubData$Tran
+        if (nbSamples==1){
+          SubRefl         = matrix(SubRefl,ncol = 1)
+          SubTran         = matrix(SubTran,ncol = 1)
+        }
         if (!PROSPECT_version =='5'){Parms2EstimateBis <- c('CHL', 'CAR', 'ANT','N')}
         else if (PROSPECT_version =='5'){Parms2EstimateBis <- c('CHL', 'CAR','N')}
         # Invert PROSPECT with optimal spectral information
@@ -863,6 +895,10 @@ Invert_PROSPECT_OPT <- function(SpecPROSPECT, lambda, Refl = NULL, Tran = NULL,
         Sublambda       = SubData$lambda
         SubRefl         = SubData$Refl
         SubTran         = SubData$Tran
+        if (nbSamples==1){
+          SubRefl         = matrix(SubRefl,ncol = 1)
+          SubTran         = matrix(SubTran,ncol = 1)
+        }
         if (!PROSPECT_version =='5'){
           Parms2EstimateBis <- c('CHL', 'CAR', 'ANT','N')
         } else if (PROSPECT_version =='5'){
@@ -888,6 +924,10 @@ Invert_PROSPECT_OPT <- function(SpecPROSPECT, lambda, Refl = NULL, Tran = NULL,
         Sublambda       = SubData$lambda
         SubRefl         = SubData$Refl
         SubTran         = SubData$Tran
+        if (nbSamples==1){
+          SubRefl         = matrix(SubRefl,ncol = 1)
+          SubTran         = matrix(SubTran,ncol = 1)
+        }
         if (!PROSPECT_version =='5'){Parms2EstimateBis <- c('CHL', 'CAR', 'ANT','N')}
         else if (PROSPECT_version =='5'){Parms2EstimateBis <- c('CHL', 'CAR','N')}
         # Invert PROSPECT with optimal spectral information
@@ -910,6 +950,10 @@ Invert_PROSPECT_OPT <- function(SpecPROSPECT, lambda, Refl = NULL, Tran = NULL,
         Sublambda       = SubData$lambda
         SubRefl         = SubData$Refl
         SubTran         = SubData$Tran
+        if (nbSamples==1){
+          SubRefl         = matrix(SubRefl,ncol = 1)
+          SubTran         = matrix(SubTran,ncol = 1)
+        }
         if (!PROSPECT_version =='PRO'){Parms2EstimateBis <- c('EWT', 'LMA','N')}
         else if (PROSPECT_version =='PRO'){Parms2EstimateBis <- c('EWT', 'PROT', 'CBC','N')}
         # Invert PROSPECT with optimal spectral information
@@ -942,6 +986,10 @@ Invert_PROSPECT_OPT <- function(SpecPROSPECT, lambda, Refl = NULL, Tran = NULL,
           Sublambda       = SubData$lambda
           SubRefl         = SubData$Refl
           SubTran         = SubData$Tran
+          if (nbSamples==1){
+            SubRefl         = matrix(SubRefl,ncol = 1)
+            SubTran         = matrix(SubTran,ncol = 1)
+          }
           Parms2EstimateBis <- c('EWT', 'LMA', 'N')
           # Invert PROSPECT with optimal spectral information
           for (i in 1:nbSamples){
@@ -966,6 +1014,10 @@ Invert_PROSPECT_OPT <- function(SpecPROSPECT, lambda, Refl = NULL, Tran = NULL,
         Sublambda       = SubData$lambda
         SubRefl         = SubData$Refl
         SubTran         = SubData$Tran
+        if (nbSamples==1){
+          SubRefl         = matrix(SubRefl,ncol = 1)
+          SubTran         = matrix(SubTran,ncol = 1)
+        }
         Parms2EstimateBis <- c('EWT', 'PROT', 'CBC','N')
         # Invert PROSPECT with optimal spectral information
         for (i in 1:nbSamples){
@@ -991,6 +1043,10 @@ Invert_PROSPECT_OPT <- function(SpecPROSPECT, lambda, Refl = NULL, Tran = NULL,
         Sublambda       = SubData$lambda
         SubRefl         = SubData$Refl
         SubTran         = SubData$Tran
+        if (nbSamples==1){
+          SubRefl         = matrix(SubRefl,ncol = 1)
+          SubTran         = matrix(SubTran,ncol = 1)
+        }
         Parms2EstimateBis <- c('EWT', 'PROT', 'CBC','N')
         # Invert PROSPECT with optimal spectral information
         for (i in 1:nbSamples){
@@ -1178,7 +1234,7 @@ Invert_PROSPECT_subdomain <- function(New_Features, Refl, Tran, SpecPROSPECT, la
   Sublambda       = SubData$lambda
   SubRefl         = SubData$Refl
   SubTran         = SubData$Tran
-  if (length(Sublambda)==1){
+  if (length(Sublambda)==length(SubRefl) | length(Sublambda)==length(SubTran)){
     SubRefl         = matrix(SubRefl,ncol = 1)
     SubTran         = matrix(SubTran,ncol = 1)
   }
