@@ -1,8 +1,16 @@
+# prospect v1.2.0
+
+## Changes
+- now accepts dataframes, matrices and vectors as input leaf optical properties
+- optimal inversion codes rewritten and simplified
+- added progress bar when inverting PROSPECT on several samples
+- updated vignettes
+
 # prospect v1.1.0
 - added verbose as input in invert_PROSPECT_OPT
 - modified info displayed when performing optimal inversion (Invert_PROSPECT_OPT) 
 - changed lambda to Sublambda in Invert_PROSPECT_OPT
-
+ 
 ## Fixes
 - Added library NlcOptim in function "tryInversion"
 - fixed bug confusing CBC with proteins when performing optimal spectral domain inversion
