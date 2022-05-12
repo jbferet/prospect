@@ -1,3 +1,11 @@
+# prospect v1.1.0
+
+## Changes
+- now accepts dataframes, matrices and vectors as input leaf optical properties
+- optimal inversion codes rewritten and simplified
+- added progress bar when inverting PROSPECT on several samples
+- updated vignettes
+
 # prospect v1.0.1
 
 ## Changes

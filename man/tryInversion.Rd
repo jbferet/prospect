@@ -38,7 +38,7 @@ to be estimated through inversion}
 \item{verbose}{boolean. Set to TRUE if you want information about adjustment of tolerance during inversion.}
 }
 \value{
-fc estimates of the parameters
+res estimates of the parameters
 }
 \description{
 Function handling error during inversion

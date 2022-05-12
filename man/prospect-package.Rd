@@ -8,8 +8,7 @@
 \description{
 \if{html}{\figure{logo.png}{options: align='right' alt='logo' width='120'}}
 
-The package prospect includes PROSPECT-PRO, the latest version of the PROSPECT leaf model. It also includes 
-              inversion routines based on iterative optimization in order to estimate leaf chemistry from spectroscopic measurements.
+The package prospect includes PROSPECT-PRO, the latest version of the PROSPECT leaf model. It also includes inversion routines based on iterative optimization in order to estimate leaf chemistry from spectroscopic measurements.
 }
 \seealso{
 Useful links:
