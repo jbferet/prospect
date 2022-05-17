@@ -30,6 +30,7 @@
 #' the lower boundaries and second line the upper boundaries.
 #' @param alphaEst boolean. should alpha be estimated or not?
 #' @param verbose boolean. set true to get info about adjustment of tolerance or initialization
+#' @param progressBar boolean. show progressbar?
 #'
 #'
 #' @return OutPROSPECT estimated values corresponding to Parms2Estimate
@@ -66,7 +67,8 @@ Invert_PROSPECT <- function(SpecPROSPECT, Refl = NULL, Tran = NULL,
                               BROWN = c(0, 1), EWT = c(1e-8, 0.1), LMA = c(1e-6, .06),
                               PROT = c(1e-7, .006), CBC = c(1e-6, .054), N = c(.5, 4),
                               alpha = c(10, 90)),
-                            alphaEst = FALSE,verbose = FALSE) {
+                            alphaEst = FALSE,verbose = FALSE,
+                            progressBar=TRUE) {
 
   # check if list of parameters applicable to PROSPECT version
   parms_checked <- check_prospect_parms(PROSPECT_version, alphaEst,
@@ -74,9 +76,11 @@ Invert_PROSPECT <- function(SpecPROSPECT, Refl = NULL, Tran = NULL,
   # check if data class is compatible and convert into data.frame
   RT <- reshape_lop4inversion(Refl = Refl, Tran = Tran, SpecPROSPECT = SpecPROSPECT)
   OutPROSPECT <- list()
-  pb <- progress::progress_bar$new(
-    format = "Inverting PROSPECT [:bar] :percent in :elapsedfull , estimated time remaining :eta",
-    total = RT$nbSamples, clear = FALSE, width= 100)
+  if (progressBar==TRUE){
+    pb <- progress::progress_bar$new(
+      format = "Inverting PROSPECT [:bar] :percent in :elapsedfull , estimated time remaining :eta",
+      total = RT$nbSamples, clear = FALSE, width= 100)
+  }
   for (idsample in 1:RT$nbSamples){
     res <- tryInversion(x0 = parms_checked$InitValues, MeritFunction = MeritFunction,
                         SpecPROSPECT = SpecPROSPECT,
@@ -86,7 +90,9 @@ Invert_PROSPECT <- function(SpecPROSPECT, Refl = NULL, Tran = NULL,
     names(res$par) <- parms_checked$Parms2Estimate
     OutPROSPECT[[idsample]] <- parms_checked$InitValues
     OutPROSPECT[[idsample]][names(res$par)] <- res$par
-    pb$tick()
+    if (progressBar==TRUE){
+      pb$tick()
+    }
   }
   OutPROSPECT <- do.call(rbind,OutPROSPECT)
   return(OutPROSPECT)
@@ -521,6 +527,7 @@ Get_Nprior <- function(SpecPROSPECT, lambda, Refl = NULL, Tran = NULL) {
 #' they are used either as initialization values for parameters to estimate,
 #' or as fix values for other parameters.
 #' Parameters not compatible with PROSPECT_version are not taken into account.
+#' @param progressBar boolean. show progressbar?
 #'
 #' @return Nprior vector corresponding to teh prior estimation of N based on R only or T only
 #' @importFrom stats lm runif
@@ -536,7 +543,8 @@ Invert_PROSPECT_OPT <- function(SpecPROSPECT, lambda, Refl = NULL, Tran = NULL,
                                   BROWN = c(0, 1), EWT = c(1e-8, 0.1), LMA = c(1e-6, .06),
                                   PROT = c(1e-7, .006), CBC = c(1e-6, .054), N = c(.5, 4),
                                   alpha = c(10, 90)),
-                                verbose = FALSE) {
+                                verbose = FALSE,
+                                progressBar = TRUE) {
 
   # define optimal domain for the different constituents
   OptDomain_RT <- list('CHL' = seq(700,720), 'CAR' = seq(520,560), 'ANT' = seq(400,800),
@@ -601,21 +609,26 @@ Invert_PROSPECT_OPT <- function(SpecPROSPECT, lambda, Refl = NULL, Tran = NULL,
                                  UL_Bounds = List_Init$UL_Bounds[[parm]])
       if (parm=='EWT' & !is.na(match('LMA',Parms2Estimate))){ ParmDisplay <- 'EWT & LMA'}
       else {ParmDisplay <- parm}
-      pb <- progress::progress_bar$new(
-        format = paste("Estimation of ",ParmDisplay," [:bar] :percent in :elapsedfull , estimated time remaining :eta"),
-        total = RT$nbSamples, clear = FALSE, width= 100)
+      if (progressBar==TRUE){
+        pb <- progress::progress_bar$new(
+          format = paste("Estimation of ",ParmDisplay," [:bar] :percent in :elapsedfull , estimated time remaining :eta"),
+          total = RT$nbSamples, clear = FALSE, width= 100)
+      }
       for (i in 1:RT$nbSamples){
         res <- Invert_PROSPECT(SpecPROSPECT = OptLOP$SpecPROSPECT,
                                Refl = OptLOP$Refl[,i], Tran = OptLOP$Tran[,i],
                                PROSPECT_version = List_Init$PROSPECT_version[[parm]],
                                Parms2Estimate = List_Init$Parms2Estimate_tmp[[parm]],
                                InitValues = List_Init$InitValues[[parm]][i,],
+                               xlub = xlub,
                                verbose = verbose)
         ParmEst[[parm]][i] <- res[[parm]]
         if (parm=='EWT' & !is.na(match('LMA',Parms2Estimate))){
           ParmEst$LMA[i] <- res$LMA
         }
-        pb$tick()
+        if (progressBar==TRUE){
+          pb$tick()
+        }
       }
     }
   }

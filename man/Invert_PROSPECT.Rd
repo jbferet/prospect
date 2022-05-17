@@ -18,7 +18,8 @@ Invert_PROSPECT(
     c(0, 1), EWT = c(1e-08, 0.1), LMA = c(1e-06, 0.06), PROT = c(1e-07, 0.006), CBC =
     c(1e-06, 0.054), N = c(0.5, 4), alpha = c(10, 90)),
   alphaEst = FALSE,
-  verbose = FALSE
+  verbose = FALSE,
+  progressBar = TRUE
 )
 }
 \arguments{
@@ -49,6 +50,8 @@ the lower boundaries and second line the upper boundaries.}
 \item{alphaEst}{boolean. should alpha be estimated or not?}
 
 \item{verbose}{boolean. set true to get info about adjustment of tolerance or initialization}
+
+\item{progressBar}{boolean. show progressbar?}
 }
 \value{
 OutPROSPECT estimated values corresponding to Parms2Estimate
