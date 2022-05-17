@@ -1,3 +1,10 @@
+=======
+# prospect v1.2.1
+
+## Changes
+- optional progress bar when inverting PROSPECT
+- possibility to modify lower and upper bounds for parameters to estimate from inversion
+
 # prospect v1.2.0
 
 ## Changes
