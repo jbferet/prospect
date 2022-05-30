@@ -1,3 +1,9 @@
+# prospect v1.2.2
+
+## Fixes
+- added default xlub which are not specified by user, and result in an error
+
+
 # prospect v1.2.1
 
 ## Changes
