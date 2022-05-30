@@ -70,9 +70,23 @@ Invert_PROSPECT <- function(SpecPROSPECT, Refl = NULL, Tran = NULL,
                             alphaEst = FALSE,verbose = FALSE,
                             progressBar=TRUE) {
 
+  # add default values to xlub in case they were not defined
+  xlub_default <- data.frame(CHL = c(1e-4, 150), CAR = c(1e-4, 25), ANT = c(0, 50),
+                             BROWN = c(0, 1), EWT = c(1e-8, 0.1), LMA = c(1e-6, .06),
+                             PROT = c(1e-7, .006), CBC = c(1e-6, .054), N = c(.5, 4),
+                             alpha = c(10, 90))
+
+  AddedParm_LB <- setdiff(names(xlub_default),names(xlub))
+  for (ad in AddedParm_LB){
+    xlub[[ad]] <- xlub_default[[ad]]
+  }
+
   # check if list of parameters applicable to PROSPECT version
-  parms_checked <- check_prospect_parms(PROSPECT_version, alphaEst,
-                                        Parms2Estimate, xlub, InitValues)
+  parms_checked <- check_prospect_parms(PROSPECT_version = PROSPECT_version,
+                                        alphaEst = alphaEst,
+                                        Parms2Estimate = Parms2Estimate,
+                                        xlub = xlub,
+                                        InitValues = InitValues)
   # check if data class is compatible and convert into data.frame
   RT <- reshape_lop4inversion(Refl = Refl, Tran = Tran, SpecPROSPECT = SpecPROSPECT)
   OutPROSPECT <- list()
