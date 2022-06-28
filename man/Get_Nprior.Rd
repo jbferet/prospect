@@ -4,7 +4,14 @@
 \alias{Get_Nprior}
 \title{This function defines a regression model to estimate N from R only or T only}
 \usage{
-Get_Nprior(SpecPROSPECT, lambda, Refl = NULL, Tran = NULL)
+Get_Nprior(
+  SpecPROSPECT,
+  lambda,
+  Refl = NULL,
+  Tran = NULL,
+  OptWL_R = list(NIR = 800, SWIR = 1131),
+  OptWL_T = list(NIR = 753, SWIR = 1121)
+)
 }
 \arguments{
 \item{SpecPROSPECT}{list. Includes optical constants
@@ -15,6 +22,10 @@ refractive index, specific absorption coefficients and corresponding spectral ba
 \item{Refl}{numeric. Measured reflectance data}
 
 \item{Tran}{numeric. Measured Transmittance data}
+
+\item{OptWL_R}{list. optimal wavelengths used to estimate N from R only}
+
+\item{OptWL_T}{list. optimal wavelengths used to estimate N from T only}
 }
 \value{
 Nprior vector corresponding to teh prior estimation of N based on R only or T only
