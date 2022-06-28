@@ -64,7 +64,7 @@ Invert_PROSPECT <- function(SpecPROSPECT, Refl = NULL, Tran = NULL,
                             MeritFunction = "Merit_RMSE_PROSPECT",
                             xlub = data.frame(
                               CHL = c(1e-4, 150), CAR = c(1e-4, 25), ANT = c(0, 50),
-                              BROWN = c(0, 1), EWT = c(1e-8, 0.1), LMA = c(1e-6, .06),
+                              BROWN = c(0, 1), EWT = c(1e-8, 0.1), LMA = c(1e-8, .06),
                               PROT = c(1e-7, .006), CBC = c(1e-6, .054), N = c(.5, 4),
                               alpha = c(10, 90)),
                             alphaEst = FALSE,verbose = FALSE,
@@ -101,6 +101,16 @@ Invert_PROSPECT <- function(SpecPROSPECT, Refl = NULL, Tran = NULL,
                         Refl = RT$Refl[,idsample], Tran = RT$Tran[,idsample],
                         Parms2Estimate = parms_checked$Parms2Estimate,
                         lb = parms_checked$lb, ub = parms_checked$ub, verbose = verbose)
+    if (NA %in% res$par){
+      ModifyInit <- match(parms_checked$Parms2Estimate,names(parms_checked$InitValues))
+      updateInitValues <- parms_checked$InitValues
+      updateInitValues[ModifyInit] <- 1.1*updateInitValues[ModifyInit]
+      res <- tryInversion(x0 = updateInitValues, MeritFunction = MeritFunction,
+                          SpecPROSPECT = SpecPROSPECT,
+                          Refl = RT$Refl[,idsample], Tran = RT$Tran[,idsample],
+                          Parms2Estimate = parms_checked$Parms2Estimate,
+                          lb = parms_checked$lb, ub = parms_checked$ub, verbose = TRUE)
+    }
     names(res$par) <- parms_checked$Parms2Estimate
     OutPROSPECT[[idsample]] <- parms_checked$InitValues
     OutPROSPECT[[idsample]][names(res$par)] <- res$par
@@ -415,18 +425,22 @@ FitSpectralData <- function(SpecPROSPECT, lambda, Refl = NULL, Tran = NULL, User
 #' @param lambda  numeric. spectral bands corresponding to experimental data
 #' @param Refl  numeric. Measured reflectance data
 #' @param Tran  numeric. Measured Transmittance data
+#' @param OptWL_R  list. optimal wavelengths used to estimate N from R only
+#' @param OptWL_T  list. optimal wavelengths used to estimate N from T only
 #'
 #' @return Nprior vector corresponding to teh prior estimation of N based on R only or T only
 #' @importFrom stats lm runif
 #' @export
-Get_Nprior <- function(SpecPROSPECT, lambda, Refl = NULL, Tran = NULL) {
+Get_Nprior <- function(SpecPROSPECT, lambda, Refl = NULL, Tran = NULL,
+                       OptWL_R = list(NIR = 800,SWIR = 1131),
+                       OptWL_T = list(NIR = 753,SWIR = 1121)) {
 
   # definition of the optimal spectral band based on data available
-  OptWL_R <- OptWL_T <- list()
-  OptWL_R$NIR <- 800
-  OptWL_R$SWIR <- 1131
-  OptWL_T$NIR <- 753
-  OptWL_T$SWIR <- 1121
+  # OptWL_R <- OptWL_T <- list()
+  # OptWL_R$NIR <- 800
+  # OptWL_R$SWIR <- 1131
+  # OptWL_T$NIR <- 753
+  # OptWL_T$SWIR <- 1121
   # if prior information based on Reflectance
   if (is.null(Tran)) {
     # if required spectral bands in the original data
