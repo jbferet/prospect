@@ -27,7 +27,13 @@ devtools::install_gitlab('jbferet/prospect')
 
 A tutorial vignette is available [here](https://jbferet.gitlab.io/prospect/articles/prospect1.html).
 
-# 3 Citation
+
+# 3 Acknowledgments / Fundings
+
+This research was supported by the Agence Nationale de la Recherche ([ANR](https://anr.fr/en/open-calls-and-preannouncements/), France) through the young researchers project **BioCop** (ANR-17-CE32-0001)
+
+
+# 4 Citation
 
 If you use **prospect**, please cite the following references for PROSPECT-PRO and PROSPECT-D:
 
