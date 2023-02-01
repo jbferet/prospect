@@ -1,3 +1,13 @@
+# prospect v1.2.4
+
+## Fixes
+- Fixed bug when setting Parms2Estimate = "ALL" with Invert_PROSPECT_OPT
+
+# prospect v1.2.3
+
+## Fixes
+- Fixed bug initial inversion outputs NA
+
 # prospect v1.2.2
 
 ## Fixes
