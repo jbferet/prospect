@@ -621,6 +621,9 @@ Invert_PROSPECT_OPT <- function(SpecPROSPECT, lambda, Refl = NULL, Tran = NULL,
   if (is.null(RT$Refl) | is.null(RT$Tran)){
     ParmEst$N <- Nprior
   }
+  if (length(which(Parms2Estimate=='N'))>0){
+    Parms2Estimate <- Parms2Estimate[-which(Parms2Estimate=='N')]
+  }
   List_Init <- SetInitParm(Parms2Estimate = Parms2Estimate, ParmEst = ParmEst,
                            PROSPECT_version = PROSPECT_version, Nprior = Nprior,
                            ANTinit = ANTinit, OptDomain = OptDomain,
