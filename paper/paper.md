@@ -90,45 +90,44 @@ content set to 0.
 For each version, it is possible to also include the influence brown pigments (BROWN), which appear during senescence, 
 by ending the name of the version with `B`. Otherwise, `prospect` assumes that leaves contain no brown pigments.
 
-\autoref{tab:tab1} provides an overview of the leaf chemical constituents included in the different versions which can be specified when calling the function `PROSPECT`
+(Table \ref{table:1} provides an overview of the leaf chemical constituents included in the different versions which can be specified when calling the function `PROSPECT`.
 
-| Version     | `5` | `5B` | `D` | `DB` | `PRO` | `PROB` |
-| ----------- | ------------------------------------------
-| CHL         | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: |
-| CAR         | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: |
-| ANT         | | | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: |
-| BROWN       | | :heavy_check_mark: | | :heavy_check_mark: | | :heavy_check_mark: |
-| EWT         | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: |
-| LMA         | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | | |
-| PROT        | | | | | :heavy_check_mark: | :heavy_check_mark: |
-| CBC         | | | | | :heavy_check_mark: | :heavy_check_mark: |
-
+| Version 	|         `5`       	|       `5B`        	|           `D`       	|          `DB`     	|         `PRO`     	|       `PROB`      	|
+|---------	|-------------------	|:------------------:	|:-----------------:	|:------------------:	|:------------------:	|:------------------:	|
+| CHL     	| :heavy_check_mark:	| :heavy_check_mark:	| :heavy_check_mark:	| :heavy_check_mark:	| :heavy_check_mark:	| :heavy_check_mark:	|
+| CAR   	| :heavy_check_mark:	| :heavy_check_mark:	| :heavy_check_mark:	| :heavy_check_mark:	| :heavy_check_mark:	| :heavy_check_mark:	|
+| ANT   	|                   	|                   	| :heavy_check_mark:	| :heavy_check_mark:	| :heavy_check_mark:	| :heavy_check_mark:	|
+| BROWN 	|                   	| :heavy_check_mark:	|                   	| :heavy_check_mark:	|                   	| :heavy_check_mark:	|
+| EWT   	| :heavy_check_mark:	| :heavy_check_mark:	| :heavy_check_mark:	| :heavy_check_mark:	| :heavy_check_mark:	| :heavy_check_mark:	|
+| LMA   	| :heavy_check_mark:	| :heavy_check_mark:	| :heavy_check_mark:	| :heavy_check_mark:	|                   	|                   	|
+| PROT  	|                   	|                   	|                   	|                   	| :heavy_check_mark:	| :heavy_check_mark:	|
+| CBC   	|                   	|                   	|                   	|                   	| :heavy_check_mark:	| :heavy_check_mark:	|
 
 : Versions of the model PROSPECT  accepted as input of the `PROSPECT` function and 
-corresponding chemical constituents.\label{tab:tab1}
+corresponding chemical constituents.\label{table:1}
 
 The inversion procedure is based on the function `fmincon` implemented in the package `pracma`. 
 `fmincon` is an optimization algorithm aiming at finding the minimum of multivariable 
 functions with nonlinear constraints. 
 
 
-\autoref{tab:tab2} provides information on the spectral range used to estimate leaf chemical constituents from 
+(Table \ref{table:1} provides information on the spectral range used to estimate leaf chemical constituents from 
 their optical properties, for the two main inversion strategies.
 
-| Version     |         `5`        |        `5B`        |         `D`        |        `DB`        |        `PRO`       |       `PROB`       |
-| ----------- | --------------------------------------------------              	                  | 
-| CHL         |     700 -- 720 	   |     700 -- 720     |     700 -- 720     |     700 -- 720     |     700 -- 720     |     700 -- 720     |
-| CAR         |     520 -- 560 	   |     520 -- 560 	|     520 -- 560     |     520 -- 560     |     520 -- 560     |     520 -- 560     |
-| ANT         |         NA         |         NA         |     520 -- 560 	 |     400 -- 800     |     400 -- 800     |     400 -- 800     |
-| BROWN       |         NA         |         NA         |         NA         |         NA         |         NA         |         NA         |
-| EWT         |    1700 -- 2400    |    1700 -- 2400    |    1700 -- 2400    |    1700 -- 2400    |         NA         |         NA         |
-| LMA         |    1700 -- 2400    |    1700 -- 2400    |    1700 -- 2400    |    1700 -- 2400    |         NA         |         NA         |
-| PROT        |         NA         |         NA         |         NA         |         NA         |2100 -- 2139 ; 2160 -- 2179 |2100 -- 2139 ; 2160 -- 2179|
-| CBC         |         NA         |         NA         |         NA         |         NA         |         NA         |         NA         |
+| Version 	|      `5`      	|      `5B`      	|      `D`      	|      `DB`      	|     `PRO`      	|     `PROB`      	|
+|---------	|-----------------	|:----------------:	|:---------------:	|:----------------:	|:----------------:	|:----------------:	|
+| CHL     	|   700 -- 720   	|     700 -- 720     |     700 -- 720     |     700 -- 720     |     700 -- 720     |     700 -- 720     |
+| CAR    	|   520 -- 560   	|     520 -- 560 	|     520 -- 560     |     520 -- 560     |     520 -- 560     |     520 -- 560     |
+| ANT    	|       NA      	|       NA      	|     520 -- 560 	 |     400 -- 800     |     400 -- 800     |     400 -- 800     |
+| BROWN   	|       NA      	|       NA      	|       NA      	|       NA      	|         NA         |         NA         |
+| EWT   	|  1700 -- 2400  	|    1700 -- 2400    |    1700 -- 2400    |    1700 -- 2400    |         NA         |         NA         |
+| LMA   	|  1700 -- 2400  	    1700 -- 2400    |    1700 -- 2400    |    1700 -- 2400    |         NA         |         NA         |
+| PROT  	|       NA      	|         NA         |         NA         |         NA         |2100 -- 2139 ; 2160 -- 2179 |2100 -- 2139 ; 2160 -- 2179|
+| CBC   	|       NA      	|         NA         |         NA         |         NA         |         NA         |         NA         |
 
 
 : Versions of the model PROSPECT  accepted as input of the `PROSPECT` function and 
-corresponding chemical constituents.\label{tab:tab1}
+corresponding chemical constituents.\label{table:2}
 
 
 # Example 1: running PROSPECT in forward mode
