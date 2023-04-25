@@ -94,14 +94,14 @@ by ending the name of the version with `B`. Otherwise, `prospect` assumes that l
 
 | Version     | `5` | `5B` | `D` | `DB` | `PRO` | `PROB` |
 | ----------- | ------------------------------------------
-| CHL         | `:heavy_check_mark:` | `:heavy_check_mark:` | `:heavy_check_mark:` | `:heavy_check_mark:` | `:heavy_check_mark:` | `:heavy_check_mark:` |
-| CAR         | `:heavy_check_mark:` | `:heavy_check_mark:` | `:heavy_check_mark:` | `:heavy_check_mark:` | `:heavy_check_mark:` | `:heavy_check_mark:` |
-| ANT         |                    |                    | `:heavy_check_mark:` | `:heavy_check_mark:` | `:heavy_check_mark:` | `:heavy_check_mark:` |
-| BROWN       |                    | `:heavy_check_mark:` |                    | `:heavy_check_mark:` |                    | `:heavy_check_mark:` |
-| EWT         | `:heavy_check_mark:` | `:heavy_check_mark:` | `:heavy_check_mark:` | `:heavy_check_mark:` | `:heavy_check_mark:` | `:heavy_check_mark:` |
-| LMA         | `:heavy_check_mark:` | `:heavy_check_mark:` | `:heavy_check_mark:` | `:heavy_check_mark:` |                    |                    |
-| PROT        |                    |                    |                    |                    | `:heavy_check_mark:` | `:heavy_check_mark:` |
-| CBC         |                    |                    |                    |                    | `:heavy_check_mark:` | `:heavy_check_mark:` |
+| CHL         | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: |
+| CAR         | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: |
+| ANT         | | | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: |
+| BROWN       | | :heavy_check_mark: | | :heavy_check_mark: | | :heavy_check_mark: |
+| EWT         | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: |
+| LMA         | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | | |
+| PROT        | | | | | :heavy_check_mark: | :heavy_check_mark: |
+| CBC         | | | | | :heavy_check_mark: | :heavy_check_mark: |
 
 
 : Versions of the model PROSPECT  accepted as input of the `PROSPECT` function and 
@@ -116,7 +116,7 @@ functions with nonlinear constraints.
 their optical properties, for the two main inversion strategies.
 
 | Version     |         `5`        |        `5B`        |         `D`        |        `DB`        |        `PRO`       |       `PROB`       |
-| ----------- | --------------------------------------------------              	                                                        | 
+| ----------- | --------------------------------------------------              	                  | 
 | CHL         |     700 -- 720 	   |     700 -- 720     |     700 -- 720     |     700 -- 720     |     700 -- 720     |     700 -- 720     |
 | CAR         |     520 -- 560 	   |     520 -- 560 	|     520 -- 560     |     520 -- 560     |     520 -- 560     |     520 -- 560     |
 | ANT         |         NA         |         NA         |     520 -- 560 	 |     400 -- 800     |     400 -- 800     |     400 -- 800     |
@@ -166,27 +166,27 @@ library(prospect)
 
 # Run PROSPECT-PRO
 LRT_PRO <- PROSPECT(SpecPROSPECT, CHL = 45, CAR = 10, ANT = 0.2, 
-                    EWT = 0.012, PROT = 0.001,  CBC = 0.009, N = 1.7)
+ EWT = 0.012, PROT = 0.001,  CBC = 0.009, N = 1.7)
 ```
 
 The leaf optical properties can then be compared.
 
 ```r
 R_D_df <- data.frame('wvl' = LRT_D$wvl,
-                     'RT' = 100*LRT_D$Reflectance,
-                     'LOP' = matrix('R PROSPECT-D',nrow = length(LRT_D$Reflectance),ncol = 1))
+  'RT' = 100*LRT_D$Reflectance,
+  'LOP' = matrix('R PROSPECT-D',nrow = length(LRT_D$Reflectance),ncol = 1))
 
 T_D_df <- data.frame('wvl' = LRT_D$wvl,
-                     'RT' = 100*(1-LRT_D$Transmittance),
-                     'LOP' = matrix('T PROSPECT-D',nrow = length(LRT_D$Transmittance),ncol = 1))
+  'RT' = 100*(1-LRT_D$Transmittance),
+  'LOP' = matrix('T PROSPECT-D',nrow = length(LRT_D$Transmittance),ncol = 1))
 
 R_PRO_df <- data.frame('wvl' = LRT_PRO$wvl,
-                     'RT' = 100*LRT_PRO$Reflectance,
-                     'LOP' = matrix('R PROSPECT-PRO',nrow = length(LRT_PRO$Reflectance),ncol = 1))
+  'RT' = 100*LRT_PRO$Reflectance,
+  'LOP' = matrix('R PROSPECT-PRO',nrow = length(LRT_PRO$Reflectance),ncol = 1))
 
 T_PRO_df <- data.frame('wvl' = LRT_PRO$wvl,
-                     'RT' = 100*(1-LRT_PRO$Transmittance),
-                     'LOP' = matrix('T PROSPECT-PRO',nrow = length(LRT_PRO$Transmittance),ncol = 1))
+  'RT' = 100*(1-LRT_PRO$Transmittance),
+  'LOP' = matrix('T PROSPECT-PRO',nrow = length(LRT_PRO$Transmittance),ncol = 1))
 
 LRT_df <- rbind(R_D_df, T_D_df, R_PRO_df, T_PRO_df)
 
@@ -224,7 +224,7 @@ EWT <- 0.04*runif(1000)
 LMA <- 0.02*runif(1000)
 N   <- 1+2*runif(1000)
 Input_PROSPECT <- data.frame('CHL' = CHL, 'CAR' = CAR, 'ANT' = ANT, 
-                             'EWT' = EWT, 'LMA' = LMA, 'N' = N)
+          'EWT' = EWT, 'LMA' = LMA, 'N' = N)
 LUT <- PROSPECT_LUT(SpecPROSPECT,Input_PROSPECT)
 ```
 
@@ -275,11 +275,11 @@ when performing inversion on the full spectral domain covered by the data.
 This can be done automatically using `FitSpectralData`
 
 ```r
-SubData <- FitSpectralData(SpecPROSPECT = SpecPROSPECT,                         # spectral properties over 400-2500 nm
-                           lambda = lambda,                                     # spectral bands corresponding to refl and Tran
-                           Refl = Refl,                                         # Reflectance data (matrix or dataframe)
-                           Tran = Tran,                                         # Transmittance data (matrix or dataframe)
-                           UserDomain = lambda)                                 # spectral domain of interest
+SubData <- FitSpectralData(SpecPROSPECT = SpecPROSPECT,      # spectral properties over 400-2500 nm
+        lambda = lambda,                  # spectral bands corresponding to refl and Tran
+        Refl = Refl,   # Reflectance data (matrix or dataframe)
+        Tran = Tran,   # Transmittance data (matrix or dataframe)
+        UserDomain = lambda)              # spectral domain of interest
 ```
 
 The main inversion procedure is called with the function `Invert_PROSPECT`.
