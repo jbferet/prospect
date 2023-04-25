@@ -29,8 +29,8 @@ properties through light absorption and scattering. They are also an important d
 of vegetation reflectance acquired from Earth observation systems.
 Hence, physical modeling of leaf optical properties is key to better understand 
 and monitor ecosystems and agrosystems.
-PROSPECT is the most widely used leaf model, allowing simulation of leaf 
-directional-hemispherical reflectance and transmittance based on a limited set of chemical 
+PROSPECT is the most widely used leaf model, allowing simulation of leaf optical properties 
+(directional-hemispherical reflectance and transmittance) based on a limited set of chemical 
 constituents with specific absorption coefficients and a unique leaf structure parameter 
 to account for scattering.
 
@@ -49,8 +49,8 @@ The estimation of vegetation biophysical and chemical properties is
 becoming increasingly important for the monitoring of ecosystem and agrosystem functions. 
 A set of key biochemical traits, including leaf pigment content, water content, nitrogen content
 and leaf mass per area (LMA) absorb light in specific domains. 
-These constituents also influence canopy reflectance measured from Earth observation systems, 
-and in situ data collection at eleaf scale is critical to provide ground truth when upscaling 
+These constituents also influence canopy reflectance measured from Earth observation systems. 
+In situ data collection at leaf scale is critical to provide ground truth when upscaling 
 and mapping vegetation traits from satellite, airborne or UAV imagery. 
 
 Techniques based on leaf spectroscopy have developed in the past decades in order to provide a 
@@ -61,49 +61,47 @@ statistical models or to identify spectral indices leading to accurate estimatio
 based on parcimonious spectral information [@feret2011]. 
 
 The model PROSPECT is widely used in the remote sensing community, 
-alone or combined with canopy reflectance models such as SAIL [@jacquemoud1990], SCOPE, or DART. 
-Multiple versions have been released since its since its first version [@jacquemoud1990], aiming at expanding 
-its capacity to account for more chemical constituents. Recent versions introduced a broader range 
-of pigment types, including carotenoids [@feret2008] and anthocyanins [@feret2017], which are 
-particularly useful to simulate and analyze leaf optical properties corresponding to different 
-leaf development stages, from juvenile to mature to senescent. More recently, the latest version named 
+alone or combined with canopy reflectance models such as SAIL [@verhoef2007] and DART [@gastellu2015]. 
+Multiple versions have been released since the first version of PROSPECT [@jacquemoud1990], aiming at expanding 
+its capacity to account for more chemical constituents. Recent versions introduced carotenoids [@feret2008],  
+and anthocyanins [@feret2017], allowing simulating and analyzing leaf optical properties corresponding to different 
+leaf development stages, from juvenile to mature and senescent. The latest version named 
 PROSPECT-PRO included proteins and carbon based constituents as complementary fractions of the 
-initial constituent identified as dry matter (corresponding to LMA). In parallel with the 
+constituent identified as dry matter (corresponding to LMA). In parallel with the 
 development of new versions of the model, advances in model inversion were also performed 
-to improve the estimation of leaf chemical constituents [@feret2019; @spafford2021]. 
+to improve the estimation of leaf chemical constituents [@feret2019; @spafford2021].
 
 The application of an appropriate model inversion strategy is critical to ensure optimal 
 estimation of leaf constituents, as it was evidenced for the estimation of LMA [@feret2019], 
-which was reported as poorly retrieved from PROSPECT inversion in multiple studies. 
+which was reported as poorly retrieved from PROSPECT inversion in earlier studies. 
 
 To ensure access to latest advances in terms of model version and inversion strategies, 
 we present `prospect`, an R package including the most recent versions of PROSPECT, 
-and various inversion routines. Inversion routines are highly parameterizable, 
-opening possibilities for user to design their own inversion strategy. 
+and parameterizable inversion routines, allowing users to design their own inversion strategy.
 
 
 # Overview
 
-Two official versions of the model PROSPECT are implemented in `prospect`: PROSPECT-D [@feret2017] and 
+Two versions of the model PROSPECT are implemented in `prospect`: PROSPECT-D [@feret2017] and 
 PROSPECT-PRO [@feret2021]. [@feret2017] highly recommended using PROSPECT-D instead of the previous 
 version PROSPECT-5, even for vegetation without anthocyanins. Nevertheless, the function `PROSPECT`
 allows specifying version `5`. This version is actually a version of PROSPECT-D with anthocyanin 
-content set to 0, as recommended by [@feret2017].
+content set to 0.
 For each version, it is possible to also include the influence brown pigments (BROWN), which appear during senescence, 
 by ending the name of the version with `B`. Otherwise, `prospect` assumes that leaves contain no brown pigments.
 
 \autoref{tab:tab1} provides an overview of the leaf chemical constituents included in the different versions which can be specified when calling the function `PROSPECT`
 
-| Version     |         `5`        |        `5B`        |         `D`        |        `DB`        |        `PRO`       |       `PROB`       |
-| ----------- | --------------------------------------------------              	                                                        | 
-| CHL         | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: |
-| CAR         | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: |
-| ANT         |                    |                    | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: |
-| BROWN       |                    | :heavy_check_mark: |                    | :heavy_check_mark: |                    | :heavy_check_mark: |
-| EWT         | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: |
-| LMA         | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: |                    |                    |
-| PROT        |                    |                    |                    |                    | :heavy_check_mark: | :heavy_check_mark: |
-| CBC         |                    |                    |                    |                    | :heavy_check_mark: | :heavy_check_mark: |
+| Version     | `5` | `5B` | `D` | `DB` | `PRO` | `PROB` |
+| ----------- | ------------------------------------------
+| CHL         | `:heavy_check_mark:` | `:heavy_check_mark:` | `:heavy_check_mark:` | `:heavy_check_mark:` | `:heavy_check_mark:` | `:heavy_check_mark:` |
+| CAR         | `:heavy_check_mark:` | `:heavy_check_mark:` | `:heavy_check_mark:` | `:heavy_check_mark:` | `:heavy_check_mark:` | `:heavy_check_mark:` |
+| ANT         |                    |                    | `:heavy_check_mark:` | `:heavy_check_mark:` | `:heavy_check_mark:` | `:heavy_check_mark:` |
+| BROWN       |                    | `:heavy_check_mark:` |                    | `:heavy_check_mark:` |                    | `:heavy_check_mark:` |
+| EWT         | `:heavy_check_mark:` | `:heavy_check_mark:` | `:heavy_check_mark:` | `:heavy_check_mark:` | `:heavy_check_mark:` | `:heavy_check_mark:` |
+| LMA         | `:heavy_check_mark:` | `:heavy_check_mark:` | `:heavy_check_mark:` | `:heavy_check_mark:` |                    |                    |
+| PROT        |                    |                    |                    |                    | `:heavy_check_mark:` | `:heavy_check_mark:` |
+| CBC         |                    |                    |                    |                    | `:heavy_check_mark:` | `:heavy_check_mark:` |
 
 
 : Versions of the model PROSPECT  accepted as input of the `PROSPECT` function and 
