@@ -114,16 +114,16 @@ functions with nonlinear constraints.
 (Table \ref{table:1} provides information on the spectral range used to estimate leaf chemical constituents from 
 their optical properties, for the two main inversion strategies.
 
-| Version 	|      `5`      	|      `5B`      	|      `D`      	|      `DB`      	|     `PRO`      	|     `PROB`      	|
-|---------	|-----------------	|:----------------:	|:---------------:	|:----------------:	|:----------------:	|:----------------:	|
-| CHL     	|   700 -- 720   	|     700 -- 720     |     700 -- 720     |     700 -- 720     |     700 -- 720     |     700 -- 720     |
-| CAR    	|   520 -- 560   	|     520 -- 560 	|     520 -- 560     |     520 -- 560     |     520 -- 560     |     520 -- 560     |
-| ANT    	|       NA      	|       NA      	|     520 -- 560 	 |     400 -- 800     |     400 -- 800     |     400 -- 800     |
-| BROWN   	|       NA      	|       NA      	|       NA      	|       NA      	|         NA         |         NA         |
-| EWT   	|  1700 -- 2400  	|    1700 -- 2400    |    1700 -- 2400    |    1700 -- 2400    |         NA         |         NA         |
-| LMA   	|  1700 -- 2400  	    1700 -- 2400    |    1700 -- 2400    |    1700 -- 2400    |         NA         |         NA         |
-| PROT  	|       NA      	|         NA         |         NA         |         NA         |2100 -- 2139 ; 2160 -- 2179 |2100 -- 2139 ; 2160 -- 2179|
-| CBC   	|       NA      	|         NA         |         NA         |         NA         |         NA         |         NA         |
+| Version 	|    `5`    	|      `5B`   	|    `D`      	|      `DB`  	|     `PRO`  	|     `PROB` 	|
+|---------	|--------------	|:------------:	|:------------:	|:------------:	|:------------:	|:------------:	|
+| CHL     	|  700 -- 720  	|  700 -- 720 	| 700 -- 720 	| 700 -- 720 	| 700 -- 720 	| 700 -- 720 	|
+| CAR    	|  520 -- 560  	|  520 -- 560 	| 520 -- 560 	| 520 -- 560 	| 520 -- 560 	| 520 -- 560 	|
+| ANT    	|     NA     	|     NA     	| 520 -- 560 	| 400 -- 800 	| 400 -- 800 	| 400 -- 800 	|
+| BROWN   	|     NA     	|     NA     	|     NA     	|     NA     	|     NA     	|     NA     	|
+| EWT   	| 1700 -- 2400 	| 1700 -- 2400 	| 1700 -- 2400 	| 1700 -- 2400 	|     NA     	|     NA     	|
+| LMA   	| 1700 -- 2400	| 1700 -- 2400 	| 1700 -- 2400 	| 1700 -- 2400 	|     NA     	|     NA     	|
+| PROT  	|     NA     	|     NA     	|     NA     	|     NA     	|2100 -- 2139 ; 2160 -- 2179 |2100 -- 2139 ; 2160 -- 2179|
+| CBC   	|     NA     	|     NA     	|     NA     	|     NA     	|     NA     	|     NA     	|
 
 
 : Versions of the model PROSPECT  accepted as input of the `PROSPECT` function and 
