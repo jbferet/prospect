@@ -24,36 +24,31 @@ bibliography: paper.bib
 
 # Summary
 
-Leaf optical properties are directly linked to their biochemical content and structural 
-properties through light absorption and scattering. They are also an important driver 
-of vegetation reflectance acquired from Earth observation systems.
-Hence, physical modeling of leaf optical properties is key to better understand 
-and monitor ecosystems and agrosystems.
 PROSPECT is the most widely used leaf model, allowing simulation of leaf optical properties 
-(directional-hemispherical reflectance and transmittance) based on a limited set of chemical 
-constituents with specific absorption coefficients and a unique leaf structure parameter 
-to account for scattering.
+based on a limited set of chemical constituents absorbing light, and a unique leaf 
+structure parameter to account for light scattering.
 
-We present `prospect`, an R package which contains
-the most recent versions of the model, including PROSPECT-D [@feret2017] and PROSPECT-PRO [@feret2021].
-The package also includes inversion routines aiming at estimating leaf chemistry 
-directly from leaf optical properties, either leaf reflectance or leaf transmittance, or both.
-These inversion routines, and are based on iterative optimization. Various inversion strategies
-are implemented in the package, including strategies recently developed [@feret2019, @spafford2021] 
-aiming at estimating leaf chemical constituents based on optimal spectral domains, and 
-estimating leaf structure when only reflectance or transmittance is used.
+We present `prospect`, an R package which includes PROSPECT-D [@feret2017] and PROSPECT-PRO [@feret2021], 
+its two most recent versions.
+The package also provides inversion routines based on iterative optimization to estimate leaf chemistry from LOP.
+Various inversion strategies are implemented in the package, including strategies recently developed 
+[@feret2019, @spafford2021] aiming at estimating leaf chemical constituents based on optimal spectral domains.
 
 # Statement of need
 
-The estimation of vegetation biophysical and chemical properties is 
-becoming increasingly important for the monitoring of ecosystem and agrosystem functions. 
-A set of key biochemical traits, including leaf pigment content, water content, nitrogen content
-and leaf mass per area (LMA) absorb light in specific domains. 
-These constituents also influence canopy reflectance measured from Earth observation systems. 
-In situ data collection at leaf scale is critical to provide ground truth when upscaling 
-and mapping vegetation traits from satellite, airborne or UAV imagery. 
+Leaf optical properties are linked to leaf biophysical properties through absorption 
+and scattering mechanisms. Physical models describe the interactions between these properties.
+PROSPECT takes advantage of specific absorption coefficients from chemical constituents 
+such as leaf pigments, water and proteins, and uses a simplified representation of leaf structure 
+through the generalised plate model [@allen1970] to simulate leaf directional-hemispherical 
+reflectance and transmittance.
+Leaf optical properties contribute significantly to vegetation reflectance acquired from Earth observation systems.
+The capacity to map and monitor leaf chemical properties is key to better understand ecosystems 
+and agrosystems functions, as well as carbon, water and energy budgets, and models and methods 
+giving access to these core leaf constituents based on observations at leaf and canopy scale are 
+important components.
 
-Techniques based on leaf spectroscopy have developed in the past decades in order to provide a 
+Techniques based on leaf spectroscopy have developed in the past decades to provide a 
 rapid, accurate and non-destructive estimation of leaf constituents. Physical modeling has an
 important role in these techniques, as it can be used to directly estimate leaf chemical content
 based on model inversion. It can also generate simulated leaf optical properties, in order to adjust 
@@ -65,14 +60,13 @@ alone or combined with canopy reflectance models such as SAIL [@verhoef2007] and
 Multiple versions have been released since the first version of PROSPECT [@jacquemoud1990], aiming at expanding 
 its capacity to account for more chemical constituents. Recent versions introduced carotenoids [@feret2008],  
 and anthocyanins [@feret2017], allowing simulating and analyzing leaf optical properties corresponding to different 
-leaf development stages, from juvenile to mature and senescent. The latest version named 
-PROSPECT-PRO included proteins and carbon based constituents as complementary fractions of the 
-constituent identified as dry matter (corresponding to LMA). In parallel with the 
+leaf development stages, from juvenile to mature and senescent. The latest version, PROSPECT-PRO, 
+separated dry matter constituents into proteins and carbon based constituents. In parallel with the 
 development of new versions of the model, advances in model inversion were also performed 
 to improve the estimation of leaf chemical constituents [@feret2019; @spafford2021].
 
 The application of an appropriate model inversion strategy is critical to ensure optimal 
-estimation of leaf constituents, as it was evidenced for the estimation of LMA [@feret2019], 
+estimation of leaf constituents, as it was evidenced for the estimation of leaf mass per area (LMA) [@feret2019], 
 which was reported as poorly retrieved from PROSPECT inversion in earlier studies. 
 
 To ensure access to latest advances in terms of model version and inversion strategies, 
@@ -83,36 +77,35 @@ and parameterizable inversion routines, allowing users to design their own inver
 # Overview
 
 Two versions of the model PROSPECT are implemented in `prospect`: PROSPECT-D [@feret2017] and 
-PROSPECT-PRO [@feret2021]. [@feret2017] highly recommended using PROSPECT-D instead of the previous 
-version PROSPECT-5, even for vegetation without anthocyanins. Nevertheless, the function `PROSPECT`
-allows specifying version `5`. This version is actually a version of PROSPECT-D with anthocyanin 
-content set to 0.
-For each version, it is possible to also include the influence brown pigments (BROWN), which appear during senescence, 
-by ending the name of the version with `B`. Otherwise, `prospect` assumes that leaves contain no brown pigments.
+PROSPECT-PRO [@feret2021]. For each version, it is possible to also include the influence brown pigments (BROWN), 
+which appear during senescence, by ending the name of the version with `B`. 
 
 (Table \ref{table:1} provides an overview of the leaf chemical constituents included in the different versions which can be specified when calling the function `PROSPECT`.
 
-| Version 	| `5` 	| `5B` 	| `D` 	| `DB` 	| `PRO` | `PROB`|
-|---------	|------	|:----:	|:----:	|:----:	|:----:	|:----:	|
-| CHL     	| **X** | **X** | **X** | **X** | **X** | **X** |
-| CAR   	| **X** | **X** | **X** | **X** | **X** | **X** |
-| ANT   	|    	|   	| **X** | **X** | **X** | **X** |
-| BROWN 	|   	| **X** |    	| **X** |      	| **X** |
-| EWT   	| **X** | **X** | **X** | **X** | **X** | **X** |
-| LMA   	| **X** | **X** | **X** | **X** |     	|     	|
-| PROT  	|     	|      	|     	|     	| **X** | **X** |
-| CBC   	|      	|    	|     	|     	| **X** | **X** |
+| Version 	| `D` 	| `DB` 	| `PRO` | `PROB`|
+|---------	|------	|:----:	|:----:	|:----:	|
+| CHL     	| **X** | **X** | **X** | **X** |
+| CAR   	| **X** | **X** | **X** | **X** |
+| ANT   	| **X** | **X** | **X** | **X** |
+| EWT   	| **X** | **X** | **X** | **X** |
+| LMA   	| **X** | **X** |     	|     	|
+| PROT  	|     	|      	| **X** | **X** |
+| CBC   	|      	|    	| **X** | **X** |
+| BROWN 	|   	| **X** |    	| **X** |
 
-: Versions of the model PROSPECT  accepted as input of the `PROSPECT` function and 
-corresponding chemical constituents.\label{table:1}
+: Versions of the model PROSPECT available in the `prospect` package and 
+corresponding chemical constituents (CHL: chlorophyll content; CAR: carotenoid content; 
+ANT: anthocyanin content; EWT: equivalent water thickness; LMA: leaf mass per area; 
+PROT: protein content; CBC: carbon based constituent content; 
+BROWN: brown pigment content).\label{table:1}
 
 The inversion procedure is based on the function `fmincon` implemented in the package `pracma`. 
 `fmincon` is an optimization algorithm aiming at finding the minimum of multivariable 
 functions with nonlinear constraints. 
 
 
-(Table \ref{table:2} provides information on the spectral range used to estimate leaf chemical constituents from 
-their optical properties, for the two main inversion strategies.
+(Table \ref{table:2} provides information on the optimal spectral range used to estimate leaf 
+chemical constituents from their optical properties, as identified by [@feret2019; @spafford2021].
 
 | Constituent 	|    Optimal spectral domain    	|                 Versions           	|
 |------------	|---------------------------------	|:----------------------------------:	|
@@ -123,11 +116,13 @@ their optical properties, for the two main inversion strategies.
 | EWT       	|          1700 -- 2400           	| `5`, `5B`, `D`, `DB`, `PRO`, `PROB`	|
 | LMA       	|          1700 -- 2400           	| `5`, `5B`, `D`, `DB`               	|
 | PROT      	|   2100 -- 2139 ; 2160 -- 2179   	| `PRO`, `PROB`                      	|
-| CBC       	| 1480 -- 1499; 1560 -- 1579; 1760 -- 1799; 2040 -- 2059; 2120 -- 2139; 2160 -- 2239; 2260 -- 2279; 2340 -- 2359; 2380 -- 2399 	| `PRO`, `PROB`                      	|
+| CBC       	| 1480 -- 1499;	1560 -- 1579;		 1760 -- 1799; 2040 -- 2059;		 2120 -- 2139; 2160 -- 2239;		 2260 -- 2279; 2340 -- 2359;		 2380 -- 2399 	| `PRO`, `PROB`                      	|
 
-: Versions of the model PROSPECT  accepted as input of the `PROSPECT` function and 
-corresponding chemical constituents.\label{table:3}
-
+: Optimal spectral domains selected to estimate vegetation chemical constituents from leaf 
+optical properties (CHL: chlorophyll content; CAR: carotenoid content; 
+ANT: anthocyanin content; EWT: equivalent water thickness; LMA: leaf mass per area; 
+PROT: protein content; CBC: carbon based constituent content; 
+BROWN: brown pigment content).\label{table:3}
 
 # Example 1: running PROSPECT in forward mode
 
