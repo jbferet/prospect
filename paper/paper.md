@@ -92,16 +92,16 @@ by ending the name of the version with `B`. Otherwise, `prospect` assumes that l
 
 (Table \ref{table:1} provides an overview of the leaf chemical constituents included in the different versions which can be specified when calling the function `PROSPECT`.
 
-| Version 	|  `5`  	|  `5B`  	|  `D`  	|  `DB`  	|  `PRO`  	|  `PROB`  	|
-|---------	|--------	|:------:	|:------:	|:------:	|:------:	|:------:	|
-| CHL     	|  **X**  	|  **X**  	|  **X**  	|  **X**  	|  **X**  	|  **X**  	|
-| CAR   	|  **X**  	|  **X**  	|  **X**  	|  **X**  	|  **X**  	|  **X**  	|
-| ANT   	|        	|       	|  **X**  	|  **X**  	|  **X**  	|  **X**  	|
-| BROWN 	|       	|  **X**  	|        	|  **X**  	|          	|  **X**  	|
-| EWT   	|  **X**  	|  **X**  	|  **X**  	|  **X**  	|  **X**  	|  **X**  	|
-| LMA   	|  **X**  	|  **X**  	|  **X**  	|  **X**  	|         	|          	|
-| PROT  	|         	|          	|         	|         	|  **X**  	|  **X**  	|
-| CBC   	|          	|        	|         	|         	|  **X**  	|  **X**  	|
+| Version 	| `5` 	| `5B` 	| `D` 	| `DB` 	| `PRO` | `PROB`|
+|---------	|------	|:----:	|:----:	|:----:	|:----:	|:----:	|
+| CHL     	| **X** | **X** | **X** | **X** | **X** | **X** |
+| CAR   	| **X** | **X** | **X** | **X** | **X** | **X** |
+| ANT   	|    	|   	| **X** | **X** | **X** | **X** |
+| BROWN 	|   	| **X** |    	| **X** |      	| **X** |
+| EWT   	| **X** | **X** | **X** | **X** | **X** | **X** |
+| LMA   	| **X** | **X** | **X** | **X** |     	|     	|
+| PROT  	|     	|      	|     	|     	| **X** | **X** |
+| CBC   	|      	|    	|     	|     	| **X** | **X** |
 
 : Versions of the model PROSPECT  accepted as input of the `PROSPECT` function and 
 corresponding chemical constituents.\label{table:1}
@@ -123,8 +123,7 @@ their optical properties, for the two main inversion strategies.
 | EWT       	|          1700 -- 2400           	| `5`, `5B`, `D`, `DB`, `PRO`, `PROB`	|
 | LMA       	|          1700 -- 2400           	| `5`, `5B`, `D`, `DB`               	|
 | PROT      	|   2100 -- 2139 ; 2160 -- 2179   	| `PRO`, `PROB`                      	|
-| CBC       	|   2100 -- 2139 ; 2160 -- 2179   	| `PRO`, `PROB`                      	|
-
+| CBC       	| 1480 -- 1499; 1560 -- 1579; 1760 -- 1799; 2040 -- 2059; 2120 -- 2139; 2160 -- 2239; 2260 -- 2279; 2340 -- 2359; 2380 -- 2399 	| `PRO`, `PROB`                      	|
 
 : Versions of the model PROSPECT  accepted as input of the `PROSPECT` function and 
 corresponding chemical constituents.\label{table:3}
