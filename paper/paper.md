@@ -92,16 +92,16 @@ by ending the name of the version with `B`. Otherwise, `prospect` assumes that l
 
 (Table \ref{table:1} provides an overview of the leaf chemical constituents included in the different versions which can be specified when calling the function `PROSPECT`.
 
-| Version 	|         `5`       	|       `5B`        	|           `D`       	|          `DB`     	|         `PRO`     	|       `PROB`      	|
-|---------	|-------------------	|:------------------:	|:-----------------:	|:------------------:	|:------------------:	|:------------------:	|
-| CHL     	| **X**	| **X**	| **X**	| **X**	| **X**	| **X**	|
-| CAR   	| **X**	| **X**	| **X**	| **X**	| **X**	| **X**	|
-| ANT   	|                   	|                   	| **X**	| **X**	| **X**	| **X**	|
-| BROWN 	|                   	| **X**	|                   	| **X**	|                   	| **X**	|
-| EWT   	| **X**	| **X**	| **X**	| **X**	| **X**	| **X**	|
-| LMA   	| **X**	| **X**	| **X**	| **X**	|                   	|                   	|
-| PROT  	|                   	|                   	|                   	|                   	| **X**	| **X**	|
-| CBC   	|                   	|                   	|                   	|                   	| **X**	| **X**	|
+| Version 	|  `5`  	|  `5B`  	|  `D`  	|  `DB`  	|  `PRO`  	|  `PROB`  	|
+|---------	|--------	|:------:	|:------:	|:------:	|:------:	|:------:	|
+| CHL     	|  **X**  	|  **X**  	|  **X**  	|  **X**  	|  **X**  	|  **X**  	|
+| CAR   	|  **X**  	|  **X**  	|  **X**  	|  **X**  	|  **X**  	|  **X**  	|
+| ANT   	|        	|       	|  **X**  	|  **X**  	|  **X**  	|  **X**  	|
+| BROWN 	|       	|  **X**  	|        	|  **X**  	|          	|  **X**  	|
+| EWT   	|  **X**  	|  **X**  	|  **X**  	|  **X**  	|  **X**  	|  **X**  	|
+| LMA   	|  **X**  	|  **X**  	|  **X**  	|  **X**  	|         	|          	|
+| PROT  	|         	|          	|         	|         	|  **X**  	|  **X**  	|
+| CBC   	|          	|        	|         	|         	|  **X**  	|  **X**  	|
 
 : Versions of the model PROSPECT  accepted as input of the `PROSPECT` function and 
 corresponding chemical constituents.\label{table:1}
@@ -132,16 +132,16 @@ corresponding chemical constituents.\label{table:2}
 (Table \ref{table:3} provides information on the spectral range used to estimate leaf chemical constituents from 
 their optical properties, for the two main inversion strategies.
 
-| Constituent 	|    Optimal spectral domain    	|      Versions `5B`   	|    `D`      	|      `DB`  	|     `PRO`  	|     `PROB` 	|
-|------------	|--------------	|:------------:	|:------------:	|:------------:	|:------------:	|:------------:	|
-| CHL       	|  700 -- 720  	|  `5`, `5B`, `D`, `DB`, `PRO`, `PROB` 	|
-| CAR       	|  520 -- 560  	|  `5`, `5B`, `D`, `DB`, `PRO`, `PROB` 	|
-| ANT       	| 400 -- 800 	|  `D`, `DB`, `PRO`, `PROB` 	|
-| BROWN     	|     NA     	|     NA     	|
-| EWT       	| 1700 -- 2400 	|  `5`, `5B`, `D`, `DB`, `PRO`, `PROB` 	|
-| LMA       	| 1700 -- 2400	|  `5`, `5B`, `D`, `DB` 	|
-| PROT      	|2100 -- 2139 ; 2160 -- 2179	|  `PRO`, `PROB` 	|
-| CBC       	|2100 -- 2139 ; 2160 -- 2179	|  `PRO`, `PROB` 	|
+| Constituent 	|    Optimal spectral domain    	|              Versions              	|
+|------------	|---------------------------------	|:-----------------------------------:	|
+| CHL       	|           700 -- 720           	| `5`, `5B`, `D`, `DB`, `PRO`, `PROB` 	|
+| CAR       	|           520 -- 560           	| `5`, `5B`, `D`, `DB`, `PRO`, `PROB` 	|
+| ANT       	|           400 -- 800           	|            `D`, `DB`, `PRO`, `PROB`  	|
+| BROWN     	|               NA              	| NA                                	|
+| EWT       	|          1700 -- 2400           	| `5`, `5B`, `D`, `DB`, `PRO`, `PROB` 	|
+| LMA       	|          1700 -- 2400           	| `5`, `5B`, `D`, `DB`               	|
+| PROT      	|   2100 -- 2139 ; 2160 -- 2179   	|                       `PRO`, `PROB` 	|
+| CBC       	|   2100 -- 2139 ; 2160 -- 2179   	|                       `PRO`, `PROB` 	|
 
 
 : Versions of the model PROSPECT  accepted as input of the `PROSPECT` function and 
