@@ -132,16 +132,16 @@ corresponding chemical constituents.\label{table:2}
 (Table \ref{table:3} provides information on the spectral range used to estimate leaf chemical constituents from 
 their optical properties, for the two main inversion strategies.
 
-| Version 	|    `5`    	|      `5B`   	|    `D`      	|      `DB`  	|     `PRO`  	|     `PROB` 	|
-|---------	|--------------	|:------------:	|:------------:	|:------------:	|:------------:	|:------------:	|
-| CHL     	|  700 -- 720  	|  700 -- 720 	| 700 -- 720 	| 700 -- 720 	| 700 -- 720 	| 700 -- 720 	|
-| CAR    	|  520 -- 560  	|  520 -- 560 	| 520 -- 560 	| 520 -- 560 	| 520 -- 560 	| 520 -- 560 	|
-| ANT    	|     NA     	|     NA     	| 520 -- 560 	| 400 -- 800 	| 400 -- 800 	| 400 -- 800 	|
-| BROWN   	|     NA     	|     NA     	|     NA     	|     NA     	|     NA     	|     NA     	|
-| EWT   	| 1700 -- 2400 	| 1700 -- 2400 	| 1700 -- 2400 	| 1700 -- 2400 	|     NA     	|     NA     	|
-| LMA   	| 1700 -- 2400	| 1700 -- 2400 	| 1700 -- 2400 	| 1700 -- 2400 	|     NA     	|     NA     	|
-| PROT  	|     NA     	|     NA     	|     NA     	|     NA     	|2100 -- 2139 ; 2160 -- 2179 |2100 -- 2139 ; 2160 -- 2179|
-| CBC   	|     NA     	|     NA     	|     NA     	|     NA     	|     NA     	|     NA     	|
+| Constituent 	|    Optimal spectral domain    	|      Versions `5B`   	|    `D`      	|      `DB`  	|     `PRO`  	|     `PROB` 	|
+|------------	|--------------	|:------------:	|:------------:	|:------------:	|:------------:	|:------------:	|
+| CHL       	|  700 -- 720  	|  `5`, `5B`, `D`, `DB`, `PRO`, `PROB` 	|
+| CAR       	|  520 -- 560  	|  `5`, `5B`, `D`, `DB`, `PRO`, `PROB` 	|
+| ANT       	| 400 -- 800 	|  `D`, `DB`, `PRO`, `PROB` 	|
+| BROWN     	|     NA     	|     NA     	|
+| EWT       	| 1700 -- 2400 	|  `5`, `5B`, `D`, `DB`, `PRO`, `PROB` 	|
+| LMA       	| 1700 -- 2400	|  `5`, `5B`, `D`, `DB` 	|
+| PROT      	|2100 -- 2139 ; 2160 -- 2179	|  `PRO`, `PROB` 	|
+| CBC       	|2100 -- 2139 ; 2160 -- 2179	|  `PRO`, `PROB` 	|
 
 
 : Versions of the model PROSPECT  accepted as input of the `PROSPECT` function and 
