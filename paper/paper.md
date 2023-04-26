@@ -94,14 +94,14 @@ by ending the name of the version with `B`. Otherwise, `prospect` assumes that l
 
 | Version 	|         `5`       	|       `5B`        	|           `D`       	|          `DB`     	|         `PRO`     	|       `PROB`      	|
 |---------	|-------------------	|:------------------:	|:-----------------:	|:------------------:	|:------------------:	|:------------------:	|
-| CHL     	| :smiley:	| :smiley:	| :smiley:	| :smiley:	| :smiley:	| :smiley:	|
-| CAR   	| :smiley:	| :smiley:	| :smiley:	| :smiley:	| :smiley:	| :smiley:	|
-| ANT   	|                   	|                   	| :smiley:	| :smiley:	| :smiley:	| :smiley:	|
-| BROWN 	|                   	| :smiley:	|                   	| :smiley:	|                   	| :smiley:	|
-| EWT   	| :smiley:	| :smiley:	| :smiley:	| :smiley:	| :smiley:	| :smiley:	|
-| LMA   	| :smiley:	| :smiley:	| :smiley:	| :smiley:	|                   	|                   	|
-| PROT  	|                   	|                   	|                   	|                   	| :smiley:	| :smiley:	|
-| CBC   	|                   	|                   	|                   	|                   	| :smiley:	| :smiley:	|
+| CHL     	| **X**	| **X**	| **X**	| **X**	| **X**	| **X**	|
+| CAR   	| **X**	| **X**	| **X**	| **X**	| **X**	| **X**	|
+| ANT   	|                   	|                   	| **X**	| **X**	| **X**	| **X**	|
+| BROWN 	|                   	| **X**	|                   	| **X**	|                   	| **X**	|
+| EWT   	| **X**	| **X**	| **X**	| **X**	| **X**	| **X**	|
+| LMA   	| **X**	| **X**	| **X**	| **X**	|                   	|                   	|
+| PROT  	|                   	|                   	|                   	|                   	| **X**	| **X**	|
+| CBC   	|                   	|                   	|                   	|                   	| **X**	| **X**	|
 
 : Versions of the model PROSPECT  accepted as input of the `PROSPECT` function and 
 corresponding chemical constituents.\label{table:1}
