@@ -9,7 +9,7 @@
 
 After installing package `devtools`, the package `prospect` can be installed with the following command line in R session:
 ```
-devtools::install_gitlab('jbferet/prospect')
+devtools::install_github("jbferet/prospect")
 ```
 
 # 2 Tutorial
