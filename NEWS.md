@@ -1,3 +1,8 @@
+# prospect v1.2.5
+
+## addition
+- added function `plotinv` to produce scatteerplots between measured and estimated values
+
 # prospect v1.2.4
 
 ## Fixes
@@ -34,9 +39,9 @@
 - changed lambda to Sublambda in Invert_PROSPECT_OPT
  
 ## Fixes
-- Added library NlcOptim in function "tryInversion"
+- Added library NlcOptim in function `tryInversion`
 - fixed bug confusing CBC with proteins when performing optimal spectral domain inversion
-- fixed input parameters for FitSpectralData: added "UL_Bounds=TRUE" to specify that UserDomain corresponds to upper and lower boundaries, not explicit definition of spectral bands
+- fixed input parameters for FitSpectralData: added `UL_Bounds=TRUE` to specify that UserDomain corresponds to upper and lower boundaries, not explicit definition of spectral bands
 
 # prospect v1.0.1
 
