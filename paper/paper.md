@@ -80,7 +80,7 @@ Two versions of the model PROSPECT are implemented in `prospect`: PROSPECT-D [@f
 PROSPECT-PRO [@feret2021]. For each version, it is possible to also include the influence brown pigments (BROWN), 
 which appear during senescence, by ending the name of the version with `B`. 
 
-(Table \ref{table:1} provides an overview of the leaf chemical constituents included in the different versions which can be specified when calling the function `PROSPECT`.
+Table \ref{table:1} provides an overview of the leaf chemical constituents included in the different versions which can be specified when calling the function `PROSPECT`.
 
 | Version 	| `D` 	| `DB` 	| `PRO` | `PROB`|
 |---------	|------	|:----:	|:----:	|:----:	|
@@ -94,17 +94,17 @@ which appear during senescence, by ending the name of the version with `B`.
 | BROWN 	|   	| **X** |    	| **X** |
 
 : Versions of the model PROSPECT available in the `prospect` package and 
-corresponding chemical constituents (CHL: chlorophyll content; CAR: carotenoid content; 
-ANT: anthocyanin content; EWT: equivalent water thickness; LMA: leaf mass per area; 
-PROT: protein content; CBC: carbon based constituent content; 
-BROWN: brown pigment content).\label{table:1}
+corresponding chemical constituents (CHL: chlorophylls; CAR: carotenoids; 
+ANT: anthocyanins; EWT: equivalent water thickness; LMA: leaf mass per area; 
+PROT: proteins; CBC: carbon based constituents; 
+BROWN: brown pigments).\label{table:1}
 
 The inversion procedure is based on the function `fmincon` implemented in the package `pracma`. 
 `fmincon` is an optimization algorithm aiming at finding the minimum of multivariable 
 functions with nonlinear constraints. 
 
 
-(Table \ref{table:2} provides information on the optimal spectral range used to estimate leaf 
+Table \ref{table:2} provides information on the optimal spectral range used to estimate leaf 
 chemical constituents from their optical properties, as identified by [@feret2019; @spafford2021].
 
 | Constituent 	|    Optimal spectral domain    	|                 Versions           	|
@@ -119,16 +119,16 @@ chemical constituents from their optical properties, as identified by [@feret201
 | CBC       	| 1480 -- 1499;	1560 -- 1579;		 1760 -- 1799; 2040 -- 2059;		 2120 -- 2139; 2160 -- 2239;		 2260 -- 2279; 2340 -- 2359;		 2380 -- 2399 	| `PRO`, `PROB`                      	|
 
 : Optimal spectral domains selected to estimate vegetation chemical constituents from leaf 
-optical properties (CHL: chlorophyll content; CAR: carotenoid content; 
-ANT: anthocyanin content; EWT: equivalent water thickness; LMA: leaf mass per area; 
-PROT: protein content; CBC: carbon based constituent content; 
-BROWN: brown pigment content).\label{table:3}
+optical properties (CHL: chlorophylls; CAR: carotenoids; 
+ANT: anthocyanins; EWT: equivalent water thickness; LMA: leaf mass per area; 
+PROT: proteins; CBC: carbon based constituents; 
+BROWN: brown pigments).\label{table:2}
 
 # Example 1: running PROSPECT in forward mode
 
 ## Individual simulation with PROSPECT-D and PROSPECT-PRO
 
-This section illustrates how to run two different versions of PROSPECT in forward mode in order to simulate 
+This section illustrates how to run PROSPECT in forward mode in order to simulate 
 leaf directional-hemispherical reflectance and transmittance from leaf structure parameter and a combination 
 of chemical constituents.
 
@@ -159,10 +159,11 @@ library(prospect)
 
 # Run PROSPECT-PRO
 LRT_PRO <- PROSPECT(SpecPROSPECT, CHL = 45, CAR = 10, ANT = 0.2, 
- EWT = 0.012, PROT = 0.001,  CBC = 0.009, N = 1.7)
+                    EWT = 0.012, PROT = 0.001,  CBC = 0.009, N = 1.7)
 ```
 
-The leaf optical properties can then be compared.
+The leaf optical properties can then be compared. Here, the differences between PROSPECT-D and PROSPECT-PRO 
+are mainly driven by the difference set for the `N` parameter.
 
 ```r
 R_D_df <- data.frame('wvl' = LRT_D$wvl,
@@ -188,7 +189,7 @@ plot <- ggplot2::ggplot(LRT_df, aes(x=wvl, y=RT, group=LOP)) +
   geom_line(aes(linetype=LOP, color=LOP),linewidth=1.00)+
   scale_color_manual(values=c('#FF9999','red1','#9999FF','blue4'))+
   scale_size_manual(values=c(5, 5))+
-  labs(x='Wavelength (nm)',y='Reflectance        (%)        1-Transmittance') +
+  labs(x='Wavelength (nm)',y='Reflectance        (%)        100-Transmittance') +
   theme(legend.position="bottom",
         axis.text=element_text(size=12),
         axis.title.x = element_text(size=14, face="bold"),
@@ -226,8 +227,7 @@ LUT <- PROSPECT_LUT(SpecPROSPECT,Input_PROSPECT)
 Several approaches can be used to perform PROSPECT inversion. As PROSPECT is a relatively simple and 
 computationally efficient model, inversion based on iterative optimization is one of the most popular 
 method to invert PROSPECT and estimate leaf chemistry and structure from their optical properties. 
-
-Here, the iterative optimization is based on the minimization of a nonlinear constrained multivariable function. 
+Here, the iterative optimization is based on the minimization of a multivariable function with nonlinear constraints. 
 This procedure is based on the function `fmincon` included in the package `pracma`, which uses 
 Sequential Quadratic Programming.
 
@@ -246,15 +246,18 @@ datasets in the domain of leaf spectroscopy.
 A version of the ANGERS dataset is hosted on gitlab, and can be directly downloaded from R.
 
 ```r
+# use data.table library
+library(data.table)
+
 # download ANGERS leaf optics database from gitlab repository
-dbName <- 'ANGERS'
 gitlab_Rep <- 'https://gitlab.com/jbferet/myshareddata/raw/master/LOP'
+dbName <- 'ANGERS'
 
 # download leaf biochemical constituents and leaf optical properties
 fileName <- list('DataBioch.txt','ReflectanceData.txt','TransmittanceData.txt')
-DataBioch <- fread(file.path(gitlab_Rep,dbName,fileName[[1]]))
-Refl<- fread(file.path(gitlab_Rep,dbName,fileName[[2]]))
-Tran <- fread(file.path(gitlab_Rep,dbName,fileName[[3]]))
+DataBioch <- data.table::fread(file.path(gitlab_Rep,dbName,fileName[[1]]))
+Refl<- data.table::fread(file.path(gitlab_Rep,dbName,fileName[[2]]))
+Tran <- data.table::fread(file.path(gitlab_Rep,dbName,fileName[[3]]))
 
 # Get the wavelengths corresponding to reflectance and transmittance measurements  
 lambda <- unlist(Refl$V1, use.names=FALSE)
@@ -268,28 +271,61 @@ when performing inversion on the full spectral domain covered by the data.
 This can be done automatically using `FitSpectralData`
 
 ```r
-SubData <- FitSpectralData(SpecPROSPECT = SpecPROSPECT,      # spectral properties over 400-2500 nm
-        lambda = lambda,                  # spectral bands corresponding to refl and Tran
-        Refl = Refl,   # Reflectance data (matrix or dataframe)
-        Tran = Tran,   # Transmittance data (matrix or dataframe)
-        UserDomain = lambda)              # spectral domain of interest
+# Adjust spectral domain for SpecPROSPECT to fit leaf optical properties 
+SubData <- FitSpectralData(SpecPROSPECT = SpecPROSPECT,                         # spectral properties over 400-2500 nm
+                           lambda = lambda,                                     # spectral bands corresponding to refl and Tran
+                           Refl = Refl,                                         # Reflectance data (matrix or dataframe)
+                           Tran = Tran,                                         # Transmittance data (matrix or dataframe)
+                           UserDomain = lambda)                                 # spectral domain of interest
+						   
+SubSpecPROSPECT <- SubData$SpecPROSPECT                                         # spectral properties adjusted to current data
+Sublambda <- SubData$lambda                                                     # updated spectral domain defined by UserDomain
+SubRefl <- SubData$Refl                                                         # updated reflectance domain defined by UserDomain
+SubTran <- SubData$Tran                                                         # updated transmittance defined by UserDomain
 ```
 
 The main inversion procedure is called with the function `Invert_PROSPECT`.
-It is based on the minimization of a merit function. The default merit function is based on the 
-root mean squared difference between measured and simulated leaf optical properties, 
-
-
-
+It is based on the minimization of a cost function. The default cost function, 
+`CostVal_RMSE`, corresponds to the root mean square of the mean quadratic difference between 
+measured and simulated leaf optical properties (either reflectance and transmittance, or one of them only).
+Users can define their own cost function. They can also select the biophyscal properties to estimate: 
+The full set (`Parms2Estimate` set to `ALL`) or a reduced set of variables to estimate can 
+be defined in `Parms2Estimate`. The value set for parameters which are not estimated is then defined 
+with the `InitValues` input variable. 
 
 ```r
+# Estimate all parameters using PROSPECT-D inversion applied to full spectral data
+PROSPECT_version <- 'D'
+Parms2Estimate  <- 'ALL'
+InitValues <- data.frame(CHL = 40, CAR = 10, ANT = 0.1, BROWN = 0, 
+                         EWT = 0.01, LMA = 0.01, N = 1.5)
+
+res_all_WL <- Invert_PROSPECT(SpecPROSPECT = SubSpecPROSPECT, 
+                       Refl = SubRefl, 
+                       Tran = SubTran, 
+                       PROSPECT_version = PROSPECT_version,
+                       Parms2Estimate = Parms2Estimate, 
+                       InitValues = InitValues)
 ```
 
 ## PROSPECT inversion using the optimal spectral domains specific to each constituent
 
-```r
-```
+The function `Invert_PROSPECT_OPT` performs PROSPECT inversion using optimal spctral domains
+defined in [@feret2019; @spafford2021]. The optimal spectral domains are specific to each constituent, 
+and the function automatically adjusts the spectral domain of the leaf optical properties provided 
+by user. 
 
+```r
+# Estimate a selection of parameters using PROSPECT-D inversion applied on optimal spectral domains
+Parms2Estimate  <- c('CHL', 'CAR', 'EWT', 'LMA')
+res_opt_WL <- Invert_PROSPECT_OPT(SpecPROSPECT = SpecPROSPECT, 
+                                  lambda = lambda, 
+                                  Refl = Refl, 
+                                  Tran = Tran, 
+                                  PROSPECT_version = PROSPECT_version,
+                                  Parms2Estimate = Parms2Estimate, 
+                                  InitValues = InitValues)
+```
 
 
 # Conclusion
