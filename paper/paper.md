@@ -67,7 +67,6 @@ and parameterizable inversion routines, allowing users to design and test their 
 Two versions of the model PROSPECT are implemented in `prospect`: PROSPECT-D [@feret2017] and 
 PROSPECT-PRO [@feret2021]. For each version, it is possible to also include the influence brown pigments, 
 which appear during senescence, by ending the name of the version with `B`. 
-
 Table \ref{table:1} provides an overview of the leaf chemical constituents included in the different versions which can be specified when calling the function `PROSPECT`.
 
 | Version 	| `D` 	| `DB` 	| `PRO` | `PROB`|
@@ -142,11 +141,11 @@ are mainly driven by the difference set for the `N` structure parameter.
 
 ## Simulation of a look up table with PROSPECT-D
 
-Look-Up-Tables (LUTs) are widely used in order to infer leaf charactristics from PROSPECT, based on minimization techniques. 
-The function `PROSPECT_LUT` allows computation of a LUT directly based on a list of input parameters.
+Look-Up-Tables (LUTs) are widely used in order to infer leaf characteristics from PROSPECT. 
+The function `PROSPECT_LUT` computates a LUT based on a list of input parameters.
 Undefined parameters are set to their default value. Vectors of values are expected to be the same length.
-The output of `PROSPECT_LUT` is a list containing a dataframe including the input parameters, as well as two matrices 
-corresponding to leaf reflectance and transmittance.
+The output of `PROSPECT_LUT` is a list containing a dataframe including the input parameters, 
+a reflectance matrix and a transmittance matrix.
 
 ```r
 CHL <- 100*runif(1000)
