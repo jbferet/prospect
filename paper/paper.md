@@ -107,15 +107,15 @@ functions with nonlinear constraints.
 Table \ref{table:2} provides information on the optimal spectral range used to estimate leaf 
 chemical constituents from their optical properties, as identified by [@feret2019; @spafford2021].
 
-| Constituent 	|    Optimal spectral domain 	|                 Versions           	|
-|------------	|-----------------------------	|:----------------------------------:	|
-| CHL       	|           700 -- 720       	| `5`, `5B`, `D`, `DB`, `PRO`, `PROB`	|
-| CAR       	|           520 -- 560        	| `5`, `5B`, `D`, `DB`, `PRO`, `PROB`	|
-| ANT       	|           400 -- 800       	| `D`, `DB`, `PRO`, `PROB`          	|
-| BROWN     	|               NA           	| NA                                	|
-| EWT       	|          1700 -- 2400       	| `5`, `5B`, `D`, `DB`, `PRO`, `PROB`	|
-| LMA       	|          1700 -- 2400       	| `5`, `5B`, `D`, `DB`               	|
-| PROT      	| 2100 -- 2139 ; 2160 -- 2179 	| `PRO`, `PROB`                      	|
+| Constituent 	|    Optimal spectral domain 	|            Versions     	|
+|------------	|-----------------------------	|:-----------------------:	|
+| CHL       	|           700 -- 720       	| `D`, `DB`, `PRO`, `PROB`	|
+| CAR       	|           520 -- 560        	| `D`, `DB`, `PRO`, `PROB`	|
+| ANT       	|           400 -- 800       	| `D`, `DB`, `PRO`, `PROB` 	|
+| BROWN     	|               NA           	| NA                       	|
+| EWT       	|          1700 -- 2400       	| `D`, `DB`, `PRO`, `PROB`	|
+| LMA       	|          1700 -- 2400       	| `D`, `DB`               	|
+| PROT      	| 2100 -- 2139 ; 2160 -- 2179 	| `PRO`, `PROB`            	|
 | CBC       	| 1480 -- 1499;	1560 -- 1579;	 1760 -- 1799; 2040 -- 2059;	 2120 -- 2139; 2160 -- 2239;	 2260 -- 2279; 2340 -- 2359;	 2380 -- 2399 	| `PRO`, `PROB`                      	|
 
 : Optimal spectral domains selected to estimate vegetation chemical constituents from leaf 
@@ -143,15 +143,12 @@ carbon based constituents (CBC) are not defined.
 ```r
 # Load prospect package
 library(prospect)
-
 # Run PROSPECT-D
 LRT_D <- PROSPECT(SpecPROSPECT, CHL = 45, CAR = 10, ANT = 0.2, 
                   EWT = 0.012, LMA = 0.010, N = 1.3)
 ```
 
-In this second example, as proteins and CBC are defined, PROSPECT-PRO is called. If user also defines a non-null 
-value for LMA in addition to PROT and CBC, the value of LMA is automatically set to 0, as PROSPECT-PRO does not 
-use LMA as input value. A warning is then displayed. 
+In this second example, PROSPECT-PRO is used as proteins and CBC are defined.  
 
 ```r
 # Run PROSPECT-PRO
@@ -163,48 +160,34 @@ The leaf optical properties can then be compared. Here, the differences between 
 are mainly driven by the difference set for the `N` parameter.
 
 ```r
-R_D <- data.frame('wvl' = LRT_D$wvl,
-                  'RT' = 100*LRT_D$Reflectance,
-                  'LOP' = matrix('R (PROSPECT-D)',
-                                 nrow = length(LRT_D$Reflectance),ncol = 1))
-
-T_D <- data.frame('wvl' = LRT_D$wvl,
-                  'RT' = 100*(1-LRT_D$Transmittance),
-                  'LOP' = matrix('T (PROSPECT-D)',
-                                 nrow = length(LRT_D$Transmittance),ncol = 1))
-
-R_PRO <- data.frame('wvl' = LRT_PRO$wvl,
-                    'RT' = 100*LRT_PRO$Reflectance,
-                    'LOP' = matrix('R (PROSPECT-PRO)',
-                                   nrow = length(LRT_PRO$Reflectance),ncol = 1))
-
-T_PRO <- data.frame('wvl' = LRT_PRO$wvl,
-                    'RT' = 100*(1-LRT_PRO$Transmittance),
-                    'LOP' = matrix('T (PROSPECT-PRO)',
-                                   nrow = length(LRT_PRO$Transmittance),ncol = 1))
-
+R_D <- data.frame('wvl' = LRT_D$wvl, 'RT' = 100*LRT_D$Reflectance,
+                  'LOP' = 'R (PROSPECT-D)')
+T_D <- data.frame('wvl' = LRT_D$wvl, 'RT' = 100*(1-LRT_D$Transmittance),
+                  'LOP' = 'T (PROSPECT-D)')
+R_PRO <- data.frame('wvl' = LRT_PRO$wvl, 'RT' = 100*LRT_PRO$Reflectance,
+                    'LOP' = 'R (PROSPECT-PRO)')
+T_PRO <- data.frame('wvl' = LRT_PRO$wvl, 'RT' = 100*(1-LRT_PRO$Transmittance),
+                    'LOP' = 'T (PROSPECT-PRO)')
 LRT_df <- rbind(R_D, T_D, R_PRO, T_PRO)
 
+# plot reflectance and transmittance for both models
 library(ggplot2)
-plot <- ggplot2::ggplot(LRT_df, aes(x=wvl, y=RT, group=LOP)) +
+RTplot <- ggplot2::ggplot(LRT_df, aes(x=wvl, y=RT, group=LOP)) +
   geom_line(aes(linetype=LOP, color=LOP),linewidth=1.00)+
   scale_color_manual(values=c('#FF9999','red1','#9999FF','blue4'))+
   scale_size_manual(values=c(5, 5))+
-  labs(x='Wavelength (nm)',y='Reflectance        (%)        100-Transmittance') +
-  theme(legend.position="bottom",
-        axis.text=element_text(size=12),
+  labs(x='Wavelength (nm)',y='Reflectance     (%)     100-Transmittance') +
+  theme(legend.position = "bottom",
+        axis.text = element_text(size=12),
         axis.title.x = element_text(size=14, face="bold"),
         axis.title.y = element_text(size=14, face="bold")) +
   scale_linetype_manual(values=c("solid","solid","solid","solid"))
 
 filename = 'compare_RT_PROSPECT_PRO_D.png'
-ggsave(filename, plot = last_plot(), device = "png", path = NULL,
-       scale = 1, width = 20, height = 13, units = "cm",
-       dpi = 600)
+ggsave(filename, plot = RTplot, device = "png", path = NULL,
+       scale = 1, width = 20, height = 13, units = "cm", dpi = 300)
 ```
-![Leaf optical properties simulated with PROSPECT-D and PROSPECT-PRO. different values of 
-N were defined to highlight differences in simulated leaf optics]
-(compare_RT_PROSPECT_PRO_D.png){ width=85% }
+![Leaf optical properties simulated with PROSPECT-D and PROSPECT-PRO. Different values of N were defined to highlight differences in simulated leaf optics \label{fig:AIM}](compare_RT_PROSPECT_PRO_D.png){ width=85% }
 
 
 ## Simulation of a look up table with PROSPECT-D
@@ -277,16 +260,16 @@ This can be done automatically using `FitSpectralData`
 
 ```r
 # Adjust spectral domain for SpecPROSPECT to fit leaf optical properties 
-SubData <- FitSpectralData(SpecPROSPECT = SpecPROSPECT,                         # spectral properties over 400-2500 nm
-                           lambda = lambda,                                     # spectral bands corresponding to refl and Tran
-                           Refl = Refl,                                         # Reflectance data (matrix or dataframe)
-                           Tran = Tran,                                         # Transmittance data (matrix or dataframe)
-                           UserDomain = lambda)                                 # spectral domain of interest
+SubData <- FitSpectralData(SpecPROSPECT = SpecPROSPECT, # spectral properties
+                           lambda = lambda, # spectral bands
+                           Refl = Refl, # Reflectance data (matrix or dataframe)
+                           Tran = Tran, # Transmittance data (matrix or dataframe)
+                           UserDomain = lambda) # spectral domain of interest
 						   
-SubSpecPROSPECT <- SubData$SpecPROSPECT                                         # spectral properties adjusted to current data
-Sublambda <- SubData$lambda                                                     # updated spectral domain defined by UserDomain
-SubRefl <- SubData$Refl                                                         # updated reflectance domain defined by UserDomain
-SubTran <- SubData$Tran                                                         # updated transmittance defined by UserDomain
+SubSpecPROSPECT <- SubData$SpecPROSPECT # spectral properties adjusted to current data
+Sublambda <- SubData$lambda # updated spectral domain defined by UserDomain
+SubRefl <- SubData$Refl # updated reflectance domain defined by UserDomain
+SubTran <- SubData$Tran # updated transmittance defined by UserDomain
 ```
 
 The main inversion procedure is called with the function `Invert_PROSPECT`.
@@ -299,18 +282,10 @@ be defined in `Parms2Estimate`. The value set for parameters which are not estim
 with the `InitValues` input variable. 
 
 ```r
-# Estimate all parameters using PROSPECT-D inversion applied to full spectral data
-PROSPECT_version <- 'D'
-Parms2Estimate  <- 'ALL'
-InitValues <- data.frame(CHL = 40, CAR = 10, ANT = 0.1, BROWN = 0, 
-                         EWT = 0.01, LMA = 0.01, N = 1.5)
-
+# Estimate all parameters using PROSPECT inversion applied to full spectral data
 res_all_WL <- Invert_PROSPECT(SpecPROSPECT = SubSpecPROSPECT, 
-                       Refl = SubRefl, 
-                       Tran = SubTran, 
-                       PROSPECT_version = PROSPECT_version,
-                       Parms2Estimate = Parms2Estimate, 
-                       InitValues = InitValues)
+                              Refl = SubRefl, 
+                              Tran = SubTran)
 ```
 
 ## PROSPECT inversion using the optimal spectral domains specific to each constituent
@@ -321,20 +296,18 @@ and the function automatically adjusts the spectral domain of the leaf optical p
 by user. 
 
 ```r
-# Estimate a selection of parameters using PROSPECT-D inversion applied on optimal spectral domains
+# Estimate a set of parameters using PROSPECT inversion with optimal spectral domains
 Parms2Estimate  <- c('CHL', 'CAR', 'EWT', 'LMA')
 res_opt_WL <- Invert_PROSPECT_OPT(SpecPROSPECT = SpecPROSPECT, 
                                   lambda = lambda, 
                                   Refl = Refl, 
-                                  Tran = Tran, 
-                                  PROSPECT_version = PROSPECT_version,
-                                  Parms2Estimate = Parms2Estimate, 
-                                  InitValues = InitValues)
+                                  Tran = Tran,
+                                  Parms2Estimate = Parms2Estimate)
 ```
 
 ## Comparing performances of the two types of inversion with experimental data
 
-The outputs of the inversion can then be plotted and compared with scatterplots
+The outputs of the inversion can then be plotted and compared with scatterplots.
 
 ```r
 # define axis labels for each leaf chemical constituent
@@ -366,16 +339,15 @@ plotALL <- gridExtra::grid.arrange(plotBP$CHL, plotBP$CAR,
 ggsave(filename = 'PROSPECT_Inversions.png', plot = plotALL, device = "png", 
        scale = 1, width = 24, height = 24, units = "cm", dpi = 300)
 ```
-![Estimation of chlorophyll content, carotenoid content, EWT and LMA from PROSPECT inversion applied on the ANGERS dataset. 
-full WL corresponds to the inversion performed with the full spectral information; 
-opt WL corresponds to the inversion performed with the optimal spectral information](PROSPECT_Inversions.png){ width=60% }
 
+
+![Estimation of chlorophyll content, carotenoid content, EWT and LMA from PROSPECT inversion applied on the ANGERS dataset. full WL corresponds to the inversion performed with the full spectral information; opt WL corresponds to the inversion performed with the optimal spectral information](PROSPECT_Inversions.png){ width=80% }
 
 # Conclusion
 
 We have described `prospect`, an R package dedicated to the PROSPECT leaf model. 
 `prospect` can run different versions of the model in direct mode, in order to simulate 
-directional-hemispherical reflectance and transmittance or LUTs. 
+directional-hemispherical reflectance and transmittance for individual leaves or LUTs.
 `prospect` also include a selection of inversion procedures based on iterative optimization, 
 in order to estimate leaf structure and chemical constituent content either from 
 directional-hemispherical reflectance and transmittance, or from reflectance or transmittance only. 
