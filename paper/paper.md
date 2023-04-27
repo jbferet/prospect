@@ -241,8 +241,8 @@ in a single scatterplot for each leaf chemical constituent.
 
 We have described `prospect`, an R package dedicated to the PROSPECT leaf model. 
 `prospect` can run different versions of the model in direct mode to simulate 
-directional-hemispherical reflectance and transmittance for individual leaves or LUTs.
-`prospect` also includes inversion routines in order to estimate leaf structure and chemical 
+directional-hemispherical reflectance and transmittance.
+`prospect` also includes inversion routines allowing estimating leaf structure and chemical 
 constituent content either from directional-hemispherical reflectance and transmittance, 
 or from reflectance or transmittance only. 
 `prospect` aims at providing latest advances in terms of model version and inversion procedures
@@ -256,7 +256,7 @@ prospect is an open-source software package made available under the GPL-3.0 lic
 # Acknowledgements
 
 The authors acknowledge financial support from Agence Nationale de la Recherche (BioCop project — ANR-17-CE32-0001)
-We are grateful to Stephane Jacquemoud and Frederic Baret for the development of the initial version of 
+We are grateful to Stéphane Jacquemoud and Frédéric Baret for the development of the initial version of 
 the PROSPECT model. We also warmly thank Luc Bidel, Christophe François and Gabriel Pavan who collected the ANGERS dataset.
 
 # References
