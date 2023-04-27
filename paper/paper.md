@@ -240,20 +240,18 @@ in a single scatterplot for each leaf chemical constituent.
 # Conclusion
 
 We have described `prospect`, an R package dedicated to the PROSPECT leaf model. 
-`prospect` can run different versions of the model in direct mode, in order to simulate 
+`prospect` can run different versions of the model in direct mode to simulate 
 directional-hemispherical reflectance and transmittance for individual leaves or LUTs.
-`prospect` also include a selection of inversion procedures based on iterative optimization, 
-in order to estimate leaf structure and chemical constituent content either from 
-directional-hemispherical reflectance and transmittance, or from reflectance or transmittance only. 
-
-We described these procedures in examples, and used experimental data to illustrate inversion procedures. 
-The `prospect` package aims at providing latest advances in terms of model version and inversion procedures
+`prospect` also includes inversion routines in order to estimate leaf structure and chemical 
+constituent content either from directional-hemispherical reflectance and transmittance, 
+or from reflectance or transmittance only. 
+`prospect` aims at providing latest advances in terms of model version and inversion procedures
 to the leaf spectroscopy community. 
 
 
 # Availability
 
-prospect is an open-source software package made available under the GPL-3.0 license. It can be installed through GitHub repository using the remotes package: remotes::install_github("jbferet/prospect"). Tutorials are available at [https://jbferet.gitlab.io/prospect/](https://jbferet.gitlab.io/prospect/).
+prospect is an open-source software package made available under the GPL-3.0 license. It can be installed through GitHub repository: remotes::install_github("jbferet/prospect"). Tutorials are available at [https://jbferet.gitlab.io/prospect/](https://jbferet.gitlab.io/prospect/).
 
 # Acknowledgements
 
