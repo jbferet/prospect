@@ -28,7 +28,7 @@ PROSPECT simulates leaf optical properties (LOP)
 based on a limited set of light absorbing chemical constituents, and a unique leaf 
 structure parameter to account for light scattering.
 We present `prospect`, an R package which includes the most recent versions of the model, 
-complemented with multiple inversion routines to estimate leaf chemistry from LOP.
+complemented with multiple inversion routines to assess leaf chemistry from LOP.
 
 # Statement of need
 
@@ -39,13 +39,13 @@ through the generalised plate model [@allen1970] to simulate leaf directional-he
 reflectance and transmittance. 
 The capacity to measure, map and monitor vegetation chemical traits from leaf to canopy scale 
 is key to better understand ecosystems and agrosystems functions, as well as carbon, water and energy budgets. 
-Models and methods taking advantage of optical meaasurements to estimate these core constituents are 
+Models and methods taking advantage of optical meaasurements to assess these core constituents are 
 important components in this perspective.
 
 Techniques based on spectroscopy have developed in the past decades to provide a 
 rapid, accurate and non-destructive estimation of leaf chemical composition. 
 Physical models aim at simulating LOP corresponding to this chemical composition, but they can 
-also be used to estimate chemical composition from LOP based on inversion techniques. 
+also be used to assess chemical composition from LOP based on inversion techniques. 
 
 Multiple versions aiming at expanding the pool of chemical constituents accounted for by PROSPECT 
 have been released since its first version [@jacquemoud1990].
@@ -85,7 +85,7 @@ PROT: proteins; CBC: carbon based constituents;
 BROWN: brown pigments).\label{table:1}
 
 The inversion procedure is based on an optimization algorithm aiming at finding the minimum of multivariable 
-functions with nonlinear constraints. Table \ref{table:2} provides information on the optimal spectral range used to estimate leaf 
+functions with nonlinear constraints. Table \ref{table:2} provides information on the optimal spectral range used to assess leaf 
 chemical constituents from their optical properties, as identified by [@feret2019; @spafford2021].
 
 | Constituent 	|    Optimal spectral domain     	|            Versions      |
@@ -99,7 +99,7 @@ chemical constituents from their optical properties, as identified by [@feret201
 | PROT      	| 2100 -- 2139 ; 2160 -- 2179     	| `PRO`, `PROB`            |
 | CBC       	| 1480 -- 1499;	1560 -- 1579;	 1760 -- 1799; 2040 -- 2059;	 2120 -- 2139; 2160 -- 2239;	 2260 -- 2279; 2340 -- 2359;	 2380 -- 2399 	| `PRO`, `PROB`                      	|
 
-: Optimal spectral domains selected to estimate vegetation chemical constituents from leaf 
+: Optimal spectral domains selected to assess vegetation chemical constituents from leaf 
 optical properties (CHL: chlorophylls; CAR: carotenoids; 
 ANT: anthocyanins; EWT: equivalent water thickness; LMA: leaf mass per area; 
 PROT: proteins; CBC: carbon based constituents; 
@@ -156,7 +156,7 @@ LUT <- PROSPECT_LUT(SpecPROSPECT,Input_PROSPECT)
 
 Several approaches can be used to perform PROSPECT inversion. As PROSPECT is a relatively simple and 
 computationally efficient model, inversion based on iterative optimization is one of the most popular 
-method to invert PROSPECT and estimate leaf chemistry and structure from their optical properties. 
+method to invert PROSPECT and assess leaf chemistry and structure from their optical properties. 
 Here, the iterative optimization is based on the minimization of a multivariable function with nonlinear constraints. 
 This procedure is based on the function `fmincon` included in the package `pracma`.
 
@@ -204,13 +204,13 @@ SubData <- FitSpectralData(SpecPROSPECT = SpecPROSPECT,
 The main inversion procedure is called with the function `Invert_PROSPECT`, which minimizes a cost function. 
 The default cost function, `CostVal_RMSE`, corresponds to the root mean square of the mean quadratic difference between 
 measured and simulated leaf optical properties (either reflectance and transmittance, or one of them only).
-Users can define their own cost function. They can also select the biophyscal properties to estimate: 
-The full set (`Parms2Estimate` set to `ALL`) or a reduced set of variables to estimate can 
+Users can define their own cost function. They can also select the biophyscal properties to assess: 
+The full set (`Parms2Estimate` set to `ALL`) or a reduced set of variables to assess can 
 be defined in `Parms2Estimate`. The value set for parameters which are not estimated is then defined 
 with the `InitValues` input variable. 
 
 ```r
-# Estimate all parameters using PROSPECT inversion applied to full spectral data
+# Assess all parameters using PROSPECT inversion applied to full spectral data
 res_all_WL <- Invert_PROSPECT(SpecPROSPECT = SubData$SpecPROSPECT, 
                               Refl = SubData$Refl,  Tran = SubData$Tran)
 ```
@@ -223,7 +223,7 @@ and the function automatically adjusts the spectral domain of the leaf optical p
 by user. 
 
 ```r
-# Estimate a set of parameters using PROSPECT inversion with optimal spectral domains
+# Assess a set of parameters using PROSPECT inversion with optimal spectral domains
 Parms2Estimate  <- c('CHL', 'CAR', 'EWT', 'LMA')
 res_opt_WL <- Invert_PROSPECT_OPT(SpecPROSPECT = SpecPROSPECT, lambda = lambda, 
                                   Refl = Refl, Tran = Tran,
@@ -242,10 +242,10 @@ in a single scatterplot for each leaf chemical constituent.
 We have described `prospect`, an R package dedicated to the PROSPECT leaf model. 
 `prospect` can run different versions of the model in direct mode to simulate 
 directional-hemispherical reflectance and transmittance.
-`prospect` also includes inversion routines allowing estimating leaf structure and chemical 
+`prospect` also includes inversion routines to assess leaf structure and chemical 
 constituent content either from directional-hemispherical reflectance and transmittance, 
 or from reflectance or transmittance only. 
-`prospect` aims at providing latest advances in terms of model version and inversion procedures
+`prospect` provides latest advances in terms of model version and inversion procedures
 to the leaf spectroscopy community. 
 
 
