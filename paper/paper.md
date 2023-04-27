@@ -235,7 +235,7 @@ res_opt_WL <- Invert_PROSPECT_OPT(SpecPROSPECT = SpecPROSPECT, lambda = lambda,
 Figure \ref{fig:scatter} displays the outputs of the inversion, compared for each configuration of inversion
 in a single scatterplot for each leaf chemical constituent.  
 
-![Estimation of chlorophyll content, carotenoid content, EWT and LMA from PROSPECT inversion applied on the ANGERS dataset. `full WL` corresponds to the inversion performed with the full spectral information; `opt WL` corresponds to the inversion performed with the optimal spectral information \label{fig:scatter}](PROSPECT_Inversions.png){ width=80% }
+![Estimation of chlorophyll content, carotenoid content, EWT and LMA from PROSPECT inversion applied on the ANGERS dataset. `full WL` corresponds to the inversion performed with the full spectral information; `opt WL` corresponds to the inversion performed with the optimal spectral information \label{fig:scatter}](PROSPECT_Inversions.png){ width=90% }
 
 # Conclusion
 
