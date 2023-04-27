@@ -27,8 +27,8 @@ bibliography: paper.bib
 PROSPECT simulates leaf optical properties (LOP)
 based on a limited set of light absorbing chemical constituents, and a unique leaf 
 structure parameter to account for light scattering.
-We present `prospect`, an R package which includes the most recent versions of the model.
-`prospect` also includes multiple inversion routines to estimate leaf chemistry from LOP.
+We present `prospect`, an R package which includes the most recent versions of the model, 
+complemented with multiple inversion routines to estimate leaf chemistry from LOP.
 
 # Statement of need
 
@@ -36,29 +36,30 @@ LOP are linked to their biophysical properties through absorption
 and scattering mechanisms. PROSPECT takes advantage of specific absorption coefficients from chemical constituents 
 such as leaf pigments, water and proteins, and uses a simplified representation of leaf structure 
 through the generalised plate model [@allen1970] to simulate leaf directional-hemispherical 
-reflectance and transmittance.
-The capacity to measure, map and monitor leaf chemical properties from leaf to canopy scale 
+reflectance and transmittance. 
+The capacity to measure, map and monitor vegetation chemical traits from leaf to canopy scale 
 is key to better understand ecosystems and agrosystems functions, as well as carbon, water and energy budgets. 
-Models and methods giving access to these core leaf constituents based on optical meaasurements are 
+Models and methods taking advantage of optical meaasurements to estimate these core constituents are 
 important components in this perspective.
 
 Techniques based on spectroscopy have developed in the past decades to provide a 
-rapid, accurate and non-destructive estimation of leaf constituents. 
-Physical models aim at simulating LOP from leaf chemical content, but they can 
-also be used to estimate leaf chemical content from LOP based on model inversion. 
+rapid, accurate and non-destructive estimation of leaf chemical composition. 
+Physical models aim at simulating LOP corresponding to this chemical composition, but they can 
+also be used to estimate chemical composition from LOP based on inversion techniques. 
 
 The model PROSPECT is widely used in the remote sensing community, 
 alone or combined with canopy reflectance models such as SAIL [@verhoef2007] and DART [@gastellu2015]. 
-Multiple versions have been released since the first version of PROSPECT [@jacquemoud1990], aiming at expanding 
-its capacity to account for more chemical constituents. Successive versions introduced carotenoids [@feret2008],  
-and anthocyanins [@feret2017], allowing simulating LOP from juvenile to mature and senescent development stages. 
+Multiple versions aiming at expanding its capacity to account for more chemical constituents
+have been released since its first version [@jacquemoud1990]. 
+Successive versions introduced carotenoids [@feret2008] and anthocyanins [@feret2017], to simulate 
+LOP from juvenile to mature and senescent development stages. 
 The latest version, PROSPECT-PRO, separates dry matter constituents into proteins and carbon based constituents. 
 In parallel with the updated versions of the model, model inversion strategies are also developed 
 to improve the estimation of leaf chemical constituents [@feret2019; @spafford2021].
 
 To ensure access to latest advances in terms of model version and inversion strategies, 
 the R package `prospect` includes the most recent versions of PROSPECT, 
-and parameterizable inversion routines, allowing users to design their own inversion strategy.
+and parameterizable inversion routines, allowing users to design and test their own inversion strategy.
 
 
 # Overview
@@ -90,15 +91,15 @@ The inversion procedure is based on an optimization algorithm aiming at finding 
 functions with nonlinear constraints. Table \ref{table:2} provides information on the optimal spectral range used to estimate leaf 
 chemical constituents from their optical properties, as identified by [@feret2019; @spafford2021].
 
-| Constituent 	|    Optimal spectral domain 	|            Versions     	|
-|------------	|-----------------------------	|:-----------------------:	|
-| CHL       	|           700 -- 720       	| `D`, `DB`, `PRO`, `PROB`	|
-| CAR       	|           520 -- 560        	| `D`, `DB`, `PRO`, `PROB`	|
-| ANT       	|           400 -- 800       	| `D`, `DB`, `PRO`, `PROB` 	|
-| BROWN     	|               NA           	| NA                       	|
-| EWT       	|          1700 -- 2400       	| `D`, `DB`, `PRO`, `PROB`	|
-| LMA       	|          1700 -- 2400       	| `D`, `DB`               	|
-| PROT      	| 2100 -- 2139 ; 2160 -- 2179 	| `PRO`, `PROB`            	|
+| Constituent 	|    Optimal spectral domain     	|            Versions      |
+|------------	|---------------------------------	|:---------------------:   |
+| CHL       	|           700 -- 720           	| `D`, `DB`, `PRO`, `PROB` |
+| CAR       	|           520 -- 560            	| `D`, `DB`, `PRO`, `PROB` |
+| ANT       	|           400 -- 800           	| `D`, `DB`, `PRO`, `PROB` |
+| BROWN     	|               NA               	| NA                       |
+| EWT       	|          1700 -- 2400           	| `D`, `DB`, `PRO`, `PROB` |
+| LMA       	|          1700 -- 2400           	| `D`, `DB`                |
+| PROT      	| 2100 -- 2139 ; 2160 -- 2179     	| `PRO`, `PROB`            |
 | CBC       	| 1480 -- 1499;	1560 -- 1579;	 1760 -- 1799; 2040 -- 2059;	 2120 -- 2139; 2160 -- 2239;	 2260 -- 2279; 2340 -- 2359;	 2380 -- 2399 	| `PRO`, `PROB`                      	|
 
 : Optimal spectral domains selected to estimate vegetation chemical constituents from leaf 
@@ -111,17 +112,15 @@ BROWN: brown pigments).\label{table:2}
 
 ## Individual simulation with PROSPECT-D and PROSPECT-PRO
 
-This section illustrates how to run PROSPECT in forward mode in order to simulate 
-leaf directional-hemispherical reflectance and transmittance from the leaf structure parameter and a combination 
-of chemical constituents.
-
+PROSPECT is run in forward mode to simulate leaf directional-hemispherical reflectance 
+and transmittance from the leaf structure parameter and a combination of chemical constituents.
 The variable `SpecPROSPECT` is automatically available as a dataframe when loading `prospect`. 
 `SpecPROSPECT` includes the leaf refractive index and all specific absorption coefficents defined on the spectral 
 range from 400 nm to 2500 nm.
 
-The first example uses PROSPECT-D. The function autmatically identifies the version to be used (PROSPECT-D), as 
-the input parameters correspond to this version: LMA is defined, while brown pigments, proteins and 
-carbon based constituents (CBC) are not defined.
+The first example uses PROSPECT-D. The function autmatically identifies the version to be used, as 
+LMA is defined, while brown pigments, proteins and carbon based constituents (CBC) are not defined 
+(hence set to 0).
 
 ```r
 # Load prospect package
@@ -139,7 +138,7 @@ LRT_PRO <- PROSPECT(SpecPROSPECT, CHL = 45, CAR = 10, ANT = 0.2,
                     EWT = 0.012, PROT = 0.001,  CBC = 0.009, N = 1.7)
 ```
 
-Simulated LOP can then be compared. Here, the differences between PROSPECT-D and PROSPECT-PRO 
+Figure \ref{fig:LOP} compares simulated LOP. Here, the differences between PROSPECT-D and PROSPECT-PRO 
 are mainly driven by the difference set for the `N` structure parameter.
 
 ```r
@@ -154,7 +153,6 @@ T_PRO <- data.frame('wvl' = LRT_PRO$wvl, 'RT' = 100*(1-LRT_PRO$Transmittance),
 LRT_df <- rbind(R_D, T_D, R_PRO, T_PRO)
 
 # plot reflectance and transmittance for both models
-library(ggplot2)
 RTplot <- ggplot2::ggplot(LRT_df, aes(x=wvl, y=RT, group=LOP)) +
   geom_line(aes(linetype=LOP, color=LOP),linewidth=1.00)+
   scale_color_manual(values=c('#FF9999','red1','#9999FF','blue4'))+
@@ -170,7 +168,7 @@ filename = 'compare_RT_PROSPECT_PRO_D.png'
 ggsave(filename, plot = RTplot, device = "png", 
        scale = 1, width = 20, height = 13, units = "cm", dpi = 300)
 ```
-![Leaf optical properties simulated with PROSPECT-D and PROSPECT-PRO. Different values of N were defined to highlight differences in simulated leaf optics \label{fig:AIM}](compare_RT_PROSPECT_PRO_D.png){ width=85% }
+![Leaf optical properties simulated with PROSPECT-D and PROSPECT-PRO. Different values of N were defined to highlight differences in simulated leaf optics \label{fig:LOP}](compare_RT_PROSPECT_PRO_D.png){ width=85% }
 
 
 ## Simulation of a look up table with PROSPECT-D
@@ -277,7 +275,8 @@ res_opt_WL <- Invert_PROSPECT_OPT(SpecPROSPECT = SpecPROSPECT, lambda = lambda,
 
 ## Comparing performances of the two types of inversion with experimental data
 
-The outputs of the inversion can then be plotted and compared with scatterplots.
+Figure \ref{fig:scatter} displays the outputs of the inversion, compared for each configuration of inversion
+in a single scatterplot for each leaf chemical constituent.  
 
 ```r
 # define axis labels for each leaf chemical constituent
@@ -310,8 +309,7 @@ ggsave(filename = 'PROSPECT_Inversions.png', plot = plotALL, device = "png",
        scale = 1, width = 24, height = 24, units = "cm", dpi = 300)
 ```
 
-
-![Estimation of chlorophyll content, carotenoid content, EWT and LMA from PROSPECT inversion applied on the ANGERS dataset. full WL corresponds to the inversion performed with the full spectral information; opt WL corresponds to the inversion performed with the optimal spectral information](PROSPECT_Inversions.png){ width=80% }
+![Estimation of chlorophyll content, carotenoid content, EWT and LMA from PROSPECT inversion applied on the ANGERS dataset. `full WL` corresponds to the inversion performed with the full spectral information; `opt WL` corresponds to the inversion performed with the optimal spectral information \label{fig:scatter}](PROSPECT_Inversions.png){ width=80% }
 
 # Conclusion
 
