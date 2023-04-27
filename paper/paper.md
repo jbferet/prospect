@@ -121,6 +121,8 @@ These two examples illustrate how to run PROSPECT.
 The function `PROSPECT` identifies the version to be used: PROSPECT-D is used if LMA is defined, 
 while PROSPECT-PRO is used if proteins and carbon based constituents (CBC) are defined. 
 If LMA, proteins and CBC are defined simulatneously, PROSPECT-PRO is used and LMA is set to 0.
+Figure \ref{fig:LOP} compares simulated LOP. Here, the differences between PROSPECT-D and PROSPECT-PRO 
+are mainly driven by the difference set for the `N` structure parameter.
 
 ```r
 # Load prospect package
@@ -133,11 +135,7 @@ LRT_PRO <- PROSPECT(SpecPROSPECT, CHL = 45, CAR = 10, ANT = 0.2,
                     EWT = 0.012, PROT = 0.001,  CBC = 0.009, N = 1.7)
 ```
 
-Figure \ref{fig:LOP} compares simulated LOP. Here, the differences between PROSPECT-D and PROSPECT-PRO 
-are mainly driven by the difference set for the `N` structure parameter.
-
 ![Leaf optical properties simulated with PROSPECT-D and PROSPECT-PRO. Different values of N were defined to highlight differences in simulated leaf optics \label{fig:LOP}](compare_RT_PROSPECT_PRO_D.png){ width=85% }
-
 
 ## Simulation of a look up table with PROSPECT-D
 
@@ -148,12 +146,9 @@ The output of `PROSPECT_LUT` is a list containing a dataframe including the inpu
 a reflectance matrix and a transmittance matrix.
 
 ```r
-CHL <- 100*runif(1000)
-CAR <- 25*runif(1000)
-ANT <- 2*runif(1000)
-EWT <- 0.04*runif(1000)
-LMA <- 0.02*runif(1000)
-N   <- 1+2*runif(1000)
+CHL <- 100*runif(1000); CAR <- 25*runif(1000)
+ANT <- 2*runif(1000); EWT <- 0.04*runif(1000)
+LMA <- 0.02*runif(1000); N   <- 1+2*runif(1000)
 Input_PROSPECT <- data.frame('CHL' = CHL, 'CAR' = CAR, 'ANT' = ANT, 
                              'EWT' = EWT, 'LMA' = LMA, 'N' = N)
 LUT <- PROSPECT_LUT(SpecPROSPECT,Input_PROSPECT)
