@@ -118,9 +118,10 @@ The variable `SpecPROSPECT` is automatically available as a dataframe when loadi
 `SpecPROSPECT` includes the leaf refractive index and all specific absorption coefficents defined on the spectral 
 range from 400 nm to 2500 nm.
 
-The first example uses PROSPECT-D. The function autmatically identifies the version to be used, as 
-LMA is defined, while brown pigments, proteins and carbon based constituents (CBC) are not defined 
-(hence set to 0).
+These two examples illustrate how to run PROSPECT. 
+The function `PROSPECT` identifies the version to be used: PROSPECT-D is used if LMA is defined, 
+while PROSPECT-PRO is used if proteins and carbon based constituents (CBC) are defined. 
+If LMA, proteins and CBC are defined simulatneously, PROSPECT-PRO is used and LMA is set to 0.
 
 ```r
 # Load prospect package
@@ -128,11 +129,6 @@ library(prospect)
 # Run PROSPECT-D
 LRT_D <- PROSPECT(SpecPROSPECT, CHL = 45, CAR = 10, ANT = 0.2, 
                   EWT = 0.012, LMA = 0.010, N = 1.3)
-```
-
-In this second example, PROSPECT-PRO is used as proteins and CBC are defined.  
-
-```r
 # Run PROSPECT-PRO
 LRT_PRO <- PROSPECT(SpecPROSPECT, CHL = 45, CAR = 10, ANT = 0.2, 
                     EWT = 0.012, PROT = 0.001,  CBC = 0.009, N = 1.7)
@@ -141,33 +137,6 @@ LRT_PRO <- PROSPECT(SpecPROSPECT, CHL = 45, CAR = 10, ANT = 0.2,
 Figure \ref{fig:LOP} compares simulated LOP. Here, the differences between PROSPECT-D and PROSPECT-PRO 
 are mainly driven by the difference set for the `N` structure parameter.
 
-```r
-R_D <- data.frame('wvl' = LRT_D$wvl, 'RT' = 100*LRT_D$Reflectance,
-                  'LOP' = 'R (PROSPECT-D)')
-T_D <- data.frame('wvl' = LRT_D$wvl, 'RT' = 100*(1-LRT_D$Transmittance),
-                  'LOP' = 'T (PROSPECT-D)')
-R_PRO <- data.frame('wvl' = LRT_PRO$wvl, 'RT' = 100*LRT_PRO$Reflectance,
-                    'LOP' = 'R (PROSPECT-PRO)')
-T_PRO <- data.frame('wvl' = LRT_PRO$wvl, 'RT' = 100*(1-LRT_PRO$Transmittance),
-                    'LOP' = 'T (PROSPECT-PRO)')
-LRT_df <- rbind(R_D, T_D, R_PRO, T_PRO)
-
-# plot reflectance and transmittance for both models
-RTplot <- ggplot2::ggplot(LRT_df, aes(x=wvl, y=RT, group=LOP)) +
-  geom_line(aes(linetype=LOP, color=LOP),linewidth=1.00)+
-  scale_color_manual(values=c('#FF9999','red1','#9999FF','blue4'))+
-  scale_size_manual(values=c(5, 5))+
-  labs(x='Wavelength (nm)',y='Reflectance     (%)     100-Transmittance') +
-  theme(legend.position = "bottom",
-        axis.text = element_text(size=12),
-        axis.title.x = element_text(size=14, face="bold"),
-        axis.title.y = element_text(size=14, face="bold")) +
-  scale_linetype_manual(values=c("solid","solid","solid","solid"))
-
-filename = 'compare_RT_PROSPECT_PRO_D.png'
-ggsave(filename, plot = RTplot, device = "png", 
-       scale = 1, width = 20, height = 13, units = "cm", dpi = 300)
-```
 ![Leaf optical properties simulated with PROSPECT-D and PROSPECT-PRO. Different values of N were defined to highlight differences in simulated leaf optics \label{fig:LOP}](compare_RT_PROSPECT_PRO_D.png){ width=85% }
 
 
@@ -219,12 +188,11 @@ A version of the ANGERS dataset is hosted on gitlab, and can be directly downloa
 library(data.table)
 # download ANGERS leaf optics database from gitlab repository
 gitlab_Rep <- 'https://gitlab.com/jbferet/myshareddata/raw/master/LOP'
-dbName <- 'ANGERS'
 # download leaf biochemical constituents and leaf optical properties
 fileName <- list('DataBioch.txt','ReflectanceData.txt','TransmittanceData.txt')
-DataBioch <- data.table::fread(file.path(gitlab_Rep,dbName,fileName[[1]]))
-Refl<- data.table::fread(file.path(gitlab_Rep,dbName,fileName[[2]]))
-Tran <- data.table::fread(file.path(gitlab_Rep,dbName,fileName[[3]]))
+DataBioch <- data.table::fread(file.path(gitlab_Rep,'ANGERS',fileName[[1]]))
+Refl<- data.table::fread(file.path(gitlab_Rep,'ANGERS',fileName[[2]]))
+Tran <- data.table::fread(file.path(gitlab_Rep,'ANGERS',fileName[[3]]))
 # Get the wavelengths corresponding to reflectance and transmittance measurements  
 lambda <- unlist(Refl$V1, use.names=FALSE)
 Refl$V1 <- Tran$V1 <- NULL
@@ -277,37 +245,6 @@ res_opt_WL <- Invert_PROSPECT_OPT(SpecPROSPECT = SpecPROSPECT, lambda = lambda,
 
 Figure \ref{fig:scatter} displays the outputs of the inversion, compared for each configuration of inversion
 in a single scatterplot for each leaf chemical constituent.  
-
-```r
-# define axis labels for each leaf chemical constituent
-Labs <- list(CHL = list(x='Estimated CHL (µg/cm-2)', y= 'Measured CHL (µg/cm-2)'), 
-             CAR = list(x='Estimated CAR (µg/cm-2)', y= 'Measured CAR (µg/cm-2)'), 
-             EWT = list(x='Estimated EWT (mg/cm-2)', y= 'Measured EWT (mg/cm-2)'), 
-             LMA = list(x='Estimated LMA (mg/cm-2)', y= 'Measured LMA (mg/cm-2)'))
-# define colors
-Colors <- list(CHL = c('gray69','green4'), CAR = c('gray69','orange2'),
-               EWT = c('gray69','blue2'), LMA = c('gray69','red3'))
-# multiplying factor to convert unit
-fact <- list('CHL' = 1, 'CAR' = 1, 'EWT' = 1000, 'LMA' = 1000)
-plotBP <- list()
-for (parm in Parms2Estimate){
-  Est_all_WL <- data.frame('measured'= fact[[parm]]*DataBioch[[parm]],
-                           'estimated'= fact[[parm]]*res_all_WL[[parm]],
-                           'config' = 'full WL')
-  EST_opt_WL <- data.frame('measured'= fact[[parm]]*DataBioch[[parm]],
-                           'estimated'= fact[[parm]]*res_opt_WL[[parm]],
-                           'config' = 'opt WL')
-  Meas_Est <- rbind(Est_all_WL, EST_opt_WL)
-  plotBP[[parm]] <- plotinv(Meas_Est, stats = TRUE, 
-                            Labs = Labs[[parm]], Colors = Colors[[parm]])
-}
-
-plotALL <- gridExtra::grid.arrange(plotBP$CHL, plotBP$CAR, 
-                                   plotBP$EWT, plotBP$LMA, 
-                                   ncol = 2, nrow = 2)
-ggsave(filename = 'PROSPECT_Inversions.png', plot = plotALL, device = "png", 
-       scale = 1, width = 24, height = 24, units = "cm", dpi = 300)
-```
 
 ![Estimation of chlorophyll content, carotenoid content, EWT and LMA from PROSPECT inversion applied on the ANGERS dataset. `full WL` corresponds to the inversion performed with the full spectral information; `opt WL` corresponds to the inversion performed with the optimal spectral information \label{fig:scatter}](PROSPECT_Inversions.png){ width=80% }
 
