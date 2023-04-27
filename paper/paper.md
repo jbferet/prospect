@@ -24,53 +24,45 @@ bibliography: paper.bib
 
 # Summary
 
-PROSPECT is the most widely used leaf model, allowing simulation of leaf optical properties 
-based on a limited set of chemical constituents absorbing light, and a unique leaf 
+PROSPECT is the most widely used leaf model. It simulates leaf optical properties (LOP)
+based on a limited set of light absorbing chemical constituents, and a unique leaf 
 structure parameter to account for light scattering.
-
-We present `prospect`, an R package which includes PROSPECT-D [@feret2017] and PROSPECT-PRO [@feret2021], 
-its two most recent versions.
-The package also provides inversion routines based on iterative optimization to estimate leaf chemistry from LOP.
-Various inversion strategies are implemented in the package, including strategies recently developed 
-[@feret2019, @spafford2021] aiming at estimating leaf chemical constituents based on optimal spectral domains.
+We present `prospect`, an R package which includes the most recent versions of the model.
+`prospect` also includes multiple inversion routines to estimate leaf chemistry from LOP.
 
 # Statement of need
 
-Leaf optical properties are linked to leaf biophysical properties through absorption 
+LOP are linked to their biophysical properties through absorption 
 and scattering mechanisms. Physical models describe the interactions between these properties.
 PROSPECT takes advantage of specific absorption coefficients from chemical constituents 
 such as leaf pigments, water and proteins, and uses a simplified representation of leaf structure 
 through the generalised plate model [@allen1970] to simulate leaf directional-hemispherical 
 reflectance and transmittance.
-Leaf optical properties contribute significantly to vegetation reflectance acquired from Earth observation systems.
+LOP contribute significantly to vegetation reflectance acquired from Earth observation systems.
 The capacity to map and monitor leaf chemical properties is key to better understand ecosystems 
-and agrosystems functions, as well as carbon, water and energy budgets, and models and methods 
-giving access to these core leaf constituents based on observations at leaf and canopy scale are 
-important components.
+and agrosystems functions, as well as carbon, water and energy budgets. Models and methods 
+giving access to these core leaf constituents based on leaf and canopy scale observations are 
+important components in this perspective.
 
-Techniques based on leaf spectroscopy have developed in the past decades to provide a 
-rapid, accurate and non-destructive estimation of leaf constituents. Physical modeling has an
-important role in these techniques, as it can be used to directly estimate leaf chemical content
-based on model inversion. It can also generate simulated leaf optical properties, in order to adjust 
+Techniques based on spectroscopy have developed in the past decades to provide a 
+rapid, accurate and non-destructive estimation of leaf constituents. Physical modeling 
+can be used to directly estimate leaf chemical content based on model inversion. 
+It can also simulate LOP, in order to adjust 
 statistical models or to identify spectral indices leading to accurate estimation of leaf chemistry
 based on parcimonious spectral information [@feret2011]. 
 
 The model PROSPECT is widely used in the remote sensing community, 
 alone or combined with canopy reflectance models such as SAIL [@verhoef2007] and DART [@gastellu2015]. 
 Multiple versions have been released since the first version of PROSPECT [@jacquemoud1990], aiming at expanding 
-its capacity to account for more chemical constituents. Recent versions introduced carotenoids [@feret2008],  
-and anthocyanins [@feret2017], allowing simulating and analyzing leaf optical properties corresponding to different 
+its capacity to account for more chemical constituents. Successive versions introduced carotenoids [@feret2008],  
+and anthocyanins [@feret2017], allowing simulating LOP corresponding to different 
 leaf development stages, from juvenile to mature and senescent. The latest version, PROSPECT-PRO, 
-separated dry matter constituents into proteins and carbon based constituents. In parallel with the 
-development of new versions of the model, advances in model inversion were also performed 
+separates dry matter constituents into proteins and carbon based constituents. In parallel with the 
+updated versions of the model, model inversion strategies were also developed 
 to improve the estimation of leaf chemical constituents [@feret2019; @spafford2021].
 
-The application of an appropriate model inversion strategy is critical to ensure optimal 
-estimation of leaf constituents, as it was evidenced for the estimation of leaf mass per area (LMA) [@feret2019], 
-which was reported as poorly retrieved from PROSPECT inversion in earlier studies. 
-
 To ensure access to latest advances in terms of model version and inversion strategies, 
-we present `prospect`, an R package including the most recent versions of PROSPECT, 
+the R package `prospect` includes the most recent versions of PROSPECT, 
 and parameterizable inversion routines, allowing users to design their own inversion strategy.
 
 
@@ -99,8 +91,7 @@ ANT: anthocyanins; EWT: equivalent water thickness; LMA: leaf mass per area;
 PROT: proteins; CBC: carbon based constituents; 
 BROWN: brown pigments).\label{table:1}
 
-The inversion procedure is based on the function `fmincon` implemented in the package `pracma`. 
-`fmincon` is an optimization algorithm aiming at finding the minimum of multivariable 
+The inversion procedure is based on an optimization algorithm aiming at finding the minimum of multivariable 
 functions with nonlinear constraints. 
 
 
@@ -129,7 +120,7 @@ BROWN: brown pigments).\label{table:2}
 ## Individual simulation with PROSPECT-D and PROSPECT-PRO
 
 This section illustrates how to run PROSPECT in forward mode in order to simulate 
-leaf directional-hemispherical reflectance and transmittance from leaf structure parameter and a combination 
+leaf directional-hemispherical reflectance and transmittance from the leaf structure parameter and a combination 
 of chemical constituents.
 
 The variable `SpecPROSPECT` is automatically available as a dataframe when loading `prospect`. 
@@ -137,7 +128,7 @@ The variable `SpecPROSPECT` is automatically available as a dataframe when loadi
 range from 400 nm to 2500 nm.
 
 The first example uses PROSPECT-D. The function autmatically identifies the version to be used (PROSPECT-D), as 
-the input parameters correspond to this version: anthocyanins are set to a value, brown pigments, proteins, and 
+the input parameters correspond to this version: LMA is defined, while brown pigments, proteins and 
 carbon based constituents (CBC) are not defined.
 
 ```r
@@ -156,8 +147,8 @@ LRT_PRO <- PROSPECT(SpecPROSPECT, CHL = 45, CAR = 10, ANT = 0.2,
                     EWT = 0.012, PROT = 0.001,  CBC = 0.009, N = 1.7)
 ```
 
-The leaf optical properties can then be compared. Here, the differences between PROSPECT-D and PROSPECT-PRO 
-are mainly driven by the difference set for the `N` parameter.
+Simulated LOP can then be compared. Here, the differences between PROSPECT-D and PROSPECT-PRO 
+are mainly driven by the difference set for the `N` structure parameter.
 
 ```r
 R_D <- data.frame('wvl' = LRT_D$wvl, 'RT' = 100*LRT_D$Reflectance,
@@ -196,7 +187,7 @@ Look-Up-Tables (LUTs) are widely used in order to infer leaf charactristics from
 The function `PROSPECT_LUT` allows computation of a LUT directly based on a list of input parameters.
 Undefined parameters are set to their default value. Vectors of values are expected to be the same length.
 The output of `PROSPECT_LUT` is a list containing a dataframe including the input parameters, as well as two matrices 
-corresponding to leaf directional-hemispherical reflectance and transmittance.
+corresponding to leaf reflectance and transmittance.
 
 ```r
 CHL <- 100*runif(1000)
