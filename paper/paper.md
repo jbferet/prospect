@@ -107,16 +107,16 @@ functions with nonlinear constraints.
 Table \ref{table:2} provides information on the optimal spectral range used to estimate leaf 
 chemical constituents from their optical properties, as identified by [@feret2019; @spafford2021].
 
-| Constituent 	|    Optimal spectral domain    	|                 Versions           	|
-|------------	|---------------------------------	|:----------------------------------:	|
-| CHL       	|           700 -- 720           	| `5`, `5B`, `D`, `DB`, `PRO`, `PROB`	|
-| CAR       	|           520 -- 560           	| `5`, `5B`, `D`, `DB`, `PRO`, `PROB`	|
-| ANT       	|           400 -- 800           	| `D`, `DB`, `PRO`, `PROB`          	|
-| BROWN     	|               NA              	| NA                                	|
-| EWT       	|          1700 -- 2400           	| `5`, `5B`, `D`, `DB`, `PRO`, `PROB`	|
-| LMA       	|          1700 -- 2400           	| `5`, `5B`, `D`, `DB`               	|
-| PROT      	|   2100 -- 2139 ; 2160 -- 2179   	| `PRO`, `PROB`                      	|
-| CBC       	| 1480 -- 1499;	1560 -- 1579;		 1760 -- 1799; 2040 -- 2059;		 2120 -- 2139; 2160 -- 2239;		 2260 -- 2279; 2340 -- 2359;		 2380 -- 2399 	| `PRO`, `PROB`                      	|
+| Constituent 	|    Optimal spectral domain 	|                 Versions           	|
+|------------	|-----------------------------	|:----------------------------------:	|
+| CHL       	|           700 -- 720       	| `5`, `5B`, `D`, `DB`, `PRO`, `PROB`	|
+| CAR       	|           520 -- 560        	| `5`, `5B`, `D`, `DB`, `PRO`, `PROB`	|
+| ANT       	|           400 -- 800       	| `D`, `DB`, `PRO`, `PROB`          	|
+| BROWN     	|               NA           	| NA                                	|
+| EWT       	|          1700 -- 2400       	| `5`, `5B`, `D`, `DB`, `PRO`, `PROB`	|
+| LMA       	|          1700 -- 2400       	| `5`, `5B`, `D`, `DB`               	|
+| PROT      	| 2100 -- 2139 ; 2160 -- 2179 	| `PRO`, `PROB`                      	|
+| CBC       	| 1480 -- 1499;	1560 -- 1579;	 1760 -- 1799; 2040 -- 2059;	 2120 -- 2139; 2160 -- 2239;	 2260 -- 2279; 2340 -- 2359;	 2380 -- 2399 	| `PRO`, `PROB`                      	|
 
 : Optimal spectral domains selected to estimate vegetation chemical constituents from leaf 
 optical properties (CHL: chlorophylls; CAR: carotenoids; 
@@ -154,9 +154,6 @@ value for LMA in addition to PROT and CBC, the value of LMA is automatically set
 use LMA as input value. A warning is then displayed. 
 
 ```r
-# Load prospect package
-library(prospect)
-
 # Run PROSPECT-PRO
 LRT_PRO <- PROSPECT(SpecPROSPECT, CHL = 45, CAR = 10, ANT = 0.2, 
                     EWT = 0.012, PROT = 0.001,  CBC = 0.009, N = 1.7)
@@ -166,23 +163,27 @@ The leaf optical properties can then be compared. Here, the differences between 
 are mainly driven by the difference set for the `N` parameter.
 
 ```r
-R_D_df <- data.frame('wvl' = LRT_D$wvl,
-  'RT' = 100*LRT_D$Reflectance,
-  'LOP' = matrix('R PROSPECT-D',nrow = length(LRT_D$Reflectance),ncol = 1))
+R_D <- data.frame('wvl' = LRT_D$wvl,
+                  'RT' = 100*LRT_D$Reflectance,
+                  'LOP' = matrix('R (PROSPECT-D)',
+                                 nrow = length(LRT_D$Reflectance),ncol = 1))
 
-T_D_df <- data.frame('wvl' = LRT_D$wvl,
-  'RT' = 100*(1-LRT_D$Transmittance),
-  'LOP' = matrix('T PROSPECT-D',nrow = length(LRT_D$Transmittance),ncol = 1))
+T_D <- data.frame('wvl' = LRT_D$wvl,
+                  'RT' = 100*(1-LRT_D$Transmittance),
+                  'LOP' = matrix('T (PROSPECT-D)',
+                                 nrow = length(LRT_D$Transmittance),ncol = 1))
 
-R_PRO_df <- data.frame('wvl' = LRT_PRO$wvl,
-  'RT' = 100*LRT_PRO$Reflectance,
-  'LOP' = matrix('R PROSPECT-PRO',nrow = length(LRT_PRO$Reflectance),ncol = 1))
+R_PRO <- data.frame('wvl' = LRT_PRO$wvl,
+                    'RT' = 100*LRT_PRO$Reflectance,
+                    'LOP' = matrix('R (PROSPECT-PRO)',
+                                   nrow = length(LRT_PRO$Reflectance),ncol = 1))
 
-T_PRO_df <- data.frame('wvl' = LRT_PRO$wvl,
-  'RT' = 100*(1-LRT_PRO$Transmittance),
-  'LOP' = matrix('T PROSPECT-PRO',nrow = length(LRT_PRO$Transmittance),ncol = 1))
+T_PRO <- data.frame('wvl' = LRT_PRO$wvl,
+                    'RT' = 100*(1-LRT_PRO$Transmittance),
+                    'LOP' = matrix('T (PROSPECT-PRO)',
+                                   nrow = length(LRT_PRO$Transmittance),ncol = 1))
 
-LRT_df <- rbind(R_D_df, T_D_df, R_PRO_df, T_PRO_df)
+LRT_df <- rbind(R_D, T_D, R_PRO, T_PRO)
 
 library(ggplot2)
 plot <- ggplot2::ggplot(LRT_df, aes(x=wvl, y=RT, group=LOP)) +
@@ -201,6 +202,8 @@ ggsave(filename, plot = last_plot(), device = "png", path = NULL,
        scale = 1, width = 20, height = 13, units = "cm",
        dpi = 600)
 ```
+![Leaf optical properties simulated with PROSPECT-D and PROSPECT-PRO. different values of N were defined to highlight differences in simulated leaf optics \label{fig:AIM}](compare_RT_PROSPECT_PRO_D.png){ width=65% }
+
 
 ## Simulation of a look up table with PROSPECT-D
 
