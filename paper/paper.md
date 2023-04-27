@@ -1,5 +1,5 @@
 ---
-title: 'PROSPECT: an R package to link leaf optical properties with their chemical and structural properties with the leaf model PROSPECT'
+title: '`prospect`: an R package to link leaf optical properties with their chemical and structural properties with the leaf model PROSPECT'
 tags:
   - R
   - leaf spectroscopy
