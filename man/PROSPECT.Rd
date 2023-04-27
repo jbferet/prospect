@@ -14,7 +14,7 @@ PROSPECT(
   ANT = 0,
   BROWN = 0,
   EWT = 0.01,
-  LMA = 0.008,
+  LMA = NULL,
   PROT = 0,
   CBC = 0,
   alpha = 40

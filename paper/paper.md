@@ -202,7 +202,9 @@ ggsave(filename, plot = last_plot(), device = "png", path = NULL,
        scale = 1, width = 20, height = 13, units = "cm",
        dpi = 600)
 ```
-![Leaf optical properties simulated with PROSPECT-D and PROSPECT-PRO. different values of N were defined to highlight differences in simulated leaf optics \label{fig:AIM}](compare_RT_PROSPECT_PRO_D.png){ width=65% }
+![Leaf optical properties simulated with PROSPECT-D and PROSPECT-PRO. different values of 
+N were defined to highlight differences in simulated leaf optics]
+(compare_RT_PROSPECT_PRO_D.png){ width=85% }
 
 
 ## Simulation of a look up table with PROSPECT-D
@@ -221,7 +223,7 @@ EWT <- 0.04*runif(1000)
 LMA <- 0.02*runif(1000)
 N   <- 1+2*runif(1000)
 Input_PROSPECT <- data.frame('CHL' = CHL, 'CAR' = CAR, 'ANT' = ANT, 
-          'EWT' = EWT, 'LMA' = LMA, 'N' = N)
+                             'EWT' = EWT, 'LMA' = LMA, 'N' = N)
 LUT <- PROSPECT_LUT(SpecPROSPECT,Input_PROSPECT)
 ```
 
@@ -329,6 +331,44 @@ res_opt_WL <- Invert_PROSPECT_OPT(SpecPROSPECT = SpecPROSPECT,
                                   Parms2Estimate = Parms2Estimate, 
                                   InitValues = InitValues)
 ```
+
+## Comparing performances of the two types of inversion with experimental data
+
+The outputs of the inversion can then be plotted and compared with scatterplots
+
+```r
+# define axis labels for each leaf chemical constituent
+Labs <- list(CHL = list(x='Estimated CHL (µg/cm-2)', y= 'Measured CHL (µg/cm-2)'), 
+             CAR = list(x='Estimated CAR (µg/cm-2)', y= 'Measured CAR (µg/cm-2)'), 
+             EWT = list(x='Estimated EWT (mg/cm-2)', y= 'Measured EWT (mg/cm-2)'), 
+             LMA = list(x='Estimated LMA (mg/cm-2)', y= 'Measured LMA (mg/cm-2)'))
+# define colors
+Colors <- list(CHL = c('gray69','green4'), CAR = c('gray69','orange2'),
+               EWT = c('gray69','blue2'), LMA = c('gray69','red3'))
+# multiplying factor to convert unit
+fact <- list('CHL' = 1, 'CAR' = 1, 'EWT' = 1000, 'LMA' = 1000)
+plotBP <- list()
+for (parm in Parms2Estimate){
+  Est_all_WL <- data.frame('measured'= fact[[parm]]*DataBioch[[parm]],
+                           'estimated'= fact[[parm]]*res_all_WL[[parm]],
+                           'config' = 'full WL')
+  EST_opt_WL <- data.frame('measured'= fact[[parm]]*DataBioch[[parm]],
+                           'estimated'= fact[[parm]]*res_opt_WL[[parm]],
+                           'config' = 'opt WL')
+  Meas_Est <- rbind(Est_all_WL, EST_opt_WL)
+  plotBP[[parm]] <- plotinv(Meas_Est, stats = TRUE, 
+                            Labs = Labs[[parm]], Colors = Colors[[parm]])
+}
+
+plotALL <- gridExtra::grid.arrange(plotBP$CHL, plotBP$CAR, 
+                                   plotBP$EWT, plotBP$LMA, 
+                                   ncol = 2, nrow = 2)
+ggsave(filename = 'PROSPECT_Inversions.png', plot = plotALL, device = "png", 
+       scale = 1, width = 24, height = 24, units = "cm", dpi = 300)
+```
+![Estimation of chlorophyll content, carotenoid content, EWT and LMA from PROSPECT inversion applied on the ANGERS dataset. 
+full WL corresponds to the inversion performed with the full spectral information; 
+opt WL corresponds to the inversion performed with the optimal spectral information](PROSPECT_Inversions.png){ width=60% }
 
 
 # Conclusion
