@@ -24,7 +24,7 @@ bibliography: paper.bib
 
 # Summary
 
-PROSPECT is the most widely used leaf model. It simulates leaf optical properties (LOP)
+PROSPECT simulates leaf optical properties (LOP)
 based on a limited set of light absorbing chemical constituents, and a unique leaf 
 structure parameter to account for light scattering.
 We present `prospect`, an R package which includes the most recent versions of the model.
@@ -33,32 +33,27 @@ We present `prospect`, an R package which includes the most recent versions of t
 # Statement of need
 
 LOP are linked to their biophysical properties through absorption 
-and scattering mechanisms. Physical models describe the interactions between these properties.
-PROSPECT takes advantage of specific absorption coefficients from chemical constituents 
+and scattering mechanisms. PROSPECT takes advantage of specific absorption coefficients from chemical constituents 
 such as leaf pigments, water and proteins, and uses a simplified representation of leaf structure 
 through the generalised plate model [@allen1970] to simulate leaf directional-hemispherical 
 reflectance and transmittance.
-LOP contribute significantly to vegetation reflectance acquired from Earth observation systems.
-The capacity to map and monitor leaf chemical properties is key to better understand ecosystems 
-and agrosystems functions, as well as carbon, water and energy budgets. Models and methods 
-giving access to these core leaf constituents based on leaf and canopy scale observations are 
+The capacity to measure, map and monitor leaf chemical properties from leaf to canopy scale 
+is key to better understand ecosystems and agrosystems functions, as well as carbon, water and energy budgets. 
+Models and methods giving access to these core leaf constituents based on optical meaasurements are 
 important components in this perspective.
 
 Techniques based on spectroscopy have developed in the past decades to provide a 
-rapid, accurate and non-destructive estimation of leaf constituents. Physical modeling 
-can be used to directly estimate leaf chemical content based on model inversion. 
-It can also simulate LOP, in order to adjust 
-statistical models or to identify spectral indices leading to accurate estimation of leaf chemistry
-based on parcimonious spectral information [@feret2011]. 
+rapid, accurate and non-destructive estimation of leaf constituents. 
+Physical models aim at simulating LOP from leaf chemical content, but they can 
+also be used to estimate leaf chemical content from LOP based on model inversion. 
 
 The model PROSPECT is widely used in the remote sensing community, 
 alone or combined with canopy reflectance models such as SAIL [@verhoef2007] and DART [@gastellu2015]. 
 Multiple versions have been released since the first version of PROSPECT [@jacquemoud1990], aiming at expanding 
 its capacity to account for more chemical constituents. Successive versions introduced carotenoids [@feret2008],  
-and anthocyanins [@feret2017], allowing simulating LOP corresponding to different 
-leaf development stages, from juvenile to mature and senescent. The latest version, PROSPECT-PRO, 
-separates dry matter constituents into proteins and carbon based constituents. In parallel with the 
-updated versions of the model, model inversion strategies were also developed 
+and anthocyanins [@feret2017], allowing simulating LOP from juvenile to mature and senescent development stages. 
+The latest version, PROSPECT-PRO, separates dry matter constituents into proteins and carbon based constituents. 
+In parallel with the updated versions of the model, model inversion strategies are also developed 
 to improve the estimation of leaf chemical constituents [@feret2019; @spafford2021].
 
 To ensure access to latest advances in terms of model version and inversion strategies, 
@@ -69,7 +64,7 @@ and parameterizable inversion routines, allowing users to design their own inver
 # Overview
 
 Two versions of the model PROSPECT are implemented in `prospect`: PROSPECT-D [@feret2017] and 
-PROSPECT-PRO [@feret2021]. For each version, it is possible to also include the influence brown pigments (BROWN), 
+PROSPECT-PRO [@feret2021]. For each version, it is possible to also include the influence brown pigments, 
 which appear during senescence, by ending the name of the version with `B`. 
 
 Table \ref{table:1} provides an overview of the leaf chemical constituents included in the different versions which can be specified when calling the function `PROSPECT`.
@@ -92,10 +87,7 @@ PROT: proteins; CBC: carbon based constituents;
 BROWN: brown pigments).\label{table:1}
 
 The inversion procedure is based on an optimization algorithm aiming at finding the minimum of multivariable 
-functions with nonlinear constraints. 
-
-
-Table \ref{table:2} provides information on the optimal spectral range used to estimate leaf 
+functions with nonlinear constraints. Table \ref{table:2} provides information on the optimal spectral range used to estimate leaf 
 chemical constituents from their optical properties, as identified by [@feret2019; @spafford2021].
 
 | Constituent 	|    Optimal spectral domain 	|            Versions     	|
@@ -175,7 +167,7 @@ RTplot <- ggplot2::ggplot(LRT_df, aes(x=wvl, y=RT, group=LOP)) +
   scale_linetype_manual(values=c("solid","solid","solid","solid"))
 
 filename = 'compare_RT_PROSPECT_PRO_D.png'
-ggsave(filename, plot = RTplot, device = "png", path = NULL,
+ggsave(filename, plot = RTplot, device = "png", 
        scale = 1, width = 20, height = 13, units = "cm", dpi = 300)
 ```
 ![Leaf optical properties simulated with PROSPECT-D and PROSPECT-PRO. Different values of N were defined to highlight differences in simulated leaf optics \label{fig:AIM}](compare_RT_PROSPECT_PRO_D.png){ width=85% }
@@ -227,17 +219,14 @@ A version of the ANGERS dataset is hosted on gitlab, and can be directly downloa
 ```r
 # use data.table library
 library(data.table)
-
 # download ANGERS leaf optics database from gitlab repository
 gitlab_Rep <- 'https://gitlab.com/jbferet/myshareddata/raw/master/LOP'
 dbName <- 'ANGERS'
-
 # download leaf biochemical constituents and leaf optical properties
 fileName <- list('DataBioch.txt','ReflectanceData.txt','TransmittanceData.txt')
 DataBioch <- data.table::fread(file.path(gitlab_Rep,dbName,fileName[[1]]))
 Refl<- data.table::fread(file.path(gitlab_Rep,dbName,fileName[[2]]))
 Tran <- data.table::fread(file.path(gitlab_Rep,dbName,fileName[[3]]))
-
 # Get the wavelengths corresponding to reflectance and transmittance measurements  
 lambda <- unlist(Refl$V1, use.names=FALSE)
 Refl$V1 <- Tran$V1 <- NULL
@@ -251,16 +240,9 @@ This can be done automatically using `FitSpectralData`
 
 ```r
 # Adjust spectral domain for SpecPROSPECT to fit leaf optical properties 
-SubData <- FitSpectralData(SpecPROSPECT = SpecPROSPECT, # spectral properties
-                           lambda = lambda, # spectral bands
-                           Refl = Refl, # Reflectance data (matrix or dataframe)
-                           Tran = Tran, # Transmittance data (matrix or dataframe)
-                           UserDomain = lambda) # spectral domain of interest
-						   
-SubSpecPROSPECT <- SubData$SpecPROSPECT # spectral properties adjusted to current data
-Sublambda <- SubData$lambda # updated spectral domain defined by UserDomain
-SubRefl <- SubData$Refl # updated reflectance domain defined by UserDomain
-SubTran <- SubData$Tran # updated transmittance defined by UserDomain
+SubData <- FitSpectralData(SpecPROSPECT = SpecPROSPECT,
+                           Refl = Refl, Tran = Tran,
+                           lambda = lambda, UserDomain = lambda)
 ```
 
 The main inversion procedure is called with the function `Invert_PROSPECT`.
@@ -274,9 +256,8 @@ with the `InitValues` input variable.
 
 ```r
 # Estimate all parameters using PROSPECT inversion applied to full spectral data
-res_all_WL <- Invert_PROSPECT(SpecPROSPECT = SubSpecPROSPECT, 
-                              Refl = SubRefl, 
-                              Tran = SubTran)
+res_all_WL <- Invert_PROSPECT(SpecPROSPECT = SubData$SpecPROSPECT, 
+                              Refl = SubData$Refl,  Tran = SubData$Tran)
 ```
 
 ## PROSPECT inversion using the optimal spectral domains specific to each constituent
@@ -289,10 +270,8 @@ by user.
 ```r
 # Estimate a set of parameters using PROSPECT inversion with optimal spectral domains
 Parms2Estimate  <- c('CHL', 'CAR', 'EWT', 'LMA')
-res_opt_WL <- Invert_PROSPECT_OPT(SpecPROSPECT = SpecPROSPECT, 
-                                  lambda = lambda, 
-                                  Refl = Refl, 
-                                  Tran = Tran,
+res_opt_WL <- Invert_PROSPECT_OPT(SpecPROSPECT = SpecPROSPECT, lambda = lambda, 
+                                  Refl = Refl, Tran = Tran,
                                   Parms2Estimate = Parms2Estimate)
 ```
 
