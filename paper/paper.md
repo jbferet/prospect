@@ -47,10 +47,8 @@ rapid, accurate and non-destructive estimation of leaf chemical composition.
 Physical models aim at simulating LOP corresponding to this chemical composition, but they can 
 also be used to estimate chemical composition from LOP based on inversion techniques. 
 
-The model PROSPECT is widely used in the remote sensing community, 
-alone or combined with canopy reflectance models such as SAIL [@verhoef2007] and DART [@gastellu2015]. 
-Multiple versions aiming at expanding its capacity to account for more chemical constituents
-have been released since its first version [@jacquemoud1990]. 
+Multiple versions aiming at expanding the pool of chemical constituents accounted for by PROSPECT 
+have been released since its first version [@jacquemoud1990].
 Successive versions introduced carotenoids [@feret2008] and anthocyanins [@feret2017], to simulate 
 LOP from juvenile to mature and senescent development stages. 
 The latest version, PROSPECT-PRO, separates dry matter constituents into proteins and carbon based constituents. 
@@ -120,7 +118,7 @@ range from 400 nm to 2500 nm.
 These two examples illustrate how to run PROSPECT. 
 The function `PROSPECT` identifies the version to be used: PROSPECT-D is used if LMA is defined, 
 while PROSPECT-PRO is used if proteins and carbon based constituents (CBC) are defined. 
-If LMA, proteins and CBC are defined simulatneously, PROSPECT-PRO is used and LMA is set to 0.
+If LMA, proteins and CBC are defined simultaneously, PROSPECT-PRO is used and LMA is set to 0.
 Figure \ref{fig:LOP} compares simulated LOP. Here, the differences between PROSPECT-D and PROSPECT-PRO 
 are mainly driven by the difference set for the `N` structure parameter.
 
@@ -160,11 +158,10 @@ Several approaches can be used to perform PROSPECT inversion. As PROSPECT is a r
 computationally efficient model, inversion based on iterative optimization is one of the most popular 
 method to invert PROSPECT and estimate leaf chemistry and structure from their optical properties. 
 Here, the iterative optimization is based on the minimization of a multivariable function with nonlinear constraints. 
-This procedure is based on the function `fmincon` included in the package `pracma`, which uses 
-Sequential Quadratic Programming.
+This procedure is based on the function `fmincon` included in the package `pracma`.
 
-Various inversion strategies have been proposed in the literature since the first version of PROSPECT. 
-These inversion strategies may differ in various ways: either by the cost function, or by the 
+Various inversion strategies have been proposed in the literature. 
+These inversion strategies differ either by the cost function, or by the 
 selection of specific spectral domains aiming at optimizing the retrieval of one or several 
 leaf biophysical properties, or by the introduction of prior information. 
 
@@ -194,9 +191,8 @@ Refl$V1 <- Tran$V1 <- NULL
 
 ## PROSPECT inversion using the full spectral range available
 
-The spectral domain covered by `SpecPROSPECT` and the leaf optical properties are expected to match 
+The spectral domains covered by `SpecPROSPECT` and the leaf optical properties are expected to match 
 when performing inversion on the full spectral domain covered by the data.
-This can be done automatically using `FitSpectralData`
 
 ```r
 # Adjust spectral domain for SpecPROSPECT to fit leaf optical properties 
@@ -205,9 +201,8 @@ SubData <- FitSpectralData(SpecPROSPECT = SpecPROSPECT,
                            lambda = lambda, UserDomain = lambda)
 ```
 
-The main inversion procedure is called with the function `Invert_PROSPECT`.
-It is based on the minimization of a cost function. The default cost function, 
-`CostVal_RMSE`, corresponds to the root mean square of the mean quadratic difference between 
+The main inversion procedure is called with the function `Invert_PROSPECT`, which minimizes a cost function. 
+The default cost function, `CostVal_RMSE`, corresponds to the root mean square of the mean quadratic difference between 
 measured and simulated leaf optical properties (either reflectance and transmittance, or one of them only).
 Users can define their own cost function. They can also select the biophyscal properties to estimate: 
 The full set (`Parms2Estimate` set to `ALL`) or a reduced set of variables to estimate can 
