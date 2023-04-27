@@ -251,6 +251,10 @@ The `prospect` package aims at providing latest advances in terms of model versi
 to the leaf spectroscopy community. 
 
 
+# Availability
+
+prospect is an open-source software package made available under the GPL-3.0 license. It can be installed through GitHub repository using the remotes package: remotes::install_github("jbferet/prospect"). Tutorials are available at [https://jbferet.gitlab.io/prospect/](https://jbferet.gitlab.io/prospect/).
+
 # Acknowledgements
 
 The authors acknowledge financial support from Agence Nationale de la Recherche (BioCop project — ANR-17-CE32-0001)
