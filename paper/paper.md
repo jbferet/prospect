@@ -107,7 +107,7 @@ BROWN: brown pigments).\label{table:2}
 
 # Example 1: running PROSPECT in forward mode
 
-## Individual simulation with PROSPECT-D and PROSPECT-PRO
+## Individual simulations
 
 PROSPECT is run in forward mode to simulate leaf directional-hemispherical reflectance 
 and transmittance from the leaf structure parameter and a combination of chemical constituents.
@@ -135,7 +135,7 @@ LRT_PRO <- PROSPECT(SpecPROSPECT, CHL = 45, CAR = 10, ANT = 0.2,
 
 ![Leaf optical properties simulated with PROSPECT-D and PROSPECT-PRO. Different values of N were defined to highlight differences in simulated leaf optics \label{fig:LOP}](compare_RT_PROSPECT_PRO_D.png){ width=85% }
 
-## Simulation of a look up table with PROSPECT-D
+## Simulation of a look up table
 
 Look-Up-Tables (LUTs) are widely used in order to infer leaf characteristics from PROSPECT. 
 The function `PROSPECT_LUT` computates a LUT based on a list of input parameters.
@@ -170,7 +170,7 @@ Here, we will illustrate different types of inversion with an experimental datab
 This database was used to calibrate the model PROSPECT, and is among the most popular public 
 datasets in the domain of leaf spectroscopy.
 
-## Downloading the ANGERS dataset and adjusting leaf optics
+## Downloading the ANGERS experimental dataset
 
 A version of the ANGERS dataset is hosted on gitlab, and can be directly downloaded from R.
 
@@ -189,7 +189,7 @@ lambda <- unlist(Refl$V1, use.names=FALSE)
 Refl$V1 <- Tran$V1 <- NULL
 ```
 
-## PROSPECT inversion using the full spectral range available
+## PROSPECT inversion using the full spectral information
 
 The spectral domains covered by `SpecPROSPECT` and the leaf optical properties are expected to match 
 when performing inversion on the full spectral domain covered by the data.
@@ -215,7 +215,7 @@ res_all_WL <- Invert_PROSPECT(SpecPROSPECT = SubData$SpecPROSPECT,
                               Refl = SubData$Refl,  Tran = SubData$Tran)
 ```
 
-## PROSPECT inversion using the optimal spectral domains specific to each constituent
+## PROSPECT inversion using optimal spectral domains for each constituent
 
 The function `Invert_PROSPECT_OPT` performs PROSPECT inversion using optimal spctral domains
 defined in [@feret2019; @spafford2021]. The optimal spectral domains are specific to each constituent, 
@@ -230,7 +230,7 @@ res_opt_WL <- Invert_PROSPECT_OPT(SpecPROSPECT = SpecPROSPECT, lambda = lambda,
                                   Parms2Estimate = Parms2Estimate)
 ```
 
-## Comparing performances of the two types of inversion with experimental data
+## Performances of the two types of inversion: Comparison with ANGERS data
 
 Figure \ref{fig:scatter} displays the outputs of the inversion, compared for each configuration of inversion
 in a single scatterplot for each leaf chemical constituent.  
