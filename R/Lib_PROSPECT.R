@@ -38,26 +38,27 @@ PROSPECT <- function(SpecPROSPECT, N = 1.5, CHL = 40.0,
                      CAR = 8.0, ANT = 0.0, BROWN = 0.0, EWT = 0.01,
                      LMA = NULL, PROT = 0.0, CBC = 0.0, alpha = 40.0) {
 
-  # if PROSPECT values are provided as individual parametrs
-  Input_PROSPECT <- data.frame(
-    CHL, CAR, ANT, BROWN, EWT,
-    LMA, PROT, CBC, N, alpha
-  )
 
-  if (!is.null(Input_PROSPECT$PROT) | !is.null(Input_PROSPECT$CBC)) {
-    if (!is.null(Input_PROSPECT$LMA) & (Input_PROSPECT$PROT > 0 | Input_PROSPECT$CBC > 0)) {
+  if (!is.null(PROT) | !is.null(CBC)) {
+    if (!is.null(LMA) & (PROT > 0 | CBC > 0)) {
       message("PROT and/or CBC are not set to 0")
       message("LMA is not set to 0 neither, which is physically incorrect")
       message("(LMA = PROT + CBC)")
       message("We assume that PROSPECT-PRO was called and set LMA to 0")
       message("Please correct input parameters LMA, PROT and/or CBC if needed")
-      Input_PROSPECT$LMA <- 0
+      LMA <- 0
     }
   }
   # setting default value for LMA
-  if (is.null(Input_PROSPECT$LMA)){
-    Input_PROSPECT$LMA <- 0.008
+  if (is.null(LMA)){
+    LMA <- 0.008
   }
+
+  # if PROSPECT values are provided as individual parameters
+  Input_PROSPECT <- data.frame('CHL' = CHL, 'CAR' = CAR, 'ANT' = ANT, 'BROWN' = BROWN,
+                               'EWT' = EWT, 'LMA' = LMA,  'PROT' = PROT, 'CBC' = CBC,
+                               'N' = N, 'alpha' =alpha)
+
 
   Kall <- (Input_PROSPECT$CHL * SpecPROSPECT$SAC_CHL + Input_PROSPECT$CAR * SpecPROSPECT$SAC_CAR +
     Input_PROSPECT$ANT * SpecPROSPECT$SAC_ANT + Input_PROSPECT$BROWN * SpecPROSPECT$SAC_BROWN +
