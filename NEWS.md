@@ -1,3 +1,11 @@
+# prospect v1.2.6
+
+## fixes
+fixed issue raised by morelju on 2023/05/31
+--> bug when running prospect with default parameterization because NULL value included in dataframe
+LRT_default <- PROSPECT(SpecPROSPECT)
+Now runs
+
 # prospect v1.2.5
 
 ## addition
