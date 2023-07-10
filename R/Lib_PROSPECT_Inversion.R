@@ -703,7 +703,7 @@ Invert_PROSPECT_OPT <- function(SpecPROSPECT, lambda, Refl = NULL, Tran = NULL,
 #' - SpectralFeatures_List = the Spectral Features identified as most relevant for estimation of Target (list)
 #' - EstimatedParm = the estimated Target parameter for each additional spectral feature
 #' - RMSE = the minimum RMSE corresponding to the estimation of Target for each asditional spectral feature
-#' @importFrom future plan multiprocess sequential
+#' @importFrom future plan multisession sequential
 #' @importFrom future.apply future_lapply
 #' @export
 
@@ -759,7 +759,7 @@ optimal_features_SFS <- function(Refl = NULL, Tran = NULL, lambda, BiochTruth, T
       message(paste('Identify Feature #',feat))
       Perf <- c()
       # multiprocess of spectral species distribution and alpha diversity metrics
-      plan(multiprocess, workers = nbCPU) ## Parallelize using four cores
+      plan(multisession, workers = nbCPU) ## Parallelize using four cores
       schedule <- ceiling(length(subdomains)/nbCPU)
       Estimated_Parm <- future_lapply(subdomains,FUN = Invert_PROSPECT_subdomain,
                                       Refl = Refl, Tran = Tran,

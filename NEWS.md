@@ -1,3 +1,8 @@
+# prospect v1.2.7
+
+## fixes
+- removed reference to multiprocess, multisession used exclusively from future
+
 # prospect v1.2.6
 
 ## fixes
