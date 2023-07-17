@@ -244,7 +244,7 @@ Figure \ref{fig:scatter} displays the outputs of the inversion obtained either f
 `Invert_PROSPECT` or from `Invert_PROSPECT_OPT`, in a single scatterplot for each 
 leaf chemical constituent.
 
-![Estimation of chlorophyll content, carotenoid content, EWT and LMA from PROSPECT inversion applied on the ANGERS dataset. `full WL` corresponds to the inversion performed with the full spectral information (function `Invert_PROSPECT`); `opt WL` corresponds to the inversion performed with the optimal spectral information (function `Invert_PROSPECT_OPT`). \label{fig:scatter}](PROSPECT_Inversions.png){ width=90% }
+![Estimation of chlorophyll content, carotenoid content, EWT and LMA from PROSPECT inversion applied on the ANGERS data set. `full WL` corresponds to the inversion performed with the full spectral information (function `Invert_PROSPECT`); `opt WL` corresponds to the inversion performed with the optimal spectral information (function `Invert_PROSPECT_OPT`). \label{fig:scatter}](PROSPECT_Inversions.png){ width=90% }
 
 # Conclusion
 
