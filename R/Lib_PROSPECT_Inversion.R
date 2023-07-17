@@ -874,7 +874,13 @@ plotinv <- function(BP_df, Labs = NULL, MinMax = NULL, Colors = NULL,
   if (is.null(Labs)) Labs <- c('Estimated', 'Measured')
   if (is.null(Colors)) Colors <- randomcoloR::distinctColorPalette(unique(BP_df$config))
   measest_vals <- c(BP_df$measured, BP_df$estimated)
-  if (is.null(MinMax)) MinMax <- c(min(measest_vals, na.rm = T), max(measest_vals, na.rm = T))
+  if (is.null(MinMax)) {
+    MinMax0 <- c(min(measest_vals, na.rm = T),
+                 max(measest_vals, na.rm = T))
+    MinMax <- c(min(0,MinMax0[1]-0.1*diff(MinMax0)),
+                MinMax0[2]+0.1*diff(MinMax0))
+
+  }
   plotxy <- ggplot2::ggplot(BP_df, aes(x = estimated,
                                        y = measured,
                                        group = config)) +
@@ -895,27 +901,27 @@ plotinv <- function(BP_df, Labs = NULL, MinMax = NULL, Colors = NULL,
   # Add 1:1 line
   plotxy <- plotxy + geom_abline(slope = 1, intercept = 0,linetype='dashed',size=1.25)
   # add statistics if needed
-  CHL_conf <- group_split(BP_df %>% group_by(config))
+  BP_conf <- group_split(BP_df %>% group_by(config))
   if (stats ==TRUE){
     # add R2 value
     for (conf in 1:length(unique(BP_df$config))){
-      chl.lm = lm(estimated ~ measured, data=CHL_conf[[conf]])
+      chl.lm = lm(estimated ~ measured, data = BP_conf[[conf]])
       R2 <- summary(chl.lm)$r.squared
       R2.expr <- paste("bolditalic(R ^ 2) == ",format(round(R2, 2),nsmall = 2))
       plotxy <- plotxy + annotate("text", vjust = "bottom",
                                   x = MinMax[1] +0.00*diff(MinMax),
-                                  y = MinMax[1] +(1.04-0.1*conf)*diff(MinMax),
+                                  y = MinMax[1] +(1.07-0.1*conf)*diff(MinMax),
                                   label = R2.expr, parse = TRUE, hjust = 0, size=5,
                                   color = Colors[conf])
     }
     # add RMSE value
     for (conf in 1:length(unique(BP_df$config))){
-      RMSE <- Metrics::rmse(actual = CHL_conf[[conf]]$measured,
-                            predicted = CHL_conf[[conf]]$estimated)
+      RMSE <- Metrics::rmse(actual = BP_conf[[conf]]$measured,
+                            predicted = BP_conf[[conf]]$estimated)
       RMSE.expr <- paste("bolditalic(RMSE) ==",format(round(RMSE, 2),nsmall = 2))
       plotxy <- plotxy + annotate("text", vjust = "bottom",
                                   x = MinMax[1] +0.3*diff(MinMax),
-                                  y = MinMax[1] +(1.04-0.1*conf)*diff(MinMax),
+                                  y = MinMax[1] +(1.07-0.1*conf)*diff(MinMax),
                                   label = RMSE.expr, parse = TRUE, hjust = 0, size=5,
                                   color = Colors[conf])
     }
