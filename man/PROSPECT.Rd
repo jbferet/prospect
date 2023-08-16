@@ -30,7 +30,7 @@ refractive index, specific absorption coefficients and corresponding spectral ba
 
 \item{CAR}{numeric. Carotenoid content (microg.cm-2)}
 
-\item{ANT}{numeric. Anthocyain content (microg.cm-2)}
+\item{ANT}{numeric. Anthocyanin content (microg.cm-2)}
 
 \item{BROWN}{numeric. Brown pigment content (Arbitrary units)}
 
@@ -40,12 +40,12 @@ refractive index, specific absorption coefficients and corresponding spectral ba
 
 \item{PROT}{numeric. protein content  (g.cm-2)}
 
-\item{CBC}{numeric. NonProtCarbon-based constituent content (g.cm-2)}
+\item{CBC}{numeric. NonProt Carbon-based constituent content (g.cm-2)}
 
 \item{alpha}{numeric. Solid angle for incident light at surface of leaf}
 }
 \value{
-leaf directional-hemisphrical reflectance and transmittance
+leaf directional-hemispherical reflectance and transmittance
 }
 \description{
 core function running PROSPECT

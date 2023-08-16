@@ -1,3 +1,12 @@
+# prospect v1.4.0
+
+## fixes
+deal with default values when seting proteins, CBC and LMA to non constant value
+
+# prospect v1.3.0
+
+new release including JOSS draft
+
 # prospect v1.2.7
 
 ## fixes

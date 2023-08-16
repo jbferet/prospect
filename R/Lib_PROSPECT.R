@@ -23,24 +23,28 @@
 #' @param N numeric. Leaf structure parameter
 #' @param CHL numeric. Chlorophyll content (microg.cm-2)
 #' @param CAR numeric. Carotenoid content (microg.cm-2)
-#' @param ANT numeric. Anthocyain content (microg.cm-2)
+#' @param ANT numeric. Anthocyanin content (microg.cm-2)
 #' @param BROWN numeric. Brown pigment content (Arbitrary units)
 #' @param EWT numeric. Equivalent Water Thickness (g.cm-2)
 #' @param LMA numeric. Leaf Mass per Area (g.cm-2)
 #' @param PROT numeric. protein content  (g.cm-2)
-#' @param CBC numeric. NonProtCarbon-based constituent content (g.cm-2)
+#' @param CBC numeric. NonProt Carbon-based constituent content (g.cm-2)
 #' @param alpha numeric. Solid angle for incident light at surface of leaf
 #'
-#' @return leaf directional-hemisphrical reflectance and transmittance
+#' @return leaf directional-hemispherical reflectance and transmittance
 #' @importFrom expint expint
 #' @export
 PROSPECT <- function(SpecPROSPECT, N = 1.5, CHL = 40.0,
                      CAR = 8.0, ANT = 0.0, BROWN = 0.0, EWT = 0.01,
                      LMA = NULL, PROT = 0.0, CBC = 0.0, alpha = 40.0) {
 
-
+  # if calling PROSPECT-PRO (protein content or CBC defined by user)
+  # then set LMA to 0 in any case
   if (!is.null(PROT) | !is.null(CBC)) {
-    if (!is.null(LMA) & (PROT > 0 | CBC > 0)) {
+    if (PROT > 0 | CBC > 0){
+      if (is.null(LMA)) LMA <- 0
+    }
+    if (!LMA==0 & (PROT > 0 | CBC > 0)) {
       message("PROT and/or CBC are not set to 0")
       message("LMA is not set to 0 neither, which is physically incorrect")
       message("(LMA = PROT + CBC)")
@@ -49,6 +53,7 @@ PROSPECT <- function(SpecPROSPECT, N = 1.5, CHL = 40.0,
       LMA <- 0
     }
   }
+  # if calling PROSPECT-D (protein content or CBC defined by user and > 0)
   # setting default value for LMA
   if (is.null(LMA)){
     LMA <- 0.008
