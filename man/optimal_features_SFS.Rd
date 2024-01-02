@@ -22,7 +22,7 @@ optimal_features_SFS(
   number_features,
   PROSPECT_version = "D",
   MeritFunction = "Merit_RMSE_PROSPECT",
-  alphaEst = FALSE,
+  Est_alpha = FALSE,
   verbose = FALSE,
   nbCPU = 1,
   Continue = FALSE,
@@ -66,7 +66,7 @@ Assumes 1nm spectral sampling}
 \item{MeritFunction}{character. name of the function to be used as merit function
 with given criterion to minimize (default = RMSE)}
 
-\item{alphaEst}{boolean. should alpha be estimated or not?}
+\item{Est_alpha}{boolean. should alpha be estimated or not?}
 
 \item{verbose}{boolean. set to TRUE to display sample number to be inverted}
 

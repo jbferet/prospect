@@ -5,46 +5,13 @@
 \title{computation of a LUT of leaf optical properties using a set of
 leaf chemical & structural parameters}
 \usage{
-PROSPECT_LUT(
-  SpecPROSPECT,
-  Input_PROSPECT = NULL,
-  N = NULL,
-  CHL = NULL,
-  CAR = NULL,
-  ANT = NULL,
-  BROWN = NULL,
-  EWT = NULL,
-  LMA = NULL,
-  PROT = NULL,
-  CBC = NULL,
-  alpha = NULL
-)
+PROSPECT_LUT(Input_PROSPECT, SpecPROSPECT = NULL)
 }
 \arguments{
-\item{SpecPROSPECT}{dataframe. Includes optical constants
-refractive index, specific absorption coefficients and corresponding spectral bands}
-
 \item{Input_PROSPECT}{dataframe. full list of PROSPECT input parameters. Default = Set to NULL}
 
-\item{N}{numeric. Leaf structure parameter}
-
-\item{CHL}{numeric. Chlorophyll content (microg.cm-2)}
-
-\item{CAR}{numeric. Carotenoid content (microg.cm-2)}
-
-\item{ANT}{numeric. Anthocyain content (microg.cm-2)}
-
-\item{BROWN}{numeric. Brown pigment content (Arbitrary units)}
-
-\item{EWT}{numeric. Equivalent Water Thickness (g.cm-2)}
-
-\item{LMA}{numeric. Leaf Mass per Area (g.cm-2)}
-
-\item{PROT}{numeric. protein content  (g.cm-2)}
-
-\item{CBC}{numeric. NonProtCarbon-based constituent content (g.cm-2)}
-
-\item{alpha}{numeric. Solid angle for incident light at surface of leaf}
+\item{SpecPROSPECT}{list. spectral constants
+refractive index, specific absorption coefficients & spectral bands}
 }
 \value{
 list. LUT including leaf reflectance and transmittance

@@ -8,7 +8,7 @@ averaged over all directions of incidence and over all polarizations.}
 calctav(alpha, nr)
 }
 \arguments{
-\item{alpha}{numeric. Maximum incidence angle defining the solid angle of incident light}
+\item{alpha}{numeric. max incidence angle of solid angle of incident light}
 
 \item{nr}{numeric. refractive index}
 }

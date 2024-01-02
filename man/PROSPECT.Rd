@@ -3,11 +3,11 @@
 \name{PROSPECT}
 \alias{PROSPECT}
 \title{core function running PROSPECT
-This function allows simulations using PROSPECT-D or PROSPECT-PRO depending on
-the parameterization.}
+This function allows simulations using PROSPECT-D or PROSPECT-PRO depending
+on the parameterization.}
 \usage{
 PROSPECT(
-  SpecPROSPECT,
+  SpecPROSPECT = NULL,
   N = 1.5,
   CHL = 40,
   CAR = 8,
@@ -21,8 +21,9 @@ PROSPECT(
 )
 }
 \arguments{
-\item{SpecPROSPECT}{list. Includes optical constants
-refractive index, specific absorption coefficients and corresponding spectral bands}
+\item{SpecPROSPECT}{list. Includes spectral constants derived from
+SpecPROSPECT_FullRange: refractive index, specific absorption coefficients
+and corresponding spectral bands}
 
 \item{N}{numeric. Leaf structure parameter}
 
@@ -49,6 +50,6 @@ leaf directional-hemispherical reflectance and transmittance
 }
 \description{
 core function running PROSPECT
-This function allows simulations using PROSPECT-D or PROSPECT-PRO depending on
-the parameterization.
+This function allows simulations using PROSPECT-D or PROSPECT-PRO depending
+on the parameterization.
 }

@@ -5,8 +5,8 @@
 \title{This function defines a regression model to estimate N from R only or T only}
 \usage{
 Get_Nprior(
-  SpecPROSPECT,
   lambda,
+  SpecPROSPECT = NULL,
   Refl = NULL,
   Tran = NULL,
   OptWL_R = list(NIR = 800, SWIR = 1131),
@@ -14,10 +14,10 @@ Get_Nprior(
 )
 }
 \arguments{
+\item{lambda}{numeric. spectral bands corresponding to experimental data}
+
 \item{SpecPROSPECT}{list. Includes optical constants
 refractive index, specific absorption coefficients and corresponding spectral bands}
-
-\item{lambda}{numeric. spectral bands corresponding to experimental data}
 
 \item{Refl}{numeric. Measured reflectance data}
 

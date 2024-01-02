@@ -1,3 +1,19 @@
+# prospect v1.5.0
+version following reviews for publication in JOSS
+
+## Changes
+- change license to MIT (Issue#3:  Consider a different license)
+- include plain text version of specific absorption coefficients with variable prospect::SpecPROSPECT_FullRange (Issue#4:  Consider including plain-text versions of PROSPECT coefficients)
+- remove function plotinv and corresponding required packages (Issue#5: Move randomcoloR to Suggests)
+- pre-calculate calctav for angles 40 degrees (default) and 90 degrees (always needed) and add them to SpecPROSPECT_FullRange (Issue#6: Pre-calculate calctav)
+- added tests for PROSPECT, Invert_PROSPECT and Invert_PROSPECT_OPT (Issue#7: Add automated unit tests)
+- add CONTRIBUTION.md and CODE_OF_CONDUCT.md (Issue#8: Add contribution guide)
+- update documentation and harmonize with corresponding code for JOSS manuscript (Issue#10: harmonize web tutorial with JOSS manuscript examples)
+- overall update of the code to work with dataframes more systematically
+
+## fixes
+- fixed error occuring when PROSPECT-PRO inversion performed to assess EWT
+
 # prospect v1.4.0
 
 ## fixes
