@@ -11,15 +11,16 @@
 # ==============================================================================
 
 #' core function running PROSPECT
-#' This function allows simulations using PROSPECT-D or PROSPECT-PRO depending on
-#' the parameterization.
+#' This function allows simulations using PROSPECT-D or PROSPECT-PRO depending
+#' on the parameterization.
 #  This code includes numerical optimizations proosed in the FLUSPECT code
 #  Authors: Wout Verhoef, Christiaan van der Tol (tol@itc.nl), Joris Timmermans,
 #  Date: 2007
 #  Update from PROSPECT to FLUSPECT: January 2011 (CvdT)
 #'
-#' @param SpecPROSPECT list. Includes optical constants
-#' refractive index, specific absorption coefficients and corresponding spectral bands
+#' @param SpecPROSPECT list. Includes spectral constants derived from
+#' SpecPROSPECT_FullRange: refractive index, specific absorption coefficients
+#' and corresponding spectral bands
 #' @param N numeric. Leaf structure parameter
 #' @param CHL numeric. Chlorophyll content (microg.cm-2)
 #' @param CAR numeric. Carotenoid content (microg.cm-2)
@@ -34,47 +35,32 @@
 #' @return leaf directional-hemispherical reflectance and transmittance
 #' @importFrom expint expint
 #' @export
-PROSPECT <- function(SpecPROSPECT, N = 1.5, CHL = 40.0,
+PROSPECT <- function(SpecPROSPECT = NULL, N = 1.5, CHL = 40.0,
                      CAR = 8.0, ANT = 0.0, BROWN = 0.0, EWT = 0.01,
-                     LMA = NULL, PROT = 0.0, CBC = 0.0, alpha = 40.0) {
+                     LMA = NULL, PROT = 0, CBC = 0, alpha = 40.0) {
 
-  # if calling PROSPECT-PRO (protein content or CBC defined by user)
-  # then set LMA to 0 in any case
-  if (!is.null(PROT) | !is.null(CBC)) {
-    if (PROT > 0 | CBC > 0){
-      if (is.null(LMA)) LMA <- 0
-    }
-    if (!LMA==0 & (PROT > 0 | CBC > 0)) {
-      message("PROT and/or CBC are not set to 0")
-      message("LMA is not set to 0 neither, which is physically incorrect")
-      message("(LMA = PROT + CBC)")
-      message("We assume that PROSPECT-PRO was called and set LMA to 0")
-      message("Please correct input parameters LMA, PROT and/or CBC if needed")
-      LMA <- 0
-    }
-  }
-  # if calling PROSPECT-D (protein content or CBC defined by user and > 0)
-  # setting default value for LMA
-  if (is.null(LMA)){
-    LMA <- 0.008
-  }
+  # default: simulates leaf optics using full spectral range
+  if (is.null(SpecPROSPECT)) SpecPROSPECT <- prospect::SpecPROSPECT_FullRange
+  # check if LMA, PROT and CBC are correctly parameterized
+  dm_val <- check_version_prospect(LMA, PROT, CBC)
+  # compute total absorption corresponding to each homogeneous layer
+  Kall <- (CHL * SpecPROSPECT$SAC_CHL +
+             CAR * SpecPROSPECT$SAC_CAR +
+             ANT * SpecPROSPECT$SAC_ANT +
+             BROWN * SpecPROSPECT$SAC_BROWN +
+             EWT * SpecPROSPECT$SAC_EWT +
+             dm_val$LMA * SpecPROSPECT$SAC_LMA +
+             dm_val$PROT * SpecPROSPECT$SAC_PROT +
+             dm_val$CBC * SpecPROSPECT$SAC_CBC) / N
 
-  # if PROSPECT values are provided as individual parameters
-  Input_PROSPECT <- data.frame('CHL' = CHL, 'CAR' = CAR, 'ANT' = ANT, 'BROWN' = BROWN,
-                               'EWT' = EWT, 'LMA' = LMA,  'PROT' = PROT, 'CBC' = CBC,
-                               'N' = N, 'alpha' =alpha)
-
-
-  Kall <- (Input_PROSPECT$CHL * SpecPROSPECT$SAC_CHL + Input_PROSPECT$CAR * SpecPROSPECT$SAC_CAR +
-    Input_PROSPECT$ANT * SpecPROSPECT$SAC_ANT + Input_PROSPECT$BROWN * SpecPROSPECT$SAC_BROWN +
-    Input_PROSPECT$EWT * SpecPROSPECT$SAC_EWT + Input_PROSPECT$LMA * SpecPROSPECT$SAC_LMA +
-    Input_PROSPECT$PROT * SpecPROSPECT$SAC_PROT + Input_PROSPECT$CBC * SpecPROSPECT$SAC_CBC) / Input_PROSPECT$N
-
-  j <- which(Kall > 0) # Non-conservative scattering (normal case)
+  # Non-conservative scattering (normal case) when Kall > 0
+  j <- which(Kall <= 0)
   t1 <- (1 - Kall) * exp(-Kall)
   t2 <- (Kall * Kall) * expint(Kall)
-  tau <- matrix(1, ncol = 1, nrow = length(t1))
-  tau[j] <- t1[j] + t2[j]
+  tau <- t1 + t2
+  if (length(j)>0) tau[j] <- 1
+  # tau <- matrix(1, ncol = 1, nrow = length(t1))
+  # tau[j] <- t1[j] + t2[j]
 
   # ***********************************************************************
   # reflectance and transmittance of one layer
@@ -85,9 +71,13 @@ PROSPECT <- function(SpecPROSPECT, N = 1.5, CHL = 40.0,
   # ***********************************************************************
   # reflectivity and transmissivity at the interface
   # ***********************************************************************
-  talf <- calctav(Input_PROSPECT$alpha, SpecPROSPECT$nrefrac)
+  if (alpha == 40) {
+    talf <- SpecPROSPECT$calctav_40
+  } else {
+    talf <- calctav(alpha, SpecPROSPECT$nrefrac)
+  }
   ralf <- 1 - talf
-  t12 <- calctav(90, SpecPROSPECT$nrefrac)
+  t12 <- SpecPROSPECT$calctav_90
   r12 <- 1 - t12
   t21 <- t12 / (SpecPROSPECT$nrefrac**2)
   r21 <- 1 - t21
@@ -115,7 +105,7 @@ PROSPECT <- function(SpecPROSPECT, N = 1.5, CHL = 40.0,
   a <- (1 + rq - tq + D) / (2 * r)
   b <- (1 - rq + tq + D) / (2 * t)
 
-  bNm1 <- b**(Input_PROSPECT$N - 1)
+  bNm1 <- b**(N - 1)
   bN2 <- bNm1**2
   a2 <- a**2
   denom <- a2 * bN2 - 1
@@ -127,18 +117,19 @@ PROSPECT <- function(SpecPROSPECT, N = 1.5, CHL = 40.0,
   Tsub[j] <- t[j] / (t[j] + (1 - t[j]) * (N - 1))
   Rsub[j] <- 1 - Tsub[j]
 
-  # Reflectance and transmittance of the leaf: combine top layer with next N-1 layers
+  # leaf reflectance and transmittance : combine top layer with next N-1 layers
   denom <- 1 - Rsub * r
   tran <- Ta * Tsub / denom
   refl <- Ra + (Ta * Rsub * t) / denom
-  my_list <- list("Reflectance" = refl, "Transmittance" = tran, "wvl" = SpecPROSPECT$lambda)
-  return(my_list)
+  return(data.frame('wvl' = SpecPROSPECT$lambda,
+                    'Reflectance' = refl,
+                    'Transmittance' = tran))
 }
 
 #' computation of transmissivity of a dielectric plane surface,
 #' averaged over all directions of incidence and over all polarizations.
 #'
-#' @param alpha numeric. Maximum incidence angle defining the solid angle of incident light
+#' @param alpha numeric. max incidence angle of solid angle of incident light
 #' @param nr numeric. refractive index
 #'
 #' @return numeric. Transmissivity of a dielectric plane surface
@@ -180,102 +171,132 @@ calctav <- function(alpha, nr) {
   return(tav)
 }
 
+#' This function checks if the input parameters are defined as expected
+#' to run either PROSPECT-D or PROSPECT-PRO
+#' @param LMA numeric. content corresponding to LMA
+#' @param PROT numeric. content corresponding to protein content
+#' @param CBC numeric. content corresponding to carbon based constituents
+#'
+#' @return list. updated LMA, PROT and CBC
+#' @export
+
+check_version_prospect <- function(LMA, PROT, CBC){
+  # PROSPECT-D as default value
+  if (is.null(LMA) & PROT == 0 & CBC == 0) LMA <- 0.008
+  # PROSPECT-PRO if PROT or CBC are not NULL
+  if (is.null(LMA) & (PROT > 0 | CBC > 0)) LMA <- 0
+  # if calling PROSPECT-PRO (protein content or CBC defined by user)
+  # then set LMA to 0 in any case
+  if (!LMA==0 & (PROT > 0 | CBC > 0)) {
+    print_msg('version_PROSPECT')
+    LMA <- 0
+  }
+  return(list('LMA' = LMA, 'PROT' = PROT, 'CBC' = CBC))
+}
+
+#' This function adapts SpecPROSPECT accordingly to experimental data
+#' or to a spectral domain defined by UserDomain
+#' @param lambda numeric. Spectral bands corresponding to experimental data
+#' @param SpecPROSPECT list. Includes optical constants
+#' refractive index, specific absorption coefficients and corresponding spectral bands
+#' @param Refl numeric. Measured reflectance data
+#' @param Tran numeric. Measured Transmittance data
+#' @param UserDomain numeric. either Lower and upper bounds for domain of interest (optional)
+#' or list of spectral bands of interest
+#' @param UL_Bounds boolean. set to TRUE if UserDomain only includes lower and upper band,
+#' set to FALSE if UserDomain is a list of spectral bands (in nm)
+#'
+#' @return list including spectral properties at the new resolution
+#' @import dplyr
+#' @importFrom utils tail
+#' @export
+
+FitSpectralData <- function(lambda, SpecPROSPECT = NULL,
+                            Refl = NULL, Tran = NULL,
+                            UserDomain = NULL, UL_Bounds = FALSE) {
+  # default: simulates leaf optics using full spectral range
+  if (is.null(SpecPROSPECT)) SpecPROSPECT <- prospect::SpecPROSPECT_FullRange
+  # convert Refl and Tran into dataframe if needed
+  if (class(Refl)[1]%in%c('numeric', 'matrix')) Refl <- data.frame(Refl)
+  if (class(Tran)[1]%in%c('numeric', 'matrix')) Tran <- data.frame(Tran)
+  # Adjust LOP: check common spectral domain between PROSPECT and leaf optics
+  if (!is.null(Refl)) Refl <- Refl %>% filter(lambda%in%SpecPROSPECT$lambda)
+  if (!is.null(Tran)) Tran <- Tran %>% filter(lambda%in%SpecPROSPECT$lambda)
+  lambda <- lambda[lambda%in%SpecPROSPECT$lambda]
+  # Adjust PROSPECT
+  lb <- lambda
+  SpecPROSPECT  <- SpecPROSPECT %>% filter(SpecPROSPECT$lambda%in%lb)
+  # if UserDomain is defined
+  if (!is.null(UserDomain)) {
+    if (UL_Bounds==TRUE) UserDomain <- seq(min(UserDomain), max(UserDomain))
+    if (!is.null(Refl)) Refl <- Refl %>% filter(lambda%in%UserDomain)
+    if (!is.null(Tran)) Tran <- Tran %>% filter(lambda%in%UserDomain)
+    lambda <- lambda[lambda%in%UserDomain]
+    # Adjust PROSPECT
+    SpecPROSPECT  <- SpecPROSPECT %>% filter(SpecPROSPECT$lambda%in%UserDomain)
+    if (any(!UserDomain%in%lambda)){
+      message('leaf optics out of range defined by UserDomain')
+    }
+  }
+  RT <- reshape_lop4inversion(Refl = Refl,
+                              Tran = Tran,
+                              SpecPROSPECT = SpecPROSPECT)
+  return(list("SpecPROSPECT" = SpecPROSPECT, "lambda" = lambda,
+              "Refl" = RT$Refl, "Tran" = RT$Tran, "nbSamples" = RT$nbSamples))
+}
+
 #' computation of a LUT of leaf optical properties using a set of
 #' leaf chemical & structural parameters
 #'
-#' @param SpecPROSPECT dataframe. Includes optical constants
-#' refractive index, specific absorption coefficients and corresponding spectral bands
+#' @param SpecPROSPECT list. spectral constants
+#' refractive index, specific absorption coefficients & spectral bands
 #' @param Input_PROSPECT dataframe. full list of PROSPECT input parameters. Default = Set to NULL
-#' @param N numeric. Leaf structure parameter
-#' @param CHL numeric. Chlorophyll content (microg.cm-2)
-#' @param CAR numeric. Carotenoid content (microg.cm-2)
-#' @param ANT numeric. Anthocyain content (microg.cm-2)
-#' @param BROWN numeric. Brown pigment content (Arbitrary units)
-#' @param EWT numeric. Equivalent Water Thickness (g.cm-2)
-#' @param LMA numeric. Leaf Mass per Area (g.cm-2)
-#' @param PROT numeric. protein content  (g.cm-2)
-#' @param CBC numeric. NonProtCarbon-based constituent content (g.cm-2)
-#' @param alpha numeric. Solid angle for incident light at surface of leaf
 #'
 #' @return list. LUT including leaf reflectance and transmittance
 #' @export
-PROSPECT_LUT <- function(SpecPROSPECT, Input_PROSPECT = NULL, N = NULL, CHL = NULL,
-                         CAR = NULL, ANT = NULL, BROWN = NULL, EWT = NULL,
-                         LMA = NULL, PROT = NULL, CBC = NULL, alpha = NULL) {
+PROSPECT_LUT <- function(Input_PROSPECT, SpecPROSPECT = NULL) {
 
+  if (is.null(SpecPROSPECT)) SpecPROSPECT <- prospect::SpecPROSPECT_FullRange
   # expected PROSPECT input parameters
-  ExpectedParms <- data.frame(
-    "CHL" = 0, "CAR" = 0, "ANT" = 0, "BROWN" = 0, "EWT" = 0,
-    "LMA" = 0, "PROT" = 0, "CBC" = 0, "N" = 1.5, "alpha" = 40
-  )
-  # if parameters already provided as a list
-  if (!is.null(Input_PROSPECT)) {
-    # identify missing elements
-    Parm2Add <- which(names(ExpectedParms) %in% names(Input_PROSPECT) == FALSE)
-    # check if all parameters are included.
-    if (length(Parm2Add) > 0) {
-      # print warning
-      Warn_MissingInput(Input_PROSPECT, ExpectedParms)
-    }
-  } else if (is.null(Input_PROSPECT)) {
-    # create a list of input parameters
-    Input_PROSPECT <- list(
-      "CHL" = CHL, "CAR" = CAR, "ANT" = ANT,
-      "BROWN" = BROWN, "EWT" = EWT, "LMA" = LMA,
-      "PROT" = PROT, "CBC" = CBC, "N" = N,
-      "alpha" = alpha
-    )
-    # check if one or some input parametrs are NULL
-    OK_Parm <- which((lengths(Input_PROSPECT) != 0) == TRUE)
-    Parm2Add <- which((lengths(Input_PROSPECT) != 0) == FALSE)
-    # if missing parameter
-    if (length(Parm2Add) > 0) {
-      Input_PROSPECT <- Input_PROSPECT[-Parm2Add]
-      # print warning
-      Warn_MissingInput(Input_PROSPECT, ExpectedParms)
-    }
-  }
+  ExpectedParms <- data.frame('CHL' = 0, 'CAR' = 0, 'ANT' = 0, 'BROWN' = 0,
+                              'EWT' = 0, 'LMA' = 0, 'PROT' = 0, 'CBC' = 0,
+                              'N' = 1.5, 'alpha' = 40)
+  # parameters provided
+  inOK <- names(Input_PROSPECT)
+  # identify missing elements
+  Parm2Add <- which(!names(ExpectedParms) %in% inOK)
+  # check if all parameters are included.
+  if (length(Parm2Add) > 0) print_msg(cause = 'Missing_Input',
+                                      args = list('Input' = inOK,
+                                                  'Expected' = ExpectedParms))
+
   # re-order missing elements the end of the list using default value
-  Input_PROSPECT <- Complete_Input_PROSPECT(Input_PROSPECT, Parm2Add, ExpectedParms)
+  Input_PROSPECT <- Complete_Input_PROSPECT(Input_PROSPECT = Input_PROSPECT,
+                                            Parm2Add = Parm2Add,
+                                            ExpectedParms = ExpectedParms)
   # print number of samples to be simulated
-  nbSamples <- length(Input_PROSPECT[[1]])
-  paste("A LUT will be produced, including", as.character(nbSamples), "samples", sep = " ")
+  nbSamples <- nrow(Input_PROSPECT)
+  messageLUT <- paste('A LUT with', nbSamples, 'samples will be produced')
+  cat(colour_to_ansi('green'), messageLUT, "\033[0m\n")
 
   # run PROSPECT for nbSamples
-  LUT_Refl <- LUT_Tran <- matrix(0, nrow = length(SpecPROSPECT$lambda), ncol = nbSamples)
-  for (i in 1:nbSamples) {
-    LUT_tmp <- do.call(PROSPECT, c(list(SpecPROSPECT = SpecPROSPECT), Input_PROSPECT[i, ]))
-    LUT_Refl[, i] <- LUT_tmp$Reflectance
-    LUT_Tran[, i] <- LUT_tmp$Transmittance
+  run_list_PROSPECT <- function(Input_PROSPECT, SpecPROSPECT){
+    LUT_tmp <- do.call(PROSPECT,
+                       c(list(SpecPROSPECT = SpecPROSPECT),
+                         Input_PROSPECT))
+    return(LUT_tmp)
   }
-  LUT <- list("Reflectance" = LUT_Refl, "Transmittance" = LUT_Tran, "Input_PROSPECT" = Input_PROSPECT)
-  return(LUT)
-}
-
-#' Display warning message to inform about the parametrs default values
-#' used during PROSPECT simulations
-#'
-#' @param Input_PROSPECT list. Input parameters sent to PROSPECT by user
-#' @param ExpectedParms list. Full set of parameters expected to run PROSPECT
-#'
-#' @return WhichMissing missing parameters
-#' @export
-Warn_MissingInput <- function(Input_PROSPECT, ExpectedParms) {
-  message("_________________ WARNING _________________")
-  message("  The list of parameters provided for LUT  ")
-  message("      in the Input_PROSPECT variable       ")
-  message("does not include the full set of parameters")
-  message("")
-  # message('        Set of parameters included:        ')
-  # print(names(Input_PROSPECT))
-  # message('')
-  # message('        Set of parameters expected:        ')
-  # print(names(ExpectedParms))
-  # message('')
-  message(" The following parameters will be set to  ")
-  message("   their default value as given here      ")
-  WhichMissing <- (ExpectedParms[which(names(ExpectedParms) %in% names(Input_PROSPECT) == FALSE)])
-  print(WhichMissing)
+  indiv_leaves <- split(Input_PROSPECT,
+                        factor(seq(1:nbSamples)))
+  LUT_tmp <- lapply(X = indiv_leaves,
+                    FUN = run_list_PROSPECT,
+                    SpecPROSPECT = SpecPROSPECT)
+  LUT_Refl <- as.data.frame(lapply(LUT_tmp,'[[', 'Reflectance'))
+  LUT_Tran <- as.data.frame(lapply(LUT_tmp,'[[', 'Transmittance'))
+  names(LUT_Refl) <- names(LUT_Tran) <- paste0('sample_',seq(1,nbSamples))
+  return(list('Reflectance' = LUT_Refl,
+              'Transmittance' = LUT_Tran,
+              'Input_PROSPECT' = Input_PROSPECT))
 }
 
 #' Complete the list of PROSPECT parameters with default values
@@ -293,14 +314,46 @@ Complete_Input_PROSPECT <- function(Input_PROSPECT, Parm2Add, ExpectedParms) {
   for (i in Parm2Add) {
     ii <- ii + 1
     nbInputs <- nbInputs + 1
-    Input_PROSPECT[[nbInputs]] <- matrix(ExpectedParms[[i]], ncol = 1, nrow = nbSamples)
+    Input_PROSPECT[[nbInputs]] <- matrix(ExpectedParms[[i]],
+                                         ncol = 1, nrow = nbSamples)
     names(Input_PROSPECT)[[nbInputs]] <- names(ExpectedParms)[[i]]
   }
-  Input_PROSPECT <- data.frame(
-    "CHL" = matrix(Input_PROSPECT$CHL, ncol = 1), "CAR" = matrix(Input_PROSPECT$CAR, ncol = 1), "ANT" = matrix(Input_PROSPECT$ANT, ncol = 1),
-    "BROWN" = matrix(Input_PROSPECT$BROWN, ncol = 1), "EWT" = matrix(Input_PROSPECT$EWT, ncol = 1), "LMA" = matrix(Input_PROSPECT$LMA, ncol = 1),
-    "PROT" = matrix(Input_PROSPECT$PROT, ncol = 1), "CBC" = matrix(Input_PROSPECT$CBC, ncol = 1), "N" = matrix(Input_PROSPECT$N, ncol = 1),
-    "alpha" = matrix(Input_PROSPECT$alpha, ncol = 1)
-  )
-  return(Input_PROSPECT)
+  return(data.frame('CHL' = matrix(Input_PROSPECT$CHL, ncol = 1),
+                    'CAR' = matrix(Input_PROSPECT$CAR, ncol = 1),
+                    'ANT' = matrix(Input_PROSPECT$ANT, ncol = 1),
+                    'BROWN' = matrix(Input_PROSPECT$BROWN, ncol = 1),
+                    'EWT' = matrix(Input_PROSPECT$EWT, ncol = 1),
+                    'LMA' = matrix(Input_PROSPECT$LMA, ncol = 1),
+                    'PROT' = matrix(Input_PROSPECT$PROT, ncol = 1),
+                    'CBC' = matrix(Input_PROSPECT$CBC, ncol = 1),
+                    'N' = matrix(Input_PROSPECT$N, ncol = 1),
+                    'alpha' = matrix(Input_PROSPECT$alpha, ncol = 1)))
 }
+
+
+#' Convert plain text colour to ANSI code
+#'
+#' @param colour colour in plain text ("red", "green", etc.) to convert to ANSI
+#'
+#' @return string representing provided colour as ANSI encoding
+#'
+#' @examples
+#' colour_to_ansi("red") # gives: "\033[31m"
+#' @export
+
+colour_to_ansi <- function(colour) {
+  # Note ANSI colour codes
+  colour_codes <- list("black" = 30,
+                       "red" = 31,
+                       "green" = 32,
+                       "yellow" = 33,
+                       "blue" = 34,
+                       "magenta" = 35,
+                       "cyan" = 36,
+                       "white" = 37)
+
+  # Create ANSI version of colour
+  ansi_colour <- paste0("\033[", colour_codes[[colour]], "m")
+  return(ansi_colour)
+}
+

@@ -1,0 +1,10 @@
+test_that("PROSPECT-D produces physically possible values", {
+  lrt <- PROSPECT()
+  expect_true(all(lrt$Reflectance >= 0))
+  expect_true(all(lrt$Reflectance <= 1))
+  expect_true(all(lrt$Transmittance >= 0))
+  expect_true(all(lrt$Transmittance <= 1))
+  expect_true(all(lrt$Transmittance <= 1))
+  expect_true(length(lrt$Reflectance)==length(lrt$Transmittance))
+  expect_true(length(lrt$Reflectance)==2101)
+})

@@ -19,7 +19,8 @@ Invert_PROSPECT_subdomain(
     0.01, PROT = 0.001, CBC = 0.009, N = 1.5, alpha = 40),
   PROSPECT_version = "D",
   MeritFunction = "Merit_RMSE_PROSPECT",
-  alphaEst = FALSE,
+  Est_Brown_Pigments = FALSE,
+  Est_alpha = FALSE,
   xlub = data.frame(CHL = c(1e-04, 150), CAR = c(1e-04, 25), ANT = c(0, 50), BROWN = c(0,
     1), EWT = c(1e-08, 0.1), LMA = c(1e-06, 0.06), PROT = c(1e-07, 0.006), CBC = c(1e-06,
     0.054), N = c(0.5, 4), alpha = c(10, 90)),
@@ -51,12 +52,14 @@ they are used either as initialization values for parameters to estimate,
 or as fix values for other parameters.
 Parameters not compatible with PROSPECT_version are not taken into account.}
 
-\item{PROSPECT_version}{character. Version of prospect model used for the inversion: '5', '5B', 'D', 'DB', 'PRO', 'PROB'}
+\item{PROSPECT_version}{character. Version of prospect model used for the inversion: 'D' or 'PRO'}
 
 \item{MeritFunction}{character. name of the function to be used as merit function
 with given criterion to minimize (default = RMSE)}
 
-\item{alphaEst}{boolean. should alpha be estimated or not?}
+\item{Est_Brown_Pigments}{boolean. should brown pigments be accounted for during inversion?}
+
+\item{Est_alpha}{boolean. should alpha be accounted for during inversion?}
 
 \item{xlub}{data.frame. Boundaries of the parameters to estimate.
 The data.frame must have columns corresponding to \code{Parms2Estimate} first line being

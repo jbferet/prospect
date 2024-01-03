@@ -6,10 +6,10 @@
 in order to define estimate a set of user defined parameters}
 \usage{
 Invert_PROSPECT(
-  SpecPROSPECT,
+  SpecPROSPECT = NULL,
   Refl = NULL,
   Tran = NULL,
-  InitValues = data.frame(CHL = 40, CAR = 10, ANT = 0.1, BROWN = 0.01, EWT = 0.01, LMA =
+  InitValues = data.frame(CHL = 40, CAR = 10, ANT = 0.1, BROWN = 0, EWT = 0.01, LMA =
     0.01, PROT = 0.001, CBC = 0.009, N = 1.5, alpha = 40),
   Parms2Estimate = "ALL",
   PROSPECT_version = "D",
@@ -17,7 +17,8 @@ Invert_PROSPECT(
   xlub = data.frame(CHL = c(1e-04, 150), CAR = c(1e-04, 25), ANT = c(0, 50), BROWN = c(0,
     1), EWT = c(1e-08, 0.1), LMA = c(1e-08, 0.06), PROT = c(1e-07, 0.006), CBC = c(1e-06,
     0.054), N = c(0.5, 4), alpha = c(10, 90)),
-  alphaEst = FALSE,
+  Est_Brown_Pigments = FALSE,
+  Est_alpha = FALSE,
   verbose = FALSE,
   progressBar = TRUE
 )
@@ -47,7 +48,9 @@ with given criterion to minimize (default = RMSE)}
 The data.frame must have columns corresponding to \code{Parms2Estimate} first line being
 the lower boundaries and second line the upper boundaries.}
 
-\item{alphaEst}{boolean. should alpha be estimated or not?}
+\item{Est_Brown_Pigments}{boolean. should brown pigments be accounted for during inversion?}
+
+\item{Est_alpha}{boolean. should alpha be accounted for during inversion?}
 
 \item{verbose}{boolean. set true to get info about adjustment of tolerance or initialization}
 

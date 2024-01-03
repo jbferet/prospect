@@ -6,8 +6,9 @@
 \usage{
 check_prospect_parms(
   PROSPECT_version,
-  alphaEst,
   Parms2Estimate,
+  Est_Brown_Pigments,
+  Est_alpha,
   xlub,
   InitValues
 )
@@ -16,9 +17,11 @@ check_prospect_parms(
 \item{PROSPECT_version}{character. Version of prospect model used for the inversion: '5', '5B', 'D', 'DB', 'PRO', 'PROB',
 See details.}
 
-\item{alphaEst}{boolean. should alpha be estimated or not?}
-
 \item{Parms2Estimate}{character vector. Parameters to estimate (can be 'ALL')}
+
+\item{Est_Brown_Pigments}{boolean. should brown pigments be accounted for during inversion?}
+
+\item{Est_alpha}{boolean. should alpha be accounted for during inversion?}
 
 \item{xlub}{data.frame. Boundaries of the parameters to estimate.
 The data.frame must have columns corresponding to \code{Parms2Estimate} first line being

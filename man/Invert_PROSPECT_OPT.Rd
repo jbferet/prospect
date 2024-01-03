@@ -6,8 +6,8 @@
 prior information on N is provided if only Reflectance or only Transmittance is available}
 \usage{
 Invert_PROSPECT_OPT(
-  SpecPROSPECT,
   lambda,
+  SpecPROSPECT = NULL,
   Refl = NULL,
   Tran = NULL,
   PROSPECT_version = "D",
@@ -22,10 +22,10 @@ Invert_PROSPECT_OPT(
 )
 }
 \arguments{
+\item{lambda}{numeric. spectral bands corresponding to experimental data}
+
 \item{SpecPROSPECT}{list. Includes optical constants
 refractive index, specific absorption coefficients and corresponding spectral bands}
-
-\item{lambda}{numeric. spectral bands corresponding to experimental data}
 
 \item{Refl}{numeric. Measured reflectance data}
 
