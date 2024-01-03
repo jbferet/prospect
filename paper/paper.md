@@ -228,7 +228,6 @@ LUT_VNIR <- PROSPECT_LUT(SpecPROSPECT = VNIR$SpecPROSPECT,
                          Input_PROSPECT = Input_PROSPECT)
 ```
 
-
 # Example 2: PROSPECT inversion using iterative optimization
 
 The package `prospect` offers possibilities to adjust these parameters for inversion. 
@@ -250,7 +249,7 @@ gitlab_Rep <- 'https://gitlab.com/jbferet/myshareddata/raw/master/LOP'
 DataBioch <- data.table::fread(file.path(gitlab_Rep,'ANGERS/DataBioch.txt'))
 Refl<- data.table::fread(file.path(gitlab_Rep,'ANGERS/ReflectanceData.txt'))
 Tran <- data.table::fread(file.path(gitlab_Rep,'ANGERS/TransmittanceData.txt'))
-# Get the wavelengths corresponding to reflectance and transmittance measurements  
+# Get the wavelengths corresponding to reflectance and transmittance measurements
 lambda <- Refl$wavelength
 Refl$wavelength <- Tran$wavelength <- NULL
 ```
@@ -305,7 +304,7 @@ by user.
 
 ```r
 # Assess a set of parameters using PROSPECT inversion with optimal spectral domains
-Parms2Estimate  <- c('CHL', 'CAR', 'EWT', 'LMA')
+Parms2Estimate <- c('CHL', 'CAR', 'EWT', 'LMA')
 res_opt_WL <- Invert_PROSPECT_OPT(lambda = lambda, 
                                   Refl = Refl, Tran = Tran
                                   Parms2Estimate = Parms2Estimate)
