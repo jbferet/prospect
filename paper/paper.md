@@ -140,8 +140,8 @@ by [@feret2019; @spafford2021].
 | BROWN      |               NA               	| NA           |
 | EWT        |          1700 -- 2400           	| `D`, `PRO`   |
 | LMA        |          1700 -- 2400           	| `D`          |
-| PROT       | 2100 -- 2139 ; 2160 -- 2179     	| `PRO`        |
-| CBC        | 1480 -- 1499;	1560 -- 1579;	 1760 -- 1799; 2040 -- 2059;	 2120 -- 2139; 2160 -- 2239;	 2260 -- 2279; 2340 -- 2359;	 2380 -- 2399 	| `PRO`        |
+| PROT       | 2100 -- 2139; 2160 -- 2179     	| `PRO`        |
+| CBC        | 1480 -- 1499;	1560 -- 1579;	1760 -- 1799;	2040 -- 2059;	2120 -- 2139;	2160 -- 2239;	2260 -- 2279;	2340 -- 2359;	2380 -- 2399 | `PRO`        |
 
 : Optimal spectral domains selected to assess vegetation chemical constituents
  from leaf optical properties (CHL: chlorophylls; CAR: carotenoids; 
@@ -352,4 +352,3 @@ We also warmly thank Luc Bidel, Christophe François and Gabriel Pavan who
 collected the ANGERS data set.
 
 # References
-0
