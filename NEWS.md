@@ -10,6 +10,7 @@ version following reviews for publication in JOSS
 - add CONTRIBUTION.md and CODE_OF_CONDUCT.md (Issue#8: Add contribution guide)
 - update documentation and harmonize with corresponding code for JOSS manuscript (Issue#10: harmonize web tutorial with JOSS manuscript examples)
 - overall update of the code to work with dataframes more systematically
+- only two versions now defined in the package (D and PRO), and the use of brown pigments is accessible during inversion by setting Est_Brown_Pigments == TRUE
 
 ## fixes
 - fixed error occuring when PROSPECT-PRO inversion performed to assess EWT

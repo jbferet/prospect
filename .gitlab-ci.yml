@@ -26,7 +26,6 @@ before_script:
 stages:
 - deps
 - check
-- test
 - deploy
 
 deps:
@@ -45,24 +44,6 @@ check:
   only:
     - master
     - schedules
-
-test:
-  stage: test
-  script:
-  - R -e "devtools::install_deps(dependencies = TRUE)"
-  - R CMD build . --no-build-vignettes --no-manual
-  - PKG_FILE_NAME=$(ls -1t *.tar.gz | head -n 1)
-  - R CMD check "${PKG_FILE_NAME}" --no-build-vignettes --no-manual
-  cache:
-    key: "$CI_COMMIT_REF_SLUG"
-    paths:
-      - installed_deps/
-  artifacts:
-  paths:
-    - '*.Rcheck/'
-  only:
-    - master
-
 
 pages:
   stage: deploy

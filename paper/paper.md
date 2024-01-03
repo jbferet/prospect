@@ -164,7 +164,8 @@ They are accessible through the variable `SpecPROSPECT_FullRange`, a data frame
 which is automatically loaded with the package. 
 Multiple functions in the package `prospect` expect a variable `SpecPROSPECT` as input. 
 `SpecPROSPECT_FullRange` is used as default value when this input variable is not defined. 
-Users can create a new variable and modify the spectral domain from `SpecPROSPECT_FullRange`. 
+Users can adjust `SpecPROSPECT_FullRange` in order to adjust the spectral characteristics 
+for simulation, including spectral domain, sampling or sensor-specicif spectral response. 
 
 These two examples illustrate how to run PROSPECT. 
 The function `PROSPECT` identifies the version to be used: PROSPECT-D is used 
@@ -246,10 +247,9 @@ library(data.table)
 # download ANGERS leaf optics database from gitlab repository
 gitlab_Rep <- 'https://gitlab.com/jbferet/myshareddata/raw/master/LOP'
 # download leaf biochemical constituents and leaf optical properties
-fileName <- list('DataBioch.txt','ReflectanceData.txt','TransmittanceData.txt')
-DataBioch <- data.table::fread(file.path(gitlab_Rep,'ANGERS',fileName[[1]]))
-Refl<- data.table::fread(file.path(gitlab_Rep,'ANGERS',fileName[[2]]))
-Tran <- data.table::fread(file.path(gitlab_Rep,'ANGERS',fileName[[3]]))
+DataBioch <- data.table::fread(file.path(gitlab_Rep,'ANGERS/DataBioch.txt'))
+Refl<- data.table::fread(file.path(gitlab_Rep,'ANGERS/ReflectanceData.txt'))
+Tran <- data.table::fread(file.path(gitlab_Rep,'ANGERS/TransmittanceData.txt'))
 # Get the wavelengths corresponding to reflectance and transmittance measurements  
 lambda <- Refl$wavelength
 Refl$wavelength <- Tran$wavelength <- NULL
@@ -285,7 +285,7 @@ This list of parameters is defined with the variable `Parms2Estimate`.
 The default parameterization of PROSPECT inversion assesses all parmeters 
 listed in Table \ref{table:1} except BROWN, which can be assessed by setting 
 `Est_Brown_Pigments = TRUE` as input for `Invert_PROSPECT`.
-The value set for parameters which are not estimated is then defined with 
+The value set for parameters which are not assessed is then defined with 
 the `InitValues` input variable. 
 
 ```r
@@ -329,6 +329,11 @@ constituent content either from directional-hemispherical reflectance and
 transmittance, or from reflectance or transmittance only. 
 `prospect` provides latest advances in terms of model version and inversion 
 procedures to the leaf spectroscopy community. 
+`prospect` is coupled with the canopy model SAIL through the R package [`prosail`](https://jbferet.gitlab.io/prosail/index.html).
+`prosail` is dedicated to applications focusing on Earth observation imagery analysis 
+and allows simulation of canopy reflectance for multispectral and hyperspectral sensors.
+Hybrid inversions based on physical modeling and machine learning are also implemented 
+in `prosail` to assess vegetation traits from imagery data.
 
 
 # Availability
@@ -347,3 +352,4 @@ We also warmly thank Luc Bidel, Christophe François and Gabriel Pavan who
 collected the ANGERS data set.
 
 # References
+0
