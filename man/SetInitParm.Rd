@@ -17,7 +17,7 @@ SetInitParm(
 )
 }
 \arguments{
-\item{Parms2Estimate}{character vector. Parameters to estimate (can be 'ALL')}
+\item{Parms2Estimate}{character. Parameters to estimate}
 
 \item{ParmEst}{character. PROSPECT parameters to be estimated}
 

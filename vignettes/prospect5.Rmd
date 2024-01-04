@@ -57,7 +57,7 @@ fileName <- list('DataBioch.txt','ReflectanceData.txt','TransmittanceData.txt')
 DataBioch <- fread(file.path(gitlab_Rep,dbName,fileName[[1]]))
 Refl <- fread(file.path(gitlab_Rep,dbName,fileName[[2]]))
 Tran <- fread(file.path(gitlab_Rep,dbName,fileName[[3]]))
-# Get the wavelengths corresponding to the reflectance and transmittance measurements  
+# Get wavelengths corresponding to the reflectance and transmittance measurements  
 lambda <- Refl$wavelength
 Refl$wavelength <- NULL
 Tran$wavelength <- NULL

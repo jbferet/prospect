@@ -19,10 +19,10 @@ tryInversion(
 \arguments{
 \item{x0}{numeric. Vector of input variables to estimate}
 
-\item{MeritFunction}{character. name of the function to be used as merit function}
+\item{MeritFunction}{character. name of the merit function}
 
-\item{SpecPROSPECT}{list. Includes optical constants
-refractive index, specific absorption coefficients and corresponding spectral bands}
+\item{SpecPROSPECT}{list. Includes optical constants refractive index,
+specific absorption coefficients and corresponding spectral bands}
 
 \item{Refl}{numeric. measured reflectance data}
 
@@ -35,7 +35,8 @@ to be estimated through inversion}
 
 \item{ub}{numeric. Upper bound}
 
-\item{verbose}{boolean. Set to TRUE if you want information about adjustment of tolerance during inversion.}
+\item{verbose}{boolean. Set TRUE for information on adjustment of tolerance
+during inversion.}
 }
 \value{
 res estimates of the parameters

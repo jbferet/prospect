@@ -12,12 +12,15 @@ test_that("PROSPECT-D inversion over optimal domains produces accurate biophysic
   expect_true(abs(leafBP$EWT-BPinit$EWT)<1e-7)
   expect_true(abs(leafBP$LMA-BPinit$LMA)<1e-7)
 
-  lrt$Reflectance <- lrt$Reflectance*(1+rnorm(length(lrt$Reflectance),0,0.01))
-  lrt$Transmittance <- lrt$Transmittance*(1+rnorm(length(lrt$Transmittance),0,0.01))
+  lrt$Reflectance <- lrt$Reflectance*(1+rnorm(length(lrt$Reflectance),
+                                              0,0.01))
+  lrt$Transmittance <- lrt$Transmittance*(1+rnorm(length(lrt$Transmittance),
+                                                  0,0.01))
   leafBPopt <- Invert_PROSPECT_OPT(lambda = lrt$wvl,
                                    Refl = lrt$Reflectance,
                                    Tran = lrt$Transmittance,
-                                   Parms2Estimate = c('CHL', 'CAR', 'EWT', 'LMA'))
+                                   Parms2Estimate = c('CHL', 'CAR',
+                                                      'EWT', 'LMA'))
   expect_true(abs(leafBPopt$CHL-BPinit$CHL)<1e-0)
   expect_true(abs(leafBPopt$CAR-BPinit$CAR)<1e-0)
   expect_true(abs(leafBPopt$EWT-BPinit$EWT)<1e-4)

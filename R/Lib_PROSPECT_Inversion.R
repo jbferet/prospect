@@ -12,22 +12,22 @@
 
 #' Performs PROSPECT inversion using iterative optimization
 #' in order to define estimate a set of user defined parameters
-#' @param SpecPROSPECT list. Includes optical constants
-#' refractive index, specific absorption coefficients and corresponding spectral bands
+#' @param SpecPROSPECT list. Includes optical constants refractive index,
+#' specific absorption coefficients and corresponding spectral bands
 #' @param Refl  numeric. Measured reflectance data
 #' @param Tran  numeric. Measured Transmittance data
-#' @param Parms2Estimate  character vector. Parameters to estimate (can be 'ALL')
+#' @param Parms2Estimate  character. Parameters to estimate (can be 'ALL')
 #' @param InitValues  data.frame. Default values of PROSPECT parameters. During optimization,
 #' they are used either as initialization values for parameters to estimate,
 #' or as fix values for other parameters.
 #' Parameters not compatible with PROSPECT_version are not taken into account.
-#' @param PROSPECT_version  character. Version of prospect model used for the inversion: '5', '5B', 'D', 'DB', 'PRO', 'PROB',
+#' @param PROSPECT_version  character. prospect version used for inversion: 'D' or 'PRO'
 #' See details.
 #' @param MeritFunction  character. name of the function to be used as merit function
 #' with given criterion to minimize (default = RMSE)
 #' @param xlub data.frame. Boundaries of the parameters to estimate.
-#' The data.frame must have columns corresponding to \code{Parms2Estimate} first line being
-#' the lower boundaries and second line the upper boundaries.
+#' The data.frame must have columns corresponding to \code{Parms2Estimate}
+#' first line being the lower boundaries and second line the upper boundaries.
 #' @param Est_Brown_Pigments boolean. should brown pigments be accounted for during inversion?
 #' @param Est_alpha boolean. should alpha be accounted for during inversion?
 #' @param verbose boolean. set true to get info about adjustment of tolerance or initialization
@@ -37,20 +37,20 @@
 #' @return OutPROSPECT estimated values corresponding to Parms2Estimate
 #' @importFrom progress progress_bar
 #' @details
-#' Six versions of prospect are available for inversion.
+#' Two versions of prospect are available for inversion.
 #' The version is depending on the parameters taken into account:
 #'
-#' | Version  | 5                                       | 5B                                    | D                                      | DB                                     | PRO                                    | PROB
-#' | :------: |:--------------------------------------:|:--------------------------------------:|:--------------------------------------:|:--------------------------------------:|:--------------------------------------:|:---------------------------------------:|
-#' | CHL      |`r emojifont::emoji('white_check_mark')`|`r emojifont::emoji('white_check_mark')`|`r emojifont::emoji('white_check_mark')`|`r emojifont::emoji('white_check_mark')`|`r emojifont::emoji('white_check_mark')`|`r emojifont::emoji('white_check_mark')`|
-#' | CAR      |`r emojifont::emoji('white_check_mark')`|`r emojifont::emoji('white_check_mark')`|`r emojifont::emoji('white_check_mark')`|`r emojifont::emoji('white_check_mark')`|`r emojifont::emoji('white_check_mark')`|`r emojifont::emoji('white_check_mark')`|
-#' | ANT      |                                        |                                        |`r emojifont::emoji('white_check_mark')`|`r emojifont::emoji('white_check_mark')`|`r emojifont::emoji('white_check_mark')`|`r emojifont::emoji('white_check_mark')`|
-#' | BROWN    |                                        |`r emojifont::emoji('white_check_mark')`|                                        |`r emojifont::emoji('white_check_mark')`|                                        |`r emojifont::emoji('white_check_mark')`|
-#' | EWT      |`r emojifont::emoji('white_check_mark')`|`r emojifont::emoji('white_check_mark')`|`r emojifont::emoji('white_check_mark')`|`r emojifont::emoji('white_check_mark')`|`r emojifont::emoji('white_check_mark')`|`r emojifont::emoji('white_check_mark')`|
-#' | LMA      |`r emojifont::emoji('white_check_mark')`|`r emojifont::emoji('white_check_mark')`|`r emojifont::emoji('white_check_mark')`|`r emojifont::emoji('white_check_mark')`|                                        |
-#' | PROT     |                                        |                                        |                                        |                                        |`r emojifont::emoji('white_check_mark')`|`r emojifont::emoji('white_check_mark')`|
-#' | CBC      |                                        |                                        |                                        |                                        |`r emojifont::emoji('white_check_mark')`|`r emojifont::emoji('white_check_mark')`|
-#' | N        |`r emojifont::emoji('white_check_mark')`|`r emojifont::emoji('white_check_mark')`|`r emojifont::emoji('white_check_mark')`|`r emojifont::emoji('white_check_mark')`|`r emojifont::emoji('white_check_mark')`|`r emojifont::emoji('white_check_mark')`|
+#' | Version  | D                                      | PRO
+#' | :------: |:--------------------------------------:|:--------------------------------------:|
+#' | CHL      |`r emojifont::emoji('white_check_mark')`|`r emojifont::emoji('white_check_mark')`|
+#' | CAR      |`r emojifont::emoji('white_check_mark')`|`r emojifont::emoji('white_check_mark')`|
+#' | ANT      |`r emojifont::emoji('white_check_mark')`|`r emojifont::emoji('white_check_mark')`|
+#' | BROWN    |`r emojifont::emoji('white_check_mark')`|`r emojifont::emoji('white_check_mark')`|
+#' | EWT      |`r emojifont::emoji('white_check_mark')`|`r emojifont::emoji('white_check_mark')`|
+#' | LMA      |`r emojifont::emoji('white_check_mark')`|                                        |
+#' | PROT     |                                        |`r emojifont::emoji('white_check_mark')`|
+#' | CBC      |                                        |`r emojifont::emoji('white_check_mark')`|
+#' | N        |`r emojifont::emoji('white_check_mark')`|`r emojifont::emoji('white_check_mark')`|
 #'
 #' Argument `InitValues` is expecting a default value for each of the parameters as well as an `alpha` value.
 #' @importFrom pracma fmincon
@@ -111,12 +111,13 @@ Invert_PROSPECT <- function(SpecPROSPECT = NULL,
                         lb = parms_checked$lb, ub = parms_checked$ub,
                         verbose = verbose)
     if (NA %in% res$par){
-      ModifyInit <- match(parms_checked$Parms2Estimate,names(parms_checked$InitValues))
+      ModifyInit <- match(parms_checked$Parms2Estimate,
+                          names(parms_checked$InitValues))
       updateInitValues <- parms_checked$InitValues
       updateInitValues[ModifyInit] <- 1.1*updateInitValues[ModifyInit]
       res <- tryInversion(x0 = updateInitValues, MeritFunction = MeritFunction,
                           SpecPROSPECT = SpecPROSPECT,
-                          Refl = RT$Refl[[idsample]], Tran = RT$Tran[[idsample]],
+                          Refl = RT$Refl[[idsample]], Tran =RT$Tran[[idsample]],
                           Parms2Estimate = parms_checked$Parms2Estimate,
                           lb = parms_checked$lb, ub = parms_checked$ub,
                           verbose = verbose)
@@ -133,16 +134,17 @@ Invert_PROSPECT <- function(SpecPROSPECT = NULL,
 #' Function handling error during inversion
 #'
 #' @param x0 numeric. Vector of input variables to estimate
-#' @param MeritFunction  character. name of the function to be used as merit function
-#' @param SpecPROSPECT list. Includes optical constants
-#' refractive index, specific absorption coefficients and corresponding spectral bands
+#' @param MeritFunction  character. name of the merit function
+#' @param SpecPROSPECT list. Includes optical constants refractive index,
+#' specific absorption coefficients and corresponding spectral bands
 #' @param Refl  numeric. measured reflectance data
 #' @param Tran  numeric. measured Transmittance data
 #' @param Parms2Estimate  character vector. Parameters to estimate
 #' to be estimated through inversion
 #' @param lb numeric. Lower bound
 #' @param ub numeric. Upper bound
-#' @param verbose boolean. Set to TRUE if you want information about adjustment of tolerance during inversion.
+#' @param verbose boolean. Set TRUE for information on adjustment of tolerance
+#' during inversion.
 #'
 #' @return res estimates of the parameters
 #' @details
@@ -198,7 +200,7 @@ tryInversion <- function(x0, MeritFunction, SpecPROSPECT, Refl, Tran,
     for (parm in Parms2Estimate) x0[parm] <- lb[[parm]]+runif(1)*(ub[[parm]]-lb[[parm]])
     reinit <- TRUE
   }
-  # if lower or upper band reached, perform new inversion with readjusted initial values
+  # perform inversion with readjusted initial values if lower/upper band reached
   while (reinit==TRUE & attempt<2){
     attempt <- attempt+1
     if (verbose) print_msg(cause = 'ULBounds')
@@ -209,7 +211,7 @@ tryInversion <- function(x0, MeritFunction, SpecPROSPECT, Refl, Tran,
         res <- tryCatch(
           {
             res <- fmincon(
-              x0 = as.numeric(x0[Parms2Estimate]), fn = MeritFunction, gr = NULL,
+              x0 = as.numeric(x0[Parms2Estimate]), fn = MeritFunction, gr =NULL,
               SpecPROSPECT = SpecPROSPECT, Refl = Refl, Tran = Tran,
               Input_PROSPECT = x0, Parms2Estimate = Parms2Estimate,
               method = "SQP", A = NULL, b = NULL, Aeq = NULL, beq = NULL,
@@ -244,8 +246,8 @@ tryInversion <- function(x0, MeritFunction, SpecPROSPECT, Refl, Tran,
 #' Merit function for PROSPECT inversion
 #'
 #' @param x numeric. Vector of input variables to estimate
-#' @param SpecPROSPECT list. Includes optical constants
-#' refractive index, specific absorption coefficients and corresponding spectral bands
+#' @param SpecPROSPECT list. Includes optical constants refractive index,
+#' specific absorption coefficients and corresponding spectral bands
 #' @param Refl  numeric. measured reflectance data
 #' @param Tran  numeric. measured Transmittance data
 #' @param Input_PROSPECT dataframe. set of PROSPECT input variables
@@ -268,7 +270,7 @@ Merit_RMSE_PROSPECT <- function(x, SpecPROSPECT, Refl, Tran,
 #' @param Refl  numeric. Reflectance on which PROSPECT ins inverted
 #' @param Tran  numeric. Transmittance on which PROSPECT ins inverted
 #'
-#' @return fc sum of squared difference between simulated and measured leaf optical properties
+#' @return fc sum of squared difference bw simulated and measured leaf optics
 #' @export
 CostVal_RMSE <- function(RT, Refl, Tran) {
   if (is.null(Tran)) {
@@ -284,14 +286,14 @@ CostVal_RMSE <- function(RT, Refl, Tran) {
 
 #' This function defines a regression model to estimate N from R only or T only
 #' @param lambda  numeric. spectral bands corresponding to experimental data
-#' @param SpecPROSPECT list. Includes optical constants
-#' refractive index, specific absorption coefficients and corresponding spectral bands
+#' @param SpecPROSPECT list. Includes optical constants refractive index,
+#' specific absorption coefficients and corresponding spectral bands
 #' @param Refl  numeric. Measured reflectance data
 #' @param Tran  numeric. Measured Transmittance data
 #' @param OptWL_R  list. optimal wavelengths used to estimate N from R only
 #' @param OptWL_T  list. optimal wavelengths used to estimate N from T only
 #'
-#' @return Nprior vector corresponding to teh prior estimation of N based on R only or T only
+#' @return Nprior prior estimation of N with R or T only
 #' @importFrom stats lm runif
 #' @export
 Get_Nprior <- function(lambda, SpecPROSPECT = NULL, Refl = NULL, Tran = NULL,
@@ -656,8 +658,8 @@ Invert_PROSPECT_subdomain <- function(New_Features, Refl, Tran, SpecPROSPECT,
                                       xlub = data.frame(
                                         CHL = c(1e-4, 150), CAR = c(1e-4, 25),
                                         ANT = c(0, 50), BROWN = c(0, 1),
-                                        EWT = c(1e-8, 0.1), LMA = c(1e-6, .06),
-                                        PROT = c(1e-7, .006), CBC = c(1e-6, .054),
+                                        EWT = c(1e-8, 0.1), LMA = c(1e-6, 0.06),
+                                        PROT = c(1e-7, .006), CBC = c(1e-6, 0.054),
                                         N = c(.5, 4), alpha = c(10, 90)),
                                       verbose = FALSE){
 
@@ -822,20 +824,19 @@ reshape_lop4inversion <- function(Refl, Tran, SpecPROSPECT){
 
 #' Function to check good agreement between prospect version and parameter list
 #'
-#' @param PROSPECT_version  character. Version of prospect model used for the inversion: '5', '5B', 'D', 'DB', 'PRO', 'PROB',
-#' See details.
+#' @param PROSPECT_version character. version used for inversion: 'D' or 'PRO'
 #' @param Est_Brown_Pigments boolean. should brown pigments be accounted for during inversion?
 #' @param Est_alpha boolean. should alpha be accounted for during inversion?
 #' @param Parms2Estimate  character vector. Parameters to estimate (can be 'ALL')
 #' @param xlub data.frame. Boundaries of the parameters to estimate.
-#' The data.frame must have columns corresponding to \code{Parms2Estimate} first line being
-#' the lower boundaries and second line the upper boundaries.
-#' @param InitValues  data.frame. Default values of PROSPECT parameters. During optimization,
-#' they are used either as initialization values for parameters to estimate,
-#' or as fix values for other parameters.
+#' The data.frame must have columns corresponding to \code{Parms2Estimate} first
+#' line being the lower boundaries and second line the upper boundaries.
+#' @param InitValues  dataframe. Default values of PROSPECT parameters. During
+#' optimization, they are used either as initialization values for parameters to
+#' estimate, or as fix values for other parameters.
 #' Parameters not compatible with PROSPECT_version are not taken into account.
 #'
-#' @return list consolidated list of parameters to estimate and corresponding lower / upper boundaries
+#' @return list of parameters to estimate & corresponding lower/upper boundaries
 #' @export
 
 check_prospect_parms <- function(PROSPECT_version, Parms2Estimate,
@@ -884,7 +885,7 @@ check_prospect_parms <- function(PROSPECT_version, Parms2Estimate,
 #' @param Tran dataframe. transmittance data
 #' @param SpecPROSPECT dataframe. spectral properties used in PROSPECT
 #'
-#' @return Nprior dataframe. N values corresponding to reflectance or transmittance
+#' @return Nprior dataframe. N values corresponding to Refl or Tran
 #' @export
 
 SetNValues <- function(Refl, Tran, SpecPROSPECT){
@@ -904,7 +905,7 @@ SetNValues <- function(Refl, Tran, SpecPROSPECT){
 #' Function to set initial parameterization when performing PROSPECT inversion
 #' using optimal configuration
 #'
-#' @param Parms2Estimate  character vector. Parameters to estimate (can be 'ALL')
+#' @param Parms2Estimate  character. Parameters to estimate
 #' @param ParmEst character. PROSPECT parameters to be estimated
 #' @param PROSPECT_version  character. Version of prospect model used for the
 #' inversion: '5', '5B', 'D', 'DB', 'PRO', 'PROB',
@@ -921,7 +922,8 @@ SetNValues <- function(Refl, Tran, SpecPROSPECT){
 SetInitParm <- function(Parms2Estimate, ParmEst, PROSPECT_version, Nprior,
                         ANTinit, OptDomain, Refl, Tran){
 
-  UL_Bounds <- PROSPECT_version_tmp <- Parms2Estimate_tmp <- InitValues <- list()
+  UL_Bounds <- PROSPECT_version_tmp <-
+    Parms2Estimate_tmp <- InitValues <- list()
   for (parm in Parms2Estimate){
     ParmEst[[parm]] <- c()
     InitValues[[parm]] <- list()
@@ -942,15 +944,16 @@ SetInitParm <- function(Parms2Estimate, ParmEst, PROSPECT_version, Nprior,
       InitValues[[parm]] <- data.frame(CHL=40, CAR=10, ANT=ANTinit,
                                        BROWN=0, EWT=0.01, LMA=0.01, N=Nprior)
     }
-
     if (parm == "CHL" | parm == "CAR"){
       PROSPECT_version_tmp[[parm]] <- PROSPECT_version
-      if (!PROSPECT_version =='5'){ Parms2Estimate_tmp[[parm]] <- c('CHL', 'CAR', 'ANT')}
-      else if (PROSPECT_version =='5'){ Parms2Estimate_tmp[[parm]] <- c('CHL', 'CAR')}
+      if (!PROSPECT_version =='5'){
+        Parms2Estimate_tmp[[parm]] <- c('CHL', 'CAR', 'ANT')
+      } else if (PROSPECT_version =='5'){
+        Parms2Estimate_tmp[[parm]] <- c('CHL', 'CAR')
+      }
       InitValues[[parm]] <- data.frame(CHL=40, CAR=10, ANT=ANTinit, BROWN=0,
                                        EWT=0.01, LMA=0.01, N=Nprior)
     }
-
     if (parm == "EWT"){
       PROSPECT_version_tmp[[parm]] <- PROSPECT_version
       if (!PROSPECT_version =='PRO'){

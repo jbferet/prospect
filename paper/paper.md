@@ -75,11 +75,14 @@ spectroscopy [@jay_physically-based_2016] and PROSAIL for canopy reflectance mod
 Note that PROSPECT is also available in packages written in [python](https://github.com/jgomezdans/prosail), 
 [Julia](https://github.com/RemoteSensingTools/CanopyOptics.jl) and [R](https://github.com/ashiklom/rrtm).
 
-The R package `prospect` includes recent versions of PROSPECT, and aims 
-at providing up-to-date developments in terms of model version and inversion strategies. 
+PROSPECT versions 4 and 5 developed by [@feret2008] are deprecated. 
+Therefore PROSPECT-D and PROSPECT-PRO are recommended versions. 
+The R package `prospect` includes recent versions of PROSPECT (D and PRO), 
+and aims at providing up-to-date developments in terms of future model version 
+and inversion strategies. 
 This includes parameterizable inversion routines, to ease physical model inversion 
 for beginners, and to help advanced users in designing and testing their own 
-inversion strategy.
+inversion strategy. 
 
 
 # Overview
@@ -116,6 +119,8 @@ LMA: leaf mass per area; PROT: proteins; CBC: carbon based constituents).\label{
 As PROSPECT is a relatively simple and computationally efficient model, 
 iterative optimization is the most widespread method to invert PROSPECT 
 and assess leaf chemistry and structure from their optical properties. 
+It usually takes less than 1 second to perform PROSPECT inversion, which is acceptable
+when processing experimental datasets of leaf optical properties including 100-1000 samples.
 Iterative optimization aims at minimizing a cost function comparing 
 measured and simulated leaf optical properties. 
 This procedure is based on the function `fmincon` included in the package `pracma`.

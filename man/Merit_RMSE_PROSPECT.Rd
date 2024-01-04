@@ -16,8 +16,8 @@ Merit_RMSE_PROSPECT(
 \arguments{
 \item{x}{numeric. Vector of input variables to estimate}
 
-\item{SpecPROSPECT}{list. Includes optical constants
-refractive index, specific absorption coefficients and corresponding spectral bands}
+\item{SpecPROSPECT}{list. Includes optical constants refractive index,
+specific absorption coefficients and corresponding spectral bands}
 
 \item{Refl}{numeric. measured reflectance data}
 

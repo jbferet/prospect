@@ -17,18 +17,18 @@ FitSpectralData(
 \arguments{
 \item{lambda}{numeric. Spectral bands corresponding to experimental data}
 
-\item{SpecPROSPECT}{list. Includes optical constants
-refractive index, specific absorption coefficients and corresponding spectral bands}
+\item{SpecPROSPECT}{list. Includes optical constants: refractive index,
+specific absorption coefficients and corresponding spectral bands}
 
 \item{Refl}{numeric. Measured reflectance data}
 
 \item{Tran}{numeric. Measured Transmittance data}
 
-\item{UserDomain}{numeric. either Lower and upper bounds for domain of interest (optional)
-or list of spectral bands of interest}
+\item{UserDomain}{numeric. either Lower and upper bounds for domain of
+interest (optional) or list of spectral bands of interest}
 
-\item{UL_Bounds}{boolean. set to TRUE if UserDomain only includes lower and upper band,
-set to FALSE if UserDomain is a list of spectral bands (in nm)}
+\item{UL_Bounds}{boolean. set to TRUE if UserDomain only includes lower and
+upper band, set to FALSE if UserDomain is a list of spectral bands (in nm)}
 }
 \value{
 list including spectral properties at the new resolution

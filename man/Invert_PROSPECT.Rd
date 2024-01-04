@@ -24,8 +24,8 @@ Invert_PROSPECT(
 )
 }
 \arguments{
-\item{SpecPROSPECT}{list. Includes optical constants
-refractive index, specific absorption coefficients and corresponding spectral bands}
+\item{SpecPROSPECT}{list. Includes optical constants refractive index,
+specific absorption coefficients and corresponding spectral bands}
 
 \item{Refl}{numeric. Measured reflectance data}
 
@@ -36,17 +36,17 @@ they are used either as initialization values for parameters to estimate,
 or as fix values for other parameters.
 Parameters not compatible with PROSPECT_version are not taken into account.}
 
-\item{Parms2Estimate}{character vector. Parameters to estimate (can be 'ALL')}
+\item{Parms2Estimate}{character. Parameters to estimate (can be 'ALL')}
 
-\item{PROSPECT_version}{character. Version of prospect model used for the inversion: '5', '5B', 'D', 'DB', 'PRO', 'PROB',
+\item{PROSPECT_version}{character. prospect version used for inversion: 'D' or 'PRO'
 See details.}
 
 \item{MeritFunction}{character. name of the function to be used as merit function
 with given criterion to minimize (default = RMSE)}
 
 \item{xlub}{data.frame. Boundaries of the parameters to estimate.
-The data.frame must have columns corresponding to \code{Parms2Estimate} first line being
-the lower boundaries and second line the upper boundaries.}
+The data.frame must have columns corresponding to \code{Parms2Estimate}
+first line being the lower boundaries and second line the upper boundaries.}
 
 \item{Est_Brown_Pigments}{boolean. should brown pigments be accounted for during inversion?}
 
@@ -64,18 +64,18 @@ Performs PROSPECT inversion using iterative optimization
 in order to define estimate a set of user defined parameters
 }
 \details{
-Six versions of prospect are available for inversion.
-The version is depending on the parameters taken into account:\tabular{ccccccc}{
-   Version \tab 5 \tab 5B \tab D \tab DB \tab PRO \tab PROB \cr
-   CHL \tab ✅ \tab ✅ \tab ✅ \tab ✅ \tab ✅ \tab ✅ \cr
-   CAR \tab ✅ \tab ✅ \tab ✅ \tab ✅ \tab ✅ \tab ✅ \cr
-   ANT \tab  \tab  \tab ✅ \tab ✅ \tab ✅ \tab ✅ \cr
-   BROWN \tab  \tab ✅ \tab  \tab ✅ \tab  \tab ✅ \cr
-   EWT \tab ✅ \tab ✅ \tab ✅ \tab ✅ \tab ✅ \tab ✅ \cr
-   LMA \tab ✅ \tab ✅ \tab ✅ \tab ✅ \tab  \tab  \cr
-   PROT \tab  \tab  \tab  \tab  \tab ✅ \tab ✅ \cr
-   CBC \tab  \tab  \tab  \tab  \tab ✅ \tab ✅ \cr
-   N \tab ✅ \tab ✅ \tab ✅ \tab ✅ \tab ✅ \tab ✅ \cr
+Two versions of prospect are available for inversion.
+The version is depending on the parameters taken into account:\tabular{ccc}{
+   Version \tab D \tab PRO \cr
+   CHL \tab ✅ \tab ✅ \cr
+   CAR \tab ✅ \tab ✅ \cr
+   ANT \tab ✅ \tab ✅ \cr
+   BROWN \tab ✅ \tab ✅ \cr
+   EWT \tab ✅ \tab ✅ \cr
+   LMA \tab ✅ \tab  \cr
+   PROT \tab  \tab ✅ \cr
+   CBC \tab  \tab ✅ \cr
+   N \tab ✅ \tab ✅ \cr
 }
 
 

@@ -14,7 +14,7 @@ SetNValues(Refl, Tran, SpecPROSPECT)
 \item{SpecPROSPECT}{dataframe. spectral properties used in PROSPECT}
 }
 \value{
-Nprior dataframe. N values corresponding to reflectance or transmittance
+Nprior dataframe. N values corresponding to Refl or Tran
 }
 \description{
 Function set N values if reflectance or transmittance is missing

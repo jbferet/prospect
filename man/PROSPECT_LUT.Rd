@@ -8,7 +8,7 @@ leaf chemical & structural parameters}
 PROSPECT_LUT(Input_PROSPECT, SpecPROSPECT = NULL)
 }
 \arguments{
-\item{Input_PROSPECT}{dataframe. full list of PROSPECT input parameters. Default = Set to NULL}
+\item{Input_PROSPECT}{dataframe. list of PROSPECT input parameters.}
 
 \item{SpecPROSPECT}{list. spectral constants
 refractive index, specific absorption coefficients & spectral bands}

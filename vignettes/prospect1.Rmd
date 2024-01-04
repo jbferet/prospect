@@ -78,7 +78,7 @@ When run without input parameters, `PROSPECT` is run with default values:
 ```{r prospect direct mode default}
 library(prospect)
 LRT_default <- PROSPECT()
-# the following command is equivalent for simulation over the full spectral domain 
+# the following command is equivalent when simulating over the full spectral domain 
 LRT_default <- PROSPECT(SpecPROSPECT = prospect::SpecPROSPECT_FullRange)
 
 ```
