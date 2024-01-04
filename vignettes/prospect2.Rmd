@@ -113,8 +113,8 @@ SubData <- FitSpectralData(lambda = LRT_D$wvl,
                            Tran = LRT_D$Transmittance,
                            UserDomain = SpectralSubDomain)
 
-# Note that FitSpectralData can also run with UserDomain defining upper and lower bounds 
-# Then you will need to set UL_Bounds = TRUE
+# Note that FitSpectralData can also run with UserDomain defining 
+# upper and lower bounds when setting input argument 'UL_Bounds = TRUE'
 ULBounds <- c(400,800)
 SubData <- FitSpectralData(lambda = LRT_D$wvl, 
                            Refl = LRT_D$Reflectance, 
@@ -189,7 +189,8 @@ Parms2Estimate  <- c('CHL','CAR','ANT','EWT','LMA')
 # define initial values for the inversion
 InitValues <- data.frame(CHL = 40, CAR = 8, ANT = 0.1, BROWN = 0, 
                          EWT = 0.01, LMA = 0.01, N = 1.5)
-# call Invert_PROSPECT_OPT in order to automaticall get optimal estimation of leaf parameters following latest published results
+# call Invert_PROSPECT_OPT to get optimal estimation of leaf parameters 
+# using optimal spectral domains
 ParmEst <- Invert_PROSPECT_OPT(lambda = LRT_D$wvl, 
                                Refl = LRT_D$Reflectance,
                                Tran = LRT_D$Transmittance,

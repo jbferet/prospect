@@ -16,8 +16,8 @@ Get_Nprior(
 \arguments{
 \item{lambda}{numeric. spectral bands corresponding to experimental data}
 
-\item{SpecPROSPECT}{list. Includes optical constants
-refractive index, specific absorption coefficients and corresponding spectral bands}
+\item{SpecPROSPECT}{list. Includes optical constants refractive index,
+specific absorption coefficients and corresponding spectral bands}
 
 \item{Refl}{numeric. Measured reflectance data}
 
@@ -28,7 +28,7 @@ refractive index, specific absorption coefficients and corresponding spectral ba
 \item{OptWL_T}{list. optimal wavelengths used to estimate N from T only}
 }
 \value{
-Nprior vector corresponding to teh prior estimation of N based on R only or T only
+Nprior prior estimation of N with R or T only
 }
 \description{
 This function defines a regression model to estimate N from R only or T only

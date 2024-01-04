@@ -197,14 +197,14 @@ check_version_prospect <- function(LMA, PROT, CBC){
 #' This function adapts SpecPROSPECT accordingly to experimental data
 #' or to a spectral domain defined by UserDomain
 #' @param lambda numeric. Spectral bands corresponding to experimental data
-#' @param SpecPROSPECT list. Includes optical constants
-#' refractive index, specific absorption coefficients and corresponding spectral bands
+#' @param SpecPROSPECT list. Includes optical constants: refractive index,
+#' specific absorption coefficients and corresponding spectral bands
 #' @param Refl numeric. Measured reflectance data
 #' @param Tran numeric. Measured Transmittance data
-#' @param UserDomain numeric. either Lower and upper bounds for domain of interest (optional)
-#' or list of spectral bands of interest
-#' @param UL_Bounds boolean. set to TRUE if UserDomain only includes lower and upper band,
-#' set to FALSE if UserDomain is a list of spectral bands (in nm)
+#' @param UserDomain numeric. either Lower and upper bounds for domain of
+#' interest (optional) or list of spectral bands of interest
+#' @param UL_Bounds boolean. set to TRUE if UserDomain only includes lower and
+#' upper band, set to FALSE if UserDomain is a list of spectral bands (in nm)
 #'
 #' @return list including spectral properties at the new resolution
 #' @import dplyr
@@ -248,9 +248,9 @@ FitSpectralData <- function(lambda, SpecPROSPECT = NULL,
 #' computation of a LUT of leaf optical properties using a set of
 #' leaf chemical & structural parameters
 #'
+#' @param Input_PROSPECT dataframe. list of PROSPECT input parameters.
 #' @param SpecPROSPECT list. spectral constants
 #' refractive index, specific absorption coefficients & spectral bands
-#' @param Input_PROSPECT dataframe. full list of PROSPECT input parameters. Default = Set to NULL
 #'
 #' @return list. LUT including leaf reflectance and transmittance
 #' @export

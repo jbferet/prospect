@@ -12,8 +12,10 @@ test_that("PROSPECT-D inversion produces accurate biophysical assessment", {
   expect_true(abs(leafBP$EWT-BPinit$EWT)<1e-6)
   expect_true(abs(leafBP$LMA-BPinit$LMA)<1e-6)
 
-  lrt$Reflectance <- lrt$Reflectance*(1+rnorm(length(lrt$Reflectance),0,0.01))
-  lrt$Transmittance <- lrt$Transmittance*(1+rnorm(length(lrt$Transmittance),0,0.01))
+  lrt$Reflectance <- lrt$Reflectance*(1+rnorm(length(lrt$Reflectance),
+                                              0,0.01))
+  lrt$Transmittance <- lrt$Transmittance*(1+rnorm(length(lrt$Transmittance),
+                                                  0,0.01))
 
   leafBP <- Invert_PROSPECT(Refl = lrt$Reflectance,
                             Tran = lrt$Transmittance)

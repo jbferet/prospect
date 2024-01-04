@@ -17,8 +17,10 @@ A dataframe including 2101 rows and 10 columns
 \item \emph{SAC_LMA}: specific absorption coefficient for dry matter (Leaf Mass per Area)
 \item \emph{SAC_PROT}: specific absorption coefficient for proteins
 \item \emph{SAC_CBC}: specific absorption coefficient for carbon-base constituents
-\item \emph{calctav_90}: transmissivity of a dielectric plane surface, averaged over all directions of incidence and over all polarizations for solid angle of 90 degrees
-\item \emph{calctav_40}: transmissivity of a dielectric plane surface, averaged over all directions of incidence and over all polarizations for solid angle of 40 degrees
+\item \emph{calctav_90}: transmissivity of a dielectric plane surface, averaged over
+all directions of incidence & all polarizations for solid angle of 90 deg
+\item \emph{calctav_40}: transmissivity of a dielectric plane surface, averaged over
+all directions of incidence & all polarizations for solid angle of 40 deg
 }
 }
 \usage{

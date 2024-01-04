@@ -14,7 +14,7 @@ CostVal_RMSE(RT, Refl, Tran)
 \item{Tran}{numeric. Transmittance on which PROSPECT ins inverted}
 }
 \value{
-fc sum of squared difference between simulated and measured leaf optical properties
+fc sum of squared difference bw simulated and measured leaf optics
 }
 \description{
 Value of the cost criterion to minimize during PROSPECT inversion

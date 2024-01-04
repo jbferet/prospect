@@ -14,8 +14,7 @@ check_prospect_parms(
 )
 }
 \arguments{
-\item{PROSPECT_version}{character. Version of prospect model used for the inversion: '5', '5B', 'D', 'DB', 'PRO', 'PROB',
-See details.}
+\item{PROSPECT_version}{character. version used for inversion: 'D' or 'PRO'}
 
 \item{Parms2Estimate}{character vector. Parameters to estimate (can be 'ALL')}
 
@@ -24,16 +23,16 @@ See details.}
 \item{Est_alpha}{boolean. should alpha be accounted for during inversion?}
 
 \item{xlub}{data.frame. Boundaries of the parameters to estimate.
-The data.frame must have columns corresponding to \code{Parms2Estimate} first line being
-the lower boundaries and second line the upper boundaries.}
+The data.frame must have columns corresponding to \code{Parms2Estimate} first
+line being the lower boundaries and second line the upper boundaries.}
 
-\item{InitValues}{data.frame. Default values of PROSPECT parameters. During optimization,
-they are used either as initialization values for parameters to estimate,
-or as fix values for other parameters.
+\item{InitValues}{dataframe. Default values of PROSPECT parameters. During
+optimization, they are used either as initialization values for parameters to
+estimate, or as fix values for other parameters.
 Parameters not compatible with PROSPECT_version are not taken into account.}
 }
 \value{
-list consolidated list of parameters to estimate and corresponding lower / upper boundaries
+list of parameters to estimate & corresponding lower/upper boundaries
 }
 \description{
 Function to check good agreement between prospect version and parameter list

@@ -49,7 +49,8 @@ library(data.table)
 # repository where data are stored
 gitlab_Rep <- 'https://gitlab.com/jbferet/myshareddata/raw/master/LOP/'
 # Datasets
-dbName <- list('LOPEX_DRY_CAL','LOPEX_FRESH_CAL','LOPEX_DRY_VAL','LOPEX_FRESH_VAL')
+dbName <- list('LOPEX_DRY_CAL','LOPEX_FRESH_CAL',
+               'LOPEX_DRY_VAL','LOPEX_FRESH_VAL')
 # files available
 fileName <- list('DataBioch.txt','ReflectanceData.txt','TransmittanceData.txt')
 # download LOPEX data
@@ -73,7 +74,7 @@ The optimal spectral domains are defined based on the results described in [Fér
 ```{r Invert PROSPECT-PRO}
 Parms2Estimate  <- c('EWT','PROT','CBC')
 EWT_mod <- PROT_mod <- CBC_mod <- list()
-# perform PROSPECT inversion using the optimal spectral domains for EWT, PROT and CBC
+# perform PROSPECT inversion using optimal spectral domains for EWT, PROT & CBC
 InitValues <- data.frame(CHL = 40, CAR = 8, ANT = 0.1, BROWN = 0, 
                          EWT = 0.01, CBC = 0.009, PROT = 0.001, N = 1.5)
 for (db in dbName){
