@@ -66,7 +66,7 @@ Invert_PROSPECT <- function(SpecPROSPECT = NULL,
                               N = 1.5, alpha = 40),
                             Parms2Estimate = "ALL",
                             PROSPECT_version = "D",
-                            MeritFunction = "Merit_RMSE_PROSPECT",
+                            MeritFunction = "Merit_PROSPECT_RMSE",
                             xlub = data.frame(
                               CHL = c(1e-4, 150), CAR = c(1e-4, 25),
                               ANT = c(0, 50), BROWN = c(0, 1),
@@ -77,14 +77,6 @@ Invert_PROSPECT <- function(SpecPROSPECT = NULL,
                             verbose = FALSE, progressBar = TRUE) {
 
   if (is.null(SpecPROSPECT)) SpecPROSPECT <- prospect::SpecPROSPECT_FullRange
-  # add default values to xlub in case they were not defined
-  xlub_default <- data.frame(CHL = c(1e-4, 150), CAR = c(1e-4, 25),
-                             ANT = c(0, 50), BROWN = c(0, 1),
-                             EWT = c(1e-8, 0.1), LMA = c(1e-6, .06),
-                             PROT = c(1e-7, .006), CBC = c(1e-6, .054),
-                             N = c(.5, 4), alpha = c(10, 90))
-  AddedParm_LB <- setdiff(names(xlub_default),names(xlub))
-  for (ad in AddedParm_LB) xlub[[ad]] <- xlub_default[[ad]]
   # check if list of parameters applicable to PROSPECT version
   parms_checked <- check_prospect_parms(PROSPECT_version = PROSPECT_version,
                                         Parms2Estimate = Parms2Estimate,
@@ -115,7 +107,8 @@ Invert_PROSPECT <- function(SpecPROSPECT = NULL,
                           names(parms_checked$InitValues))
       updateInitValues <- parms_checked$InitValues
       updateInitValues[ModifyInit] <- 1.1*updateInitValues[ModifyInit]
-      res <- tryInversion(x0 = updateInitValues, MeritFunction = MeritFunction,
+      res <- tryInversion(x0 = updateInitValues,
+                          MeritFunction = MeritFunction,
                           SpecPROSPECT = SpecPROSPECT,
                           Refl = RT$Refl[[idsample]], Tran =RT$Tran[[idsample]],
                           Parms2Estimate = parms_checked$Parms2Estimate,
@@ -211,9 +204,13 @@ tryInversion <- function(x0, MeritFunction, SpecPROSPECT, Refl, Tran,
         res <- tryCatch(
           {
             res <- fmincon(
-              x0 = as.numeric(x0[Parms2Estimate]), fn = MeritFunction, gr =NULL,
-              SpecPROSPECT = SpecPROSPECT, Refl = Refl, Tran = Tran,
-              Input_PROSPECT = x0, Parms2Estimate = Parms2Estimate,
+              x0 = as.numeric(x0[Parms2Estimate]),
+              fn = MeritFunction,
+              gr =NULL,
+              SpecPROSPECT = SpecPROSPECT,
+              Refl = Refl, Tran = Tran,
+              Input_PROSPECT = x0,
+              Parms2Estimate = Parms2Estimate,
               method = "SQP", A = NULL, b = NULL, Aeq = NULL, beq = NULL,
               lb = as.numeric(lb), ub = as.numeric(ub), hin = NULL, heq = NULL,
               tol = Tolerance, maxfeval = 2000, maxiter = 1000)
@@ -256,33 +253,19 @@ tryInversion <- function(x0, MeritFunction, SpecPROSPECT, Refl, Tran,
 #'
 #' @return fc estimates of the parameters
 #' @export
-Merit_RMSE_PROSPECT <- function(x, SpecPROSPECT, Refl, Tran,
-                                Input_PROSPECT, Parms2Estimate) {
+Merit_PROSPECT_RMSE <- function(x, SpecPROSPECT,
+                                Refl, Tran,
+                                Input_PROSPECT,
+                                Parms2Estimate) {
   x[x < 0] <- 0
   Input_PROSPECT[Parms2Estimate] <- x
   RT <- do.call("PROSPECT", c(list(SpecPROSPECT = SpecPROSPECT), Input_PROSPECT))
-  fc <- CostVal_RMSE(RT, Refl, Tran)
+  fcr <- fct <- 0
+  if (!is.null(Refl)) fcr <- sqrt(sum((Refl - RT$Reflectance)**2) / length(RT$Reflectance))
+  if (!is.null(Tran)) fct <- sqrt(sum((Tran - RT$Transmittance)**2) / length(RT$Transmittance))
+  fc <- fcr + fct
   return(fc)
 }
-
-#' Value of the cost criterion to minimize during PROSPECT inversion
-#' @param RT  list. Simulated reflectance and transmittance
-#' @param Refl  numeric. Reflectance on which PROSPECT ins inverted
-#' @param Tran  numeric. Transmittance on which PROSPECT ins inverted
-#'
-#' @return fc sum of squared difference bw simulated and measured leaf optics
-#' @export
-CostVal_RMSE <- function(RT, Refl, Tran) {
-  if (is.null(Tran)) {
-    fc <- sqrt(sum((Refl - RT$Reflectance)**2) / length(RT$Reflectance))
-  } else if (is.null(Refl)) {
-    fc <- sqrt(sum((Tran - RT$Transmittance)**2) / length(RT$Transmittance))
-  } else {
-    fc <- sqrt(sum((Refl - RT$Reflectance)**2) / length(RT$Reflectance) + sum((Tran - RT$Transmittance)**2) / length(RT$Transmittance))
-  }
-  return(fc)
-}
-
 
 #' This function defines a regression model to estimate N from R only or T only
 #' @param lambda  numeric. spectral bands corresponding to experimental data
@@ -537,7 +520,7 @@ optimal_features_SFS <- function(Refl = NULL, Tran = NULL, lambda, BiochTruth,
                                    N = c(.5, 4), alpha = c(10, 90)),
                                  SpecPROSPECT, spectral_domain, spectral_width,
                                  number_features,PROSPECT_version = 'D',
-                                 MeritFunction = "Merit_RMSE_PROSPECT",
+                                 MeritFunction = "Merit_PROSPECT_RMSE",
                                  Est_alpha = FALSE, verbose = FALSE,
                                  nbCPU = 1,Continue = FALSE, AlreadyDone = NULL){
 
@@ -652,7 +635,7 @@ Invert_PROSPECT_subdomain <- function(New_Features, Refl, Tran, SpecPROSPECT,
                                         PROT = 0.001, CBC = 0.009, N = 1.5,
                                         alpha = 40),
                                       PROSPECT_version = "D",
-                                      MeritFunction = "Merit_RMSE_PROSPECT",
+                                      MeritFunction = "Merit_PROSPECT_RMSE",
                                       Est_Brown_Pigments = FALSE,
                                       Est_alpha = FALSE,
                                       xlub = data.frame(
@@ -839,9 +822,12 @@ reshape_lop4inversion <- function(Refl, Tran, SpecPROSPECT){
 #' @return list of parameters to estimate & corresponding lower/upper boundaries
 #' @export
 
-check_prospect_parms <- function(PROSPECT_version, Parms2Estimate,
-                                 Est_Brown_Pigments, Est_alpha,
-                                 xlub, InitValues){
+check_prospect_parms <- function(PROSPECT_version,
+                                 Parms2Estimate,
+                                 Est_Brown_Pigments,
+                                 Est_alpha,
+                                 xlub,
+                                 InitValues){
 
   # check if version required is available
   if (!PROSPECT_version %in% c('D', 'PRO')) print_msg(cause = 'WrongVersion')
@@ -851,6 +837,24 @@ check_prospect_parms <- function(PROSPECT_version, Parms2Estimate,
   # add brown pigments and alpha angle if required
   if (Est_Brown_Pigments==TRUE) allParms <- c(allParms, "BROWN")
   if (Est_alpha==TRUE) allParms <- c(allParms, "alpha")
+
+  # add default values to xlub in case they were not defined
+  xlub_default <- data.frame(CHL = c(1e-4, 150), CAR = c(1e-4, 25),
+                             ANT = c(0, 50), BROWN = c(0, 1),
+                             EWT = c(1e-8, 0.1), LMA = c(1e-6, .06),
+                             PROT = c(1e-7, .006), CBC = c(1e-6, .054),
+                             N = c(.5, 4), alpha = c(10, 90))
+  AddedParm_LB <- setdiff(names(xlub_default),names(xlub))
+  for (ad in AddedParm_LB) xlub[[ad]] <- xlub_default[[ad]]
+
+  InitValues_default = data.frame(CHL = 40, CAR = 10,
+                                  ANT = 0.1, BROWN = 0.0,
+                                  EWT = 0.01, LMA = 0.01,
+                                  PROT = 0.001, CBC = 0.009,
+                                  N = 1.5, alpha = 40)
+  AddedParm_init <- setdiff(names(InitValues_default),names(InitValues))
+  for (ad in AddedParm_init) InitValues[[ad]] <- InitValues_default[[ad]]
+
   # if 'ALL' is provided, then assess all parameters available
   if ("ALL" %in% Parms2Estimate) Parms2Estimate <- allParms
   # if unknown parameter is provided, then warn
@@ -872,6 +876,7 @@ check_prospect_parms <- function(PROSPECT_version, Parms2Estimate,
     InitValues$PROT <- InitValues$CBC <- 0
     if (is.null(InitValues$LMA)) InitValues$LMA <- 0.01
   }
+  if (Est_Brown_Pigments==FALSE) InitValues$BROWN <- 0
   xlub <- data.frame(xlub[Parms2Estimate])
   lb <- xlub[1,]
   ub <- xlub[2,]

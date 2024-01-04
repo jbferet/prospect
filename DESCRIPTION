@@ -1,6 +1,6 @@
 Package: prospect
 Title: PROSPECT leaf radiative transfer model and inversion routines
-Version: 1.5.0
+Version: 1.5.1
 Authors@R: c(person(given = "Jean-Baptiste", 
 					    family = "Feret", 
 					    email = "jb.feret@teledetection.fr", 
@@ -25,13 +25,14 @@ Suggests:
     rmarkdown,
     testthat (>= 3.0.0)
 Imports: 
+    data.table,
+    dplyr,
     expint,
-    pracma,
     future,
     NlcOptim,
     future.apply,
-    progress,
-    dplyr
+    pracma,
+    progress
 VignetteBuilder: knitr
 URL: https://gitlab.com/jbferet/prospect
 BugReports: https://gitlab.com/jbferet/prospect/issues

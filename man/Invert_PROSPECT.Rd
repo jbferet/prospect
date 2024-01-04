@@ -13,7 +13,7 @@ Invert_PROSPECT(
     0.01, PROT = 0.001, CBC = 0.009, N = 1.5, alpha = 40),
   Parms2Estimate = "ALL",
   PROSPECT_version = "D",
-  MeritFunction = "Merit_RMSE_PROSPECT",
+  MeritFunction = "Merit_PROSPECT_RMSE",
   xlub = data.frame(CHL = c(1e-04, 150), CAR = c(1e-04, 25), ANT = c(0, 50), BROWN = c(0,
     1), EWT = c(1e-08, 0.1), LMA = c(1e-08, 0.06), PROT = c(1e-07, 0.006), CBC = c(1e-06,
     0.054), N = c(0.5, 4), alpha = c(10, 90)),

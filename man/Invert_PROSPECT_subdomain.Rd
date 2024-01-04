@@ -18,7 +18,7 @@ Invert_PROSPECT_subdomain(
   InitValues = data.frame(CHL = 40, CAR = 10, ANT = 0.1, BROWN = 0.01, EWT = 0.01, LMA =
     0.01, PROT = 0.001, CBC = 0.009, N = 1.5, alpha = 40),
   PROSPECT_version = "D",
-  MeritFunction = "Merit_RMSE_PROSPECT",
+  MeritFunction = "Merit_PROSPECT_RMSE",
   Est_Brown_Pigments = FALSE,
   Est_alpha = FALSE,
   xlub = data.frame(CHL = c(1e-04, 150), CAR = c(1e-04, 25), ANT = c(0, 50), BROWN = c(0,

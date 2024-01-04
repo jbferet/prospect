@@ -227,16 +227,15 @@ FitSpectralData <- function(lambda, SpecPROSPECT = NULL,
   lb <- lambda
   SpecPROSPECT  <- SpecPROSPECT %>% filter(SpecPROSPECT$lambda%in%lb)
   # if UserDomain is defined
-  if (!is.null(UserDomain)) {
-    if (UL_Bounds==TRUE) UserDomain <- seq(min(UserDomain), max(UserDomain))
-    if (!is.null(Refl)) Refl <- Refl %>% filter(lambda%in%UserDomain)
-    if (!is.null(Tran)) Tran <- Tran %>% filter(lambda%in%UserDomain)
-    lambda <- lambda[lambda%in%UserDomain]
-    # Adjust PROSPECT
-    SpecPROSPECT  <- SpecPROSPECT %>% filter(SpecPROSPECT$lambda%in%UserDomain)
-    if (any(!UserDomain%in%lambda)){
-      message('leaf optics out of range defined by UserDomain')
-    }
+  if (is.null(UserDomain)) UserDomain <- lambda
+  if (UL_Bounds==TRUE) UserDomain <- seq(min(UserDomain), max(UserDomain))
+  if (!is.null(Refl)) Refl <- Refl %>% filter(lambda%in%UserDomain)
+  if (!is.null(Tran)) Tran <- Tran %>% filter(lambda%in%UserDomain)
+  lambda <- lambda[lambda%in%UserDomain]
+  # Adjust PROSPECT
+  SpecPROSPECT  <- SpecPROSPECT %>% filter(SpecPROSPECT$lambda%in%UserDomain)
+  if (any(!UserDomain%in%lambda)){
+    message('leaf optics out of range defined by UserDomain')
   }
   RT <- reshape_lop4inversion(Refl = Refl,
                               Tran = Tran,
@@ -301,12 +300,43 @@ PROSPECT_LUT <- function(Input_PROSPECT, SpecPROSPECT = NULL) {
 
 #' Complete the list of PROSPECT parameters with default values
 #'
+#' @param urldb character. URL for online repository where to download data
+#' @param dbName character. name of the database available online
+#'
+#' @return list. Includes leaf chemistry, refl, tran & number of samples
+#' @importFrom data.table fread
+#' @export
+
+download_LeafDB <- function(urldb = NULL,
+                            dbName = 'ANGERS'){
+  # repository where data are stored
+  if (is.null(urldb)) urldb <- 'https://gitlab.com/jbferet/myshareddata/raw/master/LOP/'
+  # download leaf chemistry and optical properties
+  DataBioch <- data.table::fread(file.path(urldb,dbName,'DataBioch.txt'))
+  Refl <- data.table::fread(file.path(urldb,dbName,'ReflectanceData.txt'))
+  Tran <- data.table::fread(file.path(urldb,dbName,'TransmittanceData.txt'))
+  # Get wavelengths corresponding to the reflectance & transmittance measurements
+  lambda <- Refl$wavelength
+  Refl$wavelength <- Tran$wavelength <- NULL
+  # Get the number of samples
+  nbSamples <- ncol(Refl)
+  return(list('DataBioch' = DataBioch,
+              'lambda' = lambda,
+              'Refl' = Refl,
+              'Tran' = Tran,
+              'nbSamples' = nbSamples))
+}
+
+
+#' Complete the list of PROSPECT parameters with default values
+#'
 #' @param Input_PROSPECT input parameters sent to PROSPECT by user
 #' @param Parm2Add Parameters to be added to input parameters
 #' @param ExpectedParms full set of parameters expected to run PROSPECT
 #'
 #' @return Input_PROSPECT
 #' @export
+
 Complete_Input_PROSPECT <- function(Input_PROSPECT, Parm2Add, ExpectedParms) {
   ii <- 0
   nbSamples <- length(Input_PROSPECT[[1]])
