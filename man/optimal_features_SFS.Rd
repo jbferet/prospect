@@ -21,7 +21,7 @@ optimal_features_SFS(
   spectral_width,
   number_features,
   PROSPECT_version = "D",
-  MeritFunction = "Merit_RMSE_PROSPECT",
+  MeritFunction = "Merit_PROSPECT_RMSE",
   Est_alpha = FALSE,
   verbose = FALSE,
   nbCPU = 1,

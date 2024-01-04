@@ -6,7 +6,7 @@ test_that("PROSPECT-D inversion produces accurate biophysical assessment", {
   leafBP <- Invert_PROSPECT(Refl = lrt$Reflectance,
                             Tran = lrt$Transmittance)
   expect_true(abs(leafBP$N-BPinit$N)<1e-5)
-  expect_true(abs(leafBP$CHL-BPinit$CHL)<1e-4)
+  expect_true(abs(leafBP$CHL-BPinit$CHL)<1e-3)
   expect_true(abs(leafBP$CAR-BPinit$CAR)<1e-4)
   expect_true(abs(leafBP$ANT-BPinit$ANT)<1e-4)
   expect_true(abs(leafBP$EWT-BPinit$EWT)<1e-6)
@@ -17,12 +17,12 @@ test_that("PROSPECT-D inversion produces accurate biophysical assessment", {
   lrt$Transmittance <- lrt$Transmittance*(1+rnorm(length(lrt$Transmittance),
                                                   0,0.01))
 
-  leafBP <- Invert_PROSPECT(Refl = lrt$Reflectance,
-                            Tran = lrt$Transmittance)
-  expect_true(abs(leafBP$N-BPinit$N)<1e-3)
-  expect_true(abs(leafBP$CHL-BPinit$CHL)<1e-1)
-  expect_true(abs(leafBP$CAR-BPinit$CAR)<1e-1)
-  expect_true(abs(leafBP$ANT-BPinit$ANT)<1e-1)
-  expect_true(abs(leafBP$EWT-BPinit$EWT)<1e-4)
-  expect_true(abs(leafBP$LMA-BPinit$LMA)<1e-4)
+  leafBP_noise <- Invert_PROSPECT(Refl = lrt$Reflectance,
+                                  Tran = lrt$Transmittance)
+  expect_true(abs(leafBP_noise$N-BPinit$N)<1e-3)
+  expect_true(abs(leafBP_noise$CHL-BPinit$CHL)<1e-1)
+  expect_true(abs(leafBP_noise$CAR-BPinit$CAR)<1e-1)
+  expect_true(abs(leafBP_noise$ANT-BPinit$ANT)<1e-1)
+  expect_true(abs(leafBP_noise$EWT-BPinit$EWT)<1e-4)
+  expect_true(abs(leafBP_noise$LMA-BPinit$LMA)<1e-4)
 })

@@ -45,22 +45,17 @@ The datasets can be downloaded directly with an R script as described below.
 ```{r get LOPEX}
 # Libraries required 
 library(prospect)
-library(data.table)
-# repository where data are stored
-gitlab_Rep <- 'https://gitlab.com/jbferet/myshareddata/raw/master/LOP/'
 # Datasets
 dbName <- list('LOPEX_DRY_CAL','LOPEX_FRESH_CAL',
                'LOPEX_DRY_VAL','LOPEX_FRESH_VAL')
-# files available
-fileName <- list('DataBioch.txt','ReflectanceData.txt','TransmittanceData.txt')
 # download LOPEX data
 DataBioch <- Refl <- Tran <- lambda <- list()
 for (db in dbName){
-  DataBioch[[db]] <- fread(file.path(gitlab_Rep,db,fileName[[1]]))
-  Refl[[db]] <- fread(file.path(gitlab_Rep,db,fileName[[2]]))
-  Tran[[db]] <- fread(file.path(gitlab_Rep,db,fileName[[3]]))
-  lambda[[db]] <- Refl[[db]]$wavelength
-  Refl[[db]]$wavelength <- Tran[[db]]$wavelength <- NULL
+  LeafDB <- download_LeafDB(dbName = db)
+  DataBioch[[db]] <- LeafDB$DataBioch
+  Refl[[db]] <- LeafDB$Refl
+  Tran[[db]] <- LeafDB$Tran
+  lambda[[db]] <- LeafDB$lambda
 }
 
 ```
@@ -75,16 +70,13 @@ The optimal spectral domains are defined based on the results described in [Fér
 Parms2Estimate  <- c('EWT','PROT','CBC')
 EWT_mod <- PROT_mod <- CBC_mod <- list()
 # perform PROSPECT inversion using optimal spectral domains for EWT, PROT & CBC
-InitValues <- data.frame(CHL = 40, CAR = 8, ANT = 0.1, BROWN = 0, 
-                         EWT = 0.01, CBC = 0.009, PROT = 0.001, N = 1.5)
 for (db in dbName){
   print('PROSPECT inversion using optimal spectral domains')
   ParmEst <- Invert_PROSPECT_OPT(lambda = lambda[[db]], 
                                  Refl = Refl[[db]], 
                                  Tran = Tran[[db]], 
                                  PROSPECT_version = 'PRO',
-                                 Parms2Estimate = Parms2Estimate, 
-                                 InitValues = InitValues)
+                                 Parms2Estimate = Parms2Estimate)
   EWT_mod[[db]] <- ParmEst$EWT
   PROT_mod[[db]] <- ParmEst$PROT
   CBC_mod[[db]] <- ParmEst$CBC

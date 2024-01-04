@@ -39,22 +39,7 @@ It also includes a set of measured chemical constituents: `CHL`,`CAR`,`EWT`, and
 ```{r get ANGERS}
 # Libraries required 
 library(prospect)
-library(data.table)
-# repository where data are stored
-gitlab_Rep <- 'https://gitlab.com/jbferet/myshareddata/raw/master/LOP/'
-# download ANGERS data
-dbName <- 'ANGERS'
-# files available
-fileName <- list('DataBioch.txt','ReflectanceData.txt','TransmittanceData.txt')
-DataBioch <- fread(file.path(gitlab_Rep,dbName,fileName[[1]]))
-Refl <- fread(file.path(gitlab_Rep,dbName,fileName[[2]]))
-Tran <- fread(file.path(gitlab_Rep,dbName,fileName[[3]]))
-# Get wavelengths corresponding to the reflectance & transmittance measurements  
-lambda <- Refl$wavelength
-Refl$wavelength <- NULL
-Tran$wavelength <- NULL
-# Get the number of samples
-nbSamples <- ncol(Refl)
+LeafDB <- download_LeafDB(dbName = 'ANGERS')
 ```
 
 # Inversion of PROSPECT-D using full spectral information
@@ -67,19 +52,16 @@ Experimental leaf optics and optical constants of PROSPECT need to be adjusted b
 ```{r Invert PROSPECT-D Full}
 # Estimate all parameters for PROSPECT-D
 Parms2Estimate  <- 'ALL'
-InitValues <- data.frame(CHL = 40, CAR = 10, ANT = 0.1, BROWN = 0, 
-                         EWT = 0.01, LMA = 0.01, N = 1.5)
 # adjust PROSPECT optical constants & experimental leaf optics before inversion
-SubData <- FitSpectralData(lambda = lambda,
-                           Refl = Refl, 
-                           Tran = Tran)
+SubData <- FitSpectralData(lambda = LeafDB$lambda,
+                           Refl = LeafDB$Refl, 
+                           Tran = LeafDB$Tran)
 print('PROSPECT inversion using full spectral range')
 res <- Invert_PROSPECT(SpecPROSPECT = SubData$SpecPROSPECT, 
                        Refl = SubData$Refl, 
                        Tran = SubData$Tran, 
                        PROSPECT_version = 'D',
-                       Parms2Estimate = Parms2Estimate, 
-                       InitValues = InitValues)
+                       Parms2Estimate = Parms2Estimate)
 ```
 
 ## Results: estimation of `CHL`, `CAR`, `EWT` and `LMA`
@@ -108,15 +90,12 @@ CAB, CAR, ANT, EWT, and LMA can be estimated. However, no optimal spectral domai
 ```{r Invert PROSPECT-D Opt}
 # Estimate all parameters for PROSPECT-D 
 Parms2Estimate  <- c('CHL','CAR','ANT','EWT','LMA')
-InitValues <- data.frame(CHL = 40, CAR = 8, ANT = 0.1, BROWN = 0, 
-                         EWT = 0.01, LMA = 0.01, N = 1.5)
 print('PROSPECT inversion using optimal setting')
-ParmEst <- Invert_PROSPECT_OPT(lambda = lambda, 
-                               Refl = Refl, 
-                               Tran = Tran, 
+ParmEst <- Invert_PROSPECT_OPT(lambda = LeafDB$lambda, 
+                               Refl = LeafDB$Refl, 
+                               Tran = LeafDB$Tran, 
                                PROSPECT_version = 'D',
-                               Parms2Estimate = Parms2Estimate, 
-                               InitValues = InitValues)
+                               Parms2Estimate = Parms2Estimate)
 ```
 
 ## Results: estimation of `CHL`, `CAR`, `EWT` and `LMA`

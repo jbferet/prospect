@@ -121,18 +121,22 @@ iterative optimization is the most widespread method to invert PROSPECT
 and assess leaf chemistry and structure from their optical properties. 
 It usually takes less than 1 second to perform PROSPECT inversion, which is acceptable
 when processing experimental datasets of leaf optical properties including 100-1000 samples.
-Iterative optimization aims at minimizing a cost function comparing 
+Iterative optimization aims at minimizing a merit function comparing 
 measured and simulated leaf optical properties. 
 This procedure is based on the function `fmincon` included in the package `pracma`.
 
-Various inversion strategies using iterative optimization are described in the literature. 
-These inversion strategies differ either by the cost function, or by the 
+Various inversion strategies using iterative optimization are described in the 
+literature [@colombo_estimation_2008, @li_retrieval_2011, @feret2019]. 
+These inversion strategies differ either by the merit function, or by the 
 selection of specific spectral domains used to retrieve one or several leaf 
 biophysical properties, or by the introduction of prior information. 
-The default cost function, `CostVal_RMSE`, corresponds to the root mean square 
+The default merit function, `Merit_PROSPECT_RMSE`, corresponds to the root mean square 
 of the mean quadratic difference between measured and simulated leaf optical 
 properties (reflectance and/or transmittance).
-Users can define their own cost function. 
+Users can define their own merit function, as long as their function uses the 
+same input and output variables as `Merit_PROSPECT_RMSE`. 
+The online documentation of the package provides an example of alternative merit function.
+
 Table \ref{table:2} provides information on the optimal spectral range used to 
 assess leaf chemical constituents from their optical properties, as identified 
 by [@feret2019; @spafford2021].
@@ -154,8 +158,6 @@ ANT: anthocyanins; BROWN: brown pigments; EWT: equivalent water thickness;
 LMA: leaf mass per area; PROT: proteins; CBC: carbon based constituents).\label{table:2}
 
 # Example 1: running PROSPECT in forward mode
-
-## Individual simulations
 
 PROSPECT simulates leaf directional-hemispherical reflectance and transmittance 
 from the leaf structure parameter and a combination of chemical constituents 
@@ -209,54 +211,17 @@ LRT_VNIR <- PROSPECT(SpecPROSPECT = VNIR$SpecPROSPECT,
                      N = 1.4, CHL = 30, CAR = 6, EWT = 0.02, LMA = 0.01)
 ```
 
-## Simulation of a Look-Up-Table
-
-Look-Up-Tables (LUTs) are widely used in order to infer leaf characteristics from PROSPECT. 
-The function `PROSPECT_LUT` computes a LUT based on a list of input parameters.
-Undefined parameters are set to their default value. Vectors of values are expected 
-to be the same length.
-The output of `PROSPECT_LUT` is a list containing a data frame including the 
-input parameters, a reflectance data frame and a transmittance data frame.
-
-```r
-# define input parametrs for PROSPECT
-Input_PROSPECT <- data.frame('CHL' = 100*runif(1000), 
-                             'CAR' = 25*runif(1000), 
-                             'ANT' = 2*runif(1000), 
-                             'EWT' = 0.04*runif(1000), 
-                             'LMA' = 0.02*runif(1000), 
-                             'N' = 1+2*runif(1000))
-# produce a LUT defined over the VSWIR domain covered by PROSPECT
-LUT <- PROSPECT_LUT(Input_PROSPECT = Input_PROSPECT)
-# produce a LUT defined over the VNIR domain
-LUT_VNIR <- PROSPECT_LUT(SpecPROSPECT = VNIR$SpecPROSPECT,
-                         Input_PROSPECT = Input_PROSPECT)
-```
-
 # Example 2: PROSPECT inversion using iterative optimization
 
-The package `prospect` offers possibilities to adjust these parameters for inversion. 
-Here, we will illustrate different types of inversion with an experimental database 
+We will illustrate different types of inversion with an experimental database 
 named __ANGERS__.
 This database was used to calibrate the model PROSPECT, and is among the most 
 popular public data sets in the domain of leaf spectroscopy.
-
-## Downloading the ANGERS experimental dataset
-
-A version of the ANGERS data set can be downloaded from a gitlab repository.
+The function `download_LeafDB` allows users to directly download this database 
+from a gitlab repository.
 
 ```r
-# use data.table library
-library(data.table)
-# download ANGERS leaf optics database from gitlab repository
-gitlab_Rep <- 'https://gitlab.com/jbferet/myshareddata/raw/master/LOP'
-# download leaf biochemical constituents and leaf optical properties
-DataBioch <- data.table::fread(file.path(gitlab_Rep,'ANGERS/DataBioch.txt'))
-Refl<- data.table::fread(file.path(gitlab_Rep,'ANGERS/ReflectanceData.txt'))
-Tran <- data.table::fread(file.path(gitlab_Rep,'ANGERS/TransmittanceData.txt'))
-# Get the wavelengths corresponding to reflectance and transmittance measurements
-lambda <- Refl$wavelength
-Refl$wavelength <- Tran$wavelength <- NULL
+LeafDB <- download_LeafDB(dbName = 'ANGERS')
 ```
 
 ## PROSPECT inversion using the full spectral information
@@ -272,23 +237,26 @@ domain covered by the leaf optical properties.
 
 
 ```r
-# Adjust spectral domain for SpecPROSPECT to fit leaf optical properties 
+# Adjust spectral domain for SpecPROSPECT to fit leaf optical properties
 SubData <- FitSpectralData(SpecPROSPECT = SpecPROSPECT_FullRange,
-                           Refl = Refl, Tran = Tran,
-                           lambda = lambda, UserDomain = lambda)
+                           Refl = LeafDB$Refl, 
+                           Tran = LeafDB$Tran,
+                           lambda = LeafDB$lambda, 
+                           UserDomain = LeafDB$lambda)
 ```
 
 The main inversion procedure is called with the function `Invert_PROSPECT`, 
-which minimizes a cost function. 
-They can also select the biophysical 
-properties to assess: 
+which minimizes a merit function (defined by `Merit_PROSPECT_RMSE` as default option).
 
 The full set or a selection of chemical constituents can be assessed from 
 PROSPECT inversion. 
-This list of parameters is defined with the variable `Parms2Estimate`. 
-The default parameterization of PROSPECT inversion assesses all parmeters 
-listed in Table \ref{table:1} except BROWN, which can be assessed by setting 
-`Est_Brown_Pigments = TRUE` as input for `Invert_PROSPECT`.
+This list of PROSPECT parameters assess from PROSPECT inversion is defined with 
+the variable `Parms2Estimate`. 
+The default parameterization of PROSPECT inversion assesses all parameters, 
+including the N structure parameter and all chemical constituents listed in 
+Table \ref{table:1} except BROWN. 
+BROWN which can also be assessed by setting `Est_Brown_Pigments = TRUE` as 
+input for `Invert_PROSPECT`.
 The value set for parameters which are not assessed is then defined with 
 the `InitValues` input variable. 
 
@@ -310,8 +278,9 @@ by user.
 ```r
 # Assess a set of parameters using PROSPECT inversion with optimal spectral domains
 Parms2Estimate <- c('CHL', 'CAR', 'EWT', 'LMA')
-res_opt_WL <- Invert_PROSPECT_OPT(lambda = lambda, 
-                                  Refl = Refl, Tran = Tran
+res_opt_WL <- Invert_PROSPECT_OPT(lambda = LeafDB$lambda, 
+                                  Refl = LeafDB$Refl, 
+                                  Tran = LeafDB$Tran
                                   Parms2Estimate = Parms2Estimate)
 ```
 

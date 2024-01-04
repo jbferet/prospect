@@ -1,6 +1,19 @@
 # prospect v1.5.0
 version following reviews for publication in JOSS
 
+## addition
+- added a function download_LeafDB to get leaf databases from gitlab repository
+
+## Changes
+- modified defaulty merit function as one function instead of two
+- updated documentation
+- updated function FitSpectralData
+
+
+
+# prospect v1.5.0
+version following reviews for publication in JOSS
+
 ## Changes
 - change license to MIT (Issue#3:  Consider a different license)
 - include plain text version of specific absorption coefficients with variable prospect::SpecPROSPECT_FullRange (Issue#4:  Consider including plain-text versions of PROSPECT coefficients)
