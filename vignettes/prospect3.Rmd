@@ -42,15 +42,15 @@ library(prospect)
 LeafDB <- download_LeafDB(dbName = 'ANGERS')
 ```
 
-# Inversion of PROSPECT-D using full spectral information
+# PROSPECT-D inversion: using full spectral information
 
 PROSPECT-D can be inverted using the full spectral domain available from the data. 
 This corresponds to the domain from 400 nm to 2450 nm.
 Experimental leaf optics and optical constants of PROSPECT need to be adjusted before running `Invert_PROSPECT`. 
-`CAB`, `CAR`, `ANT`, `EWT`, and `LMA` are estimated when setting `Parms2Estimate  <- 'ALL'`
+`CAB`, `CAR`, `ANT`, `EWT`, and `LMA` are assessed when setting `Parms2Estimate  <- 'ALL'`
 
 ```{r Invert PROSPECT-D Full}
-# Estimate all parameters for PROSPECT-D
+# assess all parameters for PROSPECT-D
 Parms2Estimate  <- 'ALL'
 # adjust PROSPECT optical constants & experimental leaf optics before inversion
 SubData <- FitSpectralData(lambda = LeafDB$lambda,
@@ -82,13 +82,13 @@ Results obtained with the R package `prospect` and matlab implementation are con
 <p>&nbsp;</p>
 
 
-# Inversion of PROSPECT-D using optimal spectral domains
+# PROSPECT-D inversion: using optimal spectral domains
 
 PROSPECT-D can be inverted using the optimal spectral domain defined for each of the constituents. 
-CAB, CAR, ANT, EWT, and LMA can be estimated. However, no optimal spectral domain has been investigated for ANT so far, so the VNIR domain from 400 nm to 800 nm is used in this case...
+CAB, CAR, ANT, EWT, and LMA can be assessed. However, no optimal spectral domain has been investigated for ANT so far, so the VNIR domain from 400 nm to 800 nm is used in this case...
 
 ```{r Invert PROSPECT-D Opt}
-# Estimate all parameters for PROSPECT-D 
+# assess all parameters for PROSPECT-D 
 Parms2Estimate  <- c('CHL','CAR','ANT','EWT','LMA')
 print('PROSPECT inversion using optimal setting')
 ParmEst <- Invert_PROSPECT_OPT(lambda = LeafDB$lambda, 

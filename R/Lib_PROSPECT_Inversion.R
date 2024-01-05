@@ -357,8 +357,8 @@ Get_Nprior <- function(lambda, SpecPROSPECT = NULL, Refl = NULL, Tran = NULL,
 #' refractive index, specific absorption coefficients and corresponding spectral bands
 #' @param Refl  numeric. Measured reflectance data
 #' @param Tran  numeric. Measured Transmittance data
-#' @param PROSPECT_version  character. Version of prospect model used for the inversion: '5', '5B', 'D', 'DB', 'PRO', 'PROB',
-#' See details.
+#' @param PROSPECT_version  character. Version of prospect model used for the
+#' inversion: 'D', 'PRO'.
 #' @param Parms2Estimate  character vector. Parameters to estimate (can be 'ALL')
 #' @param InitValues  data.frame. Default values of PROSPECT parameters. During optimization,
 #' @param xlub data.frame. Boundaries of the parameters to estimate.
@@ -488,7 +488,8 @@ Invert_PROSPECT_OPT <- function(lambda, SpecPROSPECT = NULL, Refl = NULL, Tran =
 #' Assumes 1nm spectral sampling
 #' @param spectral_width vector. width of individual spectral features (in nm)
 #' @param number_features vector. number of features to be identified
-#' @param PROSPECT_version  character. Version of prospect model used for the inversion: '5', '5B', 'D', 'DB', 'PRO', 'PROB',
+#' @param PROSPECT_version  character. Version of prospect model used for the
+#' inversion: 'D', 'PRO'
 #' @param MeritFunction  character. name of the function to be used as merit function
 #' with given criterion to minimize (default = RMSE)
 #' @param Est_alpha boolean. should alpha be estimated or not?
@@ -719,7 +720,7 @@ print_msg <- function(cause, args = NULL){
     message('please fix that')
     stop()
   } else if (cause == 'WrongVersion'){
-    stop('PROSPECT_version not available. Choice is limited to "5", "5B", "D", "DB", "PRO", "PROB".')
+    stop('PROSPECT_version not available. Choice is limited to "D" and "PRO".')
   } else if (cause == 'NoBrown_OPT'){
     message('brown pigments are not accounted for when performing optimal estimation of leaf chemistry')
     message('model version excluding brown pigments will be used instead')
@@ -913,7 +914,7 @@ SetNValues <- function(Refl, Tran, SpecPROSPECT){
 #' @param Parms2Estimate  character. Parameters to estimate
 #' @param ParmEst character. PROSPECT parameters to be estimated
 #' @param PROSPECT_version  character. Version of prospect model used for the
-#' inversion: '5', '5B', 'D', 'DB', 'PRO', 'PROB',
+#' inversion: 'D' or 'PRO'
 #' @param Nprior numeric prior estimation of N
 #' @param ANTinit numeric prior estimation of ANT
 #' @param OptDomain vector. optimal spectral domain
@@ -938,24 +939,15 @@ SetInitParm <- function(Parms2Estimate, ParmEst, PROSPECT_version, Nprior,
       UL_Bounds[[parm]] <- FALSE
     }
     if (parm == "ANT"){
-      if (!is.na(match(PROSPECT_version,'5'))){
-        message ('Cannot estimate anthocyanins using PROSPECT-5')
-        Parms2Estimate <- Parms2Estimate[-which(Parms2Estimate=='ANT')]
-      } else {
-        print_msg(cause = 'NoOpt_ANT')
-        PROSPECT_version_tmp[[parm]] <- PROSPECT_version
-        Parms2Estimate_tmp[[parm]] <- c('CHL', 'CAR', 'ANT')
-      }
+      print_msg(cause = 'NoOpt_ANT')
+      PROSPECT_version_tmp[[parm]] <- PROSPECT_version
+      Parms2Estimate_tmp[[parm]] <- c('CHL', 'CAR', 'ANT')
       InitValues[[parm]] <- data.frame(CHL=40, CAR=10, ANT=ANTinit,
                                        BROWN=0, EWT=0.01, LMA=0.01, N=Nprior)
     }
     if (parm == "CHL" | parm == "CAR"){
       PROSPECT_version_tmp[[parm]] <- PROSPECT_version
-      if (!PROSPECT_version =='5'){
-        Parms2Estimate_tmp[[parm]] <- c('CHL', 'CAR', 'ANT')
-      } else if (PROSPECT_version =='5'){
-        Parms2Estimate_tmp[[parm]] <- c('CHL', 'CAR')
-      }
+      Parms2Estimate_tmp[[parm]] <- c('CHL', 'CAR', 'ANT')
       InitValues[[parm]] <- data.frame(CHL=40, CAR=10, ANT=ANTinit, BROWN=0,
                                        EWT=0.01, LMA=0.01, N=Nprior)
     }
