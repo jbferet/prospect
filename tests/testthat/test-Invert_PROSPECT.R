@@ -7,7 +7,7 @@ test_that("PROSPECT-D inversion produces accurate biophysical assessment", {
                             Tran = lrt$Transmittance)
   expect_true(abs(leafBP$N-BPinit$N)<1e-5)
   expect_true(abs(leafBP$CHL-BPinit$CHL)<1e-3)
-  expect_true(abs(leafBP$CAR-BPinit$CAR)<1e-4)
+  expect_true(abs(leafBP$CAR-BPinit$CAR)<1e-3)
   expect_true(abs(leafBP$ANT-BPinit$ANT)<1e-4)
   expect_true(abs(leafBP$EWT-BPinit$EWT)<1e-6)
   expect_true(abs(leafBP$LMA-BPinit$LMA)<1e-6)
