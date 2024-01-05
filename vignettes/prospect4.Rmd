@@ -60,7 +60,7 @@ for (db in dbName){
 
 ```
 
-# Inversion of PROSPECT-PRO using optimal subdomains
+# PROSPECT-PRO inversion: using optimal subdomains
 
 The inversion of PROSPECT-PRO is performed using the optimal spectral domains corresponding to each constituent of interest. 
 `EWT`, `PROT` and `CBC` are estimated here. 
