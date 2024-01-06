@@ -13,7 +13,7 @@ Authors@R: c(person(given = "Jean-Baptiste",
 					    comment = c(ORCID = "0000-0002-2185-9952")))
 Description: The package prospect includes PROSPECT-PRO, the latest version of the PROSPECT leaf model. It also includes 
               inversion routines based on iterative optimization in order to estimate leaf chemistry from spectroscopic measurements.
-License: GPL-3
+License: MIT
 Depends: R (>= 3.5.0)
 Encoding: UTF-8
 LazyData: true
