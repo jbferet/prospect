@@ -297,10 +297,13 @@ Tutorials are available at [https://jbferet.gitlab.io/prospect/](https://jbferet
 # Acknowledgements
 
 The authors acknowledge financial support from Agence Nationale de la Recherche 
-(BioCop project — ANR-17-CE32-0001)
+(BioCop project — ANR-17-CE32-0001).
 We are grateful to Stéphane Jacquemoud and Frédéric Baret for the development of 
 the initial version of the PROSPECT model. 
-We also warmly thank Luc Bidel, Christophe François and Gabriel Pavan who 
+We warmly thank Luc Bidel, Christophe François and Gabriel Pavan who 
 collected the ANGERS data set.
+Finally, we warmly thank Christopher Anderson, Alexey Shiklomanov and Neha K. Nawandar 
+for their review and the constructive comments and suggestions they provided, which 
+greatly helped in improving both performances and functionalities of this package.
 
 # References
