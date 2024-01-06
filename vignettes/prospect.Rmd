@@ -115,8 +115,6 @@ These models may be added in a future version of the package.
 
 ## Alternative distributions and coupling with SAIL
 
-__We strongly recommend using version D or PRO instead of versions 4 and 5__. 
-
 A version of the R package `prospect` coupled with the __SAIL canopy model__ 
 is available in the R package [`prosail`](https://jbferet.gitlab.io/prosail/index.html). 
 
@@ -125,6 +123,8 @@ A non-exhaustive list of distributions of these models is available at
 [this webpage](http://teledetection.ipgp.jussieu.fr/prosail/). 
 It includes Matlab, Fortran and R implementations of versions 4, 5, D and PRO 
 of PROSPECT. 
+
+__We strongly recommend using version D or PRO instead of versions 4 and 5__. 
 
 Note that additional versions of PROSPECT and PROSAIL model are also available 
 in packages written in [python](https://github.com/earth-chris/xleaf), 
