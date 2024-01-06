@@ -72,7 +72,10 @@ It also provides links to distribution corresponding to the coupling of PROSPECT
 with vegetation models such as COSINE dedicated to close-range imaging 
 spectroscopy [@jay_physically-based_2016] and PROSAIL for canopy reflectance modeling 
 [verhoef_coupled_2007, @verhoef_unified_2007, @jacquemoud_prospect+_2009]. 
-Note that PROSPECT is also available in packages written in [python](https://github.com/jgomezdans/prosail), 
+A version of this R package `prospect` coupled with the SAIL canopy model 
+is available in the R package [`prosail`](https://jbferet.gitlab.io/prosail/index.html). 
+Note that PROSPECT and PROSAIL are also available in packages written in 
+[python](https://github.com/earth-chris/xleaf), 
 [Julia](https://github.com/RemoteSensingTools/CanopyOptics.jl) and [R](https://github.com/ashiklom/rrtm).
 
 PROSPECT versions 4 and 5 developed by [@feret2008] are deprecated. 
@@ -83,7 +86,6 @@ and inversion strategies.
 This includes parameterizable inversion routines, to ease physical model inversion 
 for beginners, and to help advanced users in designing and testing their own 
 inversion strategy. 
-
 
 # Overview
 
@@ -302,7 +304,8 @@ constituent content either from directional-hemispherical reflectance and
 transmittance, or from reflectance or transmittance only. 
 `prospect` provides latest advances in terms of model version and inversion 
 procedures to the leaf spectroscopy community. 
-`prospect` is coupled with the canopy model SAIL through the R package [`prosail`](https://jbferet.gitlab.io/prosail/index.html).
+`prospect` is coupled with the canopy model SAIL through the R package 
+[`prosail`](https://jbferet.gitlab.io/prosail/index.html).
 `prosail` is dedicated to applications focusing on Earth observation imagery analysis 
 and allows simulation of canopy reflectance for multispectral and hyperspectral sensors.
 Hybrid inversions based on physical modeling and machine learning are also implemented 

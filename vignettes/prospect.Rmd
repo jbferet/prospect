@@ -104,9 +104,29 @@ See the following pages of the tutorial for an illustration of how to use `prosp
 
 # `prospect`: Miscellaneous
 
-The package currently only includes a version of the model covering teh domain from 400 nm to 2500 nm. However, several valuable alternative versions exist, but are not available in the current version of the package:
+## Fluorescence & extended infrared domain
+
+The package currently only includes a version of the model covering the domain from 400 nm to 2500 nm. However, several valuable alternative versions exist, but are not available in the current version of the package:
 
 - [PROSPECT-VISIR](https://www.sciencedirect.com/science/article/abs/pii/S0034425710002841?via%3Dihub), modeling directional–hemispherical reflectance and transmittance of fresh and dry leaves from 0.4 μm to 5.7 μm.
 - [FLUSPECT](https://www.sciencedirect.com/science/article/abs/pii/S0034425718301573?via%3Dihub), radiative transfer model for leaf chlorophyll fluorescence.
 
 These models may be added in a future version of the package.
+
+## Alternative distributions and coupling with SAIL
+
+__We strongly recommend using version D or PRO instead of versions 4 and 5__. 
+
+A version of the R package `prospect` coupled with the __SAIL canopy model__ 
+is available in the R package [`prosail`](https://jbferet.gitlab.io/prosail/index.html). 
+
+Alternative implementations of PROSPECT and PROSAIL can be found in various languages. 
+A non-exhaustive list of distributions of these models is available at 
+[this webpage](http://teledetection.ipgp.jussieu.fr/prosail/). 
+It includes Matlab, Fortran and R implementations of versions 4, 5, D and PRO 
+of PROSPECT. 
+
+Note that additional versions of PROSPECT and PROSAIL model are also available 
+in packages written in [python](https://github.com/earth-chris/xleaf), 
+[Julia](https://github.com/RemoteSensingTools/CanopyOptics.jl) and 
+[R](https://github.com/ashiklom/rrtm). 
