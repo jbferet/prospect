@@ -1,4 +1,7 @@
-# prospect v1.5.0
+# prospect v1.6.0
+Released version of the software with the latest changes from the review
+
+# prospect v1.5.1
 version following reviews for publication in JOSS
 
 ## addition
@@ -8,8 +11,6 @@ version following reviews for publication in JOSS
 - modified defaulty merit function as one function instead of two
 - updated documentation
 - updated function FitSpectralData
-
-
 
 # prospect v1.5.0
 version following reviews for publication in JOSS
