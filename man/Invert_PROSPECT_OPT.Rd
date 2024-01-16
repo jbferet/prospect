@@ -31,8 +31,8 @@ refractive index, specific absorption coefficients and corresponding spectral ba
 
 \item{Tran}{numeric. Measured Transmittance data}
 
-\item{PROSPECT_version}{character. Version of prospect model used for the inversion: '5', '5B', 'D', 'DB', 'PRO', 'PROB',
-See details.}
+\item{PROSPECT_version}{character. Version of prospect model used for the
+inversion: 'D', 'PRO'.}
 
 \item{Parms2Estimate}{character vector. Parameters to estimate (can be 'ALL')}
 

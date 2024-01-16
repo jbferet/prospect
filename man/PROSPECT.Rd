@@ -8,6 +8,7 @@ on the parameterization.}
 \usage{
 PROSPECT(
   SpecPROSPECT = NULL,
+  Input_PROSPECT = NULL,
   N = 1.5,
   CHL = 40,
   CAR = 8,
@@ -24,6 +25,8 @@ PROSPECT(
 \item{SpecPROSPECT}{list. Includes spectral constants derived from
 SpecPROSPECT_FullRange: refractive index, specific absorption coefficients
 and corresponding spectral bands}
+
+\item{Input_PROSPECT}{list. Includes all prospect input parameters}
 
 \item{N}{numeric. Leaf structure parameter}
 

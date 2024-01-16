@@ -22,7 +22,7 @@ SetInitParm(
 \item{ParmEst}{character. PROSPECT parameters to be estimated}
 
 \item{PROSPECT_version}{character. Version of prospect model used for the
-inversion: '5', '5B', 'D', 'DB', 'PRO', 'PROB',}
+inversion: 'D' or 'PRO'}
 
 \item{Nprior}{numeric prior estimation of N}
 
