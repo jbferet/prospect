@@ -21,6 +21,7 @@
 #' @param SpecPROSPECT list. Includes spectral constants derived from
 #' SpecPROSPECT_FullRange: refractive index, specific absorption coefficients
 #' and corresponding spectral bands
+#' @param Input_PROSPECT list. Includes all prospect input parameters
 #' @param N numeric. Leaf structure parameter
 #' @param CHL numeric. Chlorophyll content (microg.cm-2)
 #' @param CAR numeric. Carotenoid content (microg.cm-2)
@@ -35,23 +36,24 @@
 #' @return leaf directional-hemispherical reflectance and transmittance
 #' @importFrom expint expint
 #' @export
-PROSPECT <- function(SpecPROSPECT = NULL, N = 1.5, CHL = 40.0,
-                     CAR = 8.0, ANT = 0.0, BROWN = 0.0, EWT = 0.01,
-                     LMA = NULL, PROT = 0, CBC = 0, alpha = 40.0) {
+PROSPECT <- function(SpecPROSPECT = NULL, Input_PROSPECT = NULL,
+                     N = 1.5, CHL = 40.0, CAR = 8.0, ANT = 0.0, BROWN = 0.0,
+                     EWT = 0.01, LMA = NULL, PROT = 0, CBC = 0, alpha = 40.0) {
 
+  # define PROSPECT input in a dataframe
+  Input_PROSPECT <- define_Input_PROSPECT(Input_PROSPECT, CHL, CAR, ANT, BROWN,
+                                          EWT, LMA, PROT, CBC, N, alpha)
   # default: simulates leaf optics using full spectral range
   if (is.null(SpecPROSPECT)) SpecPROSPECT <- prospect::SpecPROSPECT_FullRange
-  # check if LMA, PROT and CBC are correctly parameterized
-  dm_val <- check_version_prospect(LMA, PROT, CBC)
   # compute total absorption corresponding to each homogeneous layer
-  Kall <- (CHL * SpecPROSPECT$SAC_CHL +
-             CAR * SpecPROSPECT$SAC_CAR +
-             ANT * SpecPROSPECT$SAC_ANT +
-             BROWN * SpecPROSPECT$SAC_BROWN +
-             EWT * SpecPROSPECT$SAC_EWT +
-             dm_val$LMA * SpecPROSPECT$SAC_LMA +
-             dm_val$PROT * SpecPROSPECT$SAC_PROT +
-             dm_val$CBC * SpecPROSPECT$SAC_CBC) / N
+  Kall <- (Input_PROSPECT$CHL * SpecPROSPECT$SAC_CHL +
+             Input_PROSPECT$CAR * SpecPROSPECT$SAC_CAR +
+             Input_PROSPECT$ANT * SpecPROSPECT$SAC_ANT +
+             Input_PROSPECT$BROWN * SpecPROSPECT$SAC_BROWN +
+             Input_PROSPECT$EWT * SpecPROSPECT$SAC_EWT +
+             Input_PROSPECT$LMA * SpecPROSPECT$SAC_LMA +
+             Input_PROSPECT$PROT * SpecPROSPECT$SAC_PROT +
+             Input_PROSPECT$CBC * SpecPROSPECT$SAC_CBC) / Input_PROSPECT$N
 
   # Non-conservative scattering (normal case) when Kall > 0
   j <- which(Kall <= 0)
@@ -71,10 +73,10 @@ PROSPECT <- function(SpecPROSPECT = NULL, N = 1.5, CHL = 40.0,
   # ***********************************************************************
   # reflectivity and transmissivity at the interface
   # ***********************************************************************
-  if (alpha == 40) {
+  if (Input_PROSPECT$alpha == 40) {
     talf <- SpecPROSPECT$calctav_40
   } else {
-    talf <- calctav(alpha, SpecPROSPECT$nrefrac)
+    talf <- calctav(Input_PROSPECT$alpha, SpecPROSPECT$nrefrac)
   }
   ralf <- 1 - talf
   t12 <- SpecPROSPECT$calctav_90
@@ -193,6 +195,56 @@ check_version_prospect <- function(LMA, PROT, CBC){
   }
   return(list('LMA' = LMA, 'PROT' = PROT, 'CBC' = CBC))
 }
+
+
+#' This function produces a data frame from all prospect input variables if not
+#' defined already
+#'
+#'
+
+#' @param Input_PROSPECT numeric. content corresponding to LMA
+#' @param CHL numeric. Chlorophyll content (microg.cm-2)
+#' @param CAR numeric. Carotenoid content (microg.cm-2)
+#' @param ANT numeric. Anthocyanin content (microg.cm-2)
+#' @param BROWN numeric. Brown pigment content (Arbitrary units)
+#' @param EWT numeric. Equivalent Water Thickness (g.cm-2)
+#' @param LMA numeric. Leaf Mass per Area (g.cm-2)
+#' @param PROT numeric. protein content  (g.cm-2)
+#' @param CBC numeric. NonProt Carbon-based constituent content (g.cm-2)
+#' @param N numeric. Leaf structure parameter
+#' @param alpha numeric. Solid angle for incident light at surface of leaf
+#'
+#' @return list. updated LMA, PROT and CBC
+#' @export
+
+define_Input_PROSPECT <- function(Input_PROSPECT, CHL = NULL, CAR = NULL,
+                                  ANT = NULL, BROWN = NULL, EWT = NULL,
+                                  LMA = NULL, PROT = NULL, CBC = NULL,
+                                  N = NULL, alpha = NULL){
+
+  default_PROSPECT <- data.frame('CHL' = 40.0, 'CAR' = 8.0, 'ANT' = 0.0,
+                                 'BROWN' = 0.0, 'EWT' = 0.01, 'LMA' = 0.0,
+                                 'PROT'= 0.0, 'CBC' = 0.0, 'N' = 1.5,
+                                 'alpha' = 40.0)
+  if (is.null(Input_PROSPECT)){
+    dm_val <- prospect::check_version_prospect(LMA, PROT, CBC)
+    Input_PROSPECT <- data.frame('CHL' = CHL, 'CAR' = CAR, 'ANT' = ANT,
+                                 'BROWN' = BROWN, 'EWT' = EWT, 'LMA' = dm_val$LMA,
+                                 'PROT'= dm_val$PROT, 'CBC' = dm_val$CBC,
+                                 'N' = N, 'alpha' = alpha)
+  } else if (!is.null(Input_PROSPECT)){
+    missing <- which(!names(default_PROSPECT)%in%names(Input_PROSPECT))
+    if (length(missing)>0) Input_PROSPECT <- cbind(Input_PROSPECT, default_PROSPECT[missing])
+    dm_val <- prospect::check_version_prospect(Input_PROSPECT$LMA,
+                                               Input_PROSPECT$PROT,
+                                               Input_PROSPECT$CBC)
+    Input_PROSPECT$LMA <- dm_val$LMA
+    Input_PROSPECT$PROT <- dm_val$PROT
+    Input_PROSPECT$CBC <- dm_val$CBC
+  }
+  return(Input_PROSPECT)
+}
+
 
 #' This function adapts SpecPROSPECT accordingly to experimental data
 #' or to a spectral domain defined by UserDomain

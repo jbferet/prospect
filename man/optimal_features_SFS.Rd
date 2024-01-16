@@ -61,7 +61,8 @@ Assumes 1nm spectral sampling}
 
 \item{number_features}{vector. number of features to be identified}
 
-\item{PROSPECT_version}{character. Version of prospect model used for the inversion: '5', '5B', 'D', 'DB', 'PRO', 'PROB',}
+\item{PROSPECT_version}{character. Version of prospect model used for the
+inversion: 'D', 'PRO'}
 
 \item{MeritFunction}{character. name of the function to be used as merit function
 with given criterion to minimize (default = RMSE)}

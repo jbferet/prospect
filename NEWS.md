@@ -1,3 +1,7 @@
+# prospect v1.6.1
+## addition
+- added input dataframe InputPROSPECT to function PROSPECT
+
 # prospect v1.6.0
 Released version of the software with the latest changes from the review
 
