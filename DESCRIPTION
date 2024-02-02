@@ -8,7 +8,7 @@ Authors@R: c(person(given = "Jean-Baptiste",
 					    comment = c(ORCID = "0000-0002-0151-1334")),
 			    person(	given = "Florian", 
 					    family = "de Boissieu", 
-					    email = "florian.deboissieu@irstea.fr", 
+					    email = "florian.deboissieu@inrae.fr", 
 					    role = c("aut"), 
 					    comment = c(ORCID = "0000-0002-2185-9952")))
 Description: The package prospect includes PROSPECT-PRO, the latest version of the PROSPECT leaf model. It also includes 
