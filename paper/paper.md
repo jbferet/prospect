@@ -56,16 +56,16 @@ Hence, it is a key component for remote sensing applications dedicated to
 vegetation monitoring. 
 
 Multiple versions have been released since its first version [@jacquemoud1990].
-[@feret2008] introduced carotenoids and [@feret2017] introduced anthocyanins, 
+@feret2008 introduced carotenoids and @feret2017 introduced anthocyanins, 
 to simulate leaf optical properties from juvenile to mature and senescent 
 development stages. 
-[@feret2021] introduced PROSPECT-PRO, the latest version separating dry matter 
+@feret2021 introduced PROSPECT-PRO, the latest version separating dry matter 
 constituents into proteins and carbon based constituents. 
 In parallel with updated versions of the model, model inversion strategies 
 have been introduced to improve the assessment of leaf chemical constituents 
 [@feret2019; @spafford2021].
 
-PROSPECT implementations since [@feret2008] can be found at 
+PROSPECT implementations since @feret2008 can be found at 
 [this webpage](http://teledetection.ipgp.jussieu.fr/prosail/).
 This includes distributions in matlab, R and fortran programming languages. 
 PROSPECT is coupled with vegetation models, including COSINE dedicated to 

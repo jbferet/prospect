@@ -32,17 +32,23 @@
 #' @param PROT numeric. protein content  (g.cm-2)
 #' @param CBC numeric. NonProt Carbon-based constituent content (g.cm-2)
 #' @param alpha numeric. Solid angle for incident light at surface of leaf
+#' @param check boolean. set to TRUE to check input data format
 #'
 #' @return leaf directional-hemispherical reflectance and transmittance
 #' @importFrom expint expint
 #' @export
 PROSPECT <- function(SpecPROSPECT = NULL, Input_PROSPECT = NULL,
                      N = 1.5, CHL = 40.0, CAR = 8.0, ANT = 0.0, BROWN = 0.0,
-                     EWT = 0.01, LMA = NULL, PROT = 0, CBC = 0, alpha = 40.0) {
+                     EWT = 0.01, LMA = NULL, PROT = 0, CBC = 0, alpha = 40.0,
+                     check = TRUE) {
 
   # define PROSPECT input in a dataframe
-  Input_PROSPECT <- define_Input_PROSPECT(Input_PROSPECT, CHL, CAR, ANT, BROWN,
-                                          EWT, LMA, PROT, CBC, N, alpha)
+  Input_PROSPECT <- define_Input_PROSPECT(Input_PROSPECT, CHL, CAR,
+                                          ANT, BROWN, EWT, LMA, PROT,
+                                          CBC, N, alpha)
+  # if (check) Input_PROSPECT <- define_Input_PROSPECT(Input_PROSPECT, CHL, CAR,
+  #                                                    ANT, BROWN, EWT, LMA, PROT,
+  #                                                    CBC, N, alpha)
   # default: simulates leaf optics using full spectral range
   if (is.null(SpecPROSPECT)) SpecPROSPECT <- prospect::SpecPROSPECT_FullRange
   # compute total absorption corresponding to each homogeneous layer
@@ -260,7 +266,6 @@ define_Input_PROSPECT <- function(Input_PROSPECT, CHL = NULL, CAR = NULL,
 #'
 #' @return list including spectral properties at the new resolution
 #' @import dplyr
-#' @importFrom utils tail
 #' @export
 
 FitSpectralData <- function(lambda, SpecPROSPECT = NULL,
@@ -269,8 +274,10 @@ FitSpectralData <- function(lambda, SpecPROSPECT = NULL,
   # default: simulates leaf optics using full spectral range
   if (is.null(SpecPROSPECT)) SpecPROSPECT <- prospect::SpecPROSPECT_FullRange
   # convert Refl and Tran into dataframe if needed
-  if (class(Refl)[1]%in%c('numeric', 'matrix')) Refl <- data.frame(Refl)
-  if (class(Tran)[1]%in%c('numeric', 'matrix')) Tran <- data.frame(Tran)
+  if (inherits(Refl, what = c('numeric', 'matrix'))) Refl <- data.frame(Refl)
+  if (inherits(Tran, what = c('numeric', 'matrix'))) Tran <- data.frame(Tran)
+  # if (class(Refl)[1]%in%c('numeric', 'matrix')) Refl <- data.frame(Refl)
+  # if (class(Tran)[1]%in%c('numeric', 'matrix')) Tran <- data.frame(Tran)
   # Adjust LOP: check common spectral domain between PROSPECT and leaf optics
   if (!is.null(Refl)) Refl <- Refl %>% filter(lambda%in%SpecPROSPECT$lambda)
   if (!is.null(Tran)) Tran <- Tran %>% filter(lambda%in%SpecPROSPECT$lambda)
@@ -356,7 +363,6 @@ PROSPECT_LUT <- function(Input_PROSPECT, SpecPROSPECT = NULL) {
 #' @param dbName character. name of the database available online
 #'
 #' @return list. Includes leaf chemistry, refl, tran & number of samples
-#' @importFrom data.table fread
 #' @export
 
 download_LeafDB <- function(urldb = NULL,

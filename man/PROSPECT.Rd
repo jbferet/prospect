@@ -18,7 +18,8 @@ PROSPECT(
   LMA = NULL,
   PROT = 0,
   CBC = 0,
-  alpha = 40
+  alpha = 40,
+  check = TRUE
 )
 }
 \arguments{
@@ -47,6 +48,8 @@ and corresponding spectral bands}
 \item{CBC}{numeric. NonProt Carbon-based constituent content (g.cm-2)}
 
 \item{alpha}{numeric. Solid angle for incident light at surface of leaf}
+
+\item{check}{boolean. set to TRUE to check input data format}
 }
 \value{
 leaf directional-hemispherical reflectance and transmittance
