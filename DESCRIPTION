@@ -1,6 +1,6 @@
 Package: prospect
 Title: PROSPECT leaf radiative transfer model and inversion routines
-Version: 1.6.1
+Version: 1.6.2
 Authors@R: c(person(given = "Jean-Baptiste", 
 					    family = "Feret", 
 					    email = "jb.feret@teledetection.fr", 
@@ -20,12 +20,12 @@ LazyData: true
 Roxygen: list(markdown = TRUE)
 RoxygenNote: 7.3.0
 Suggests: 
+    data.table,
     knitr,
     emojifont,
     rmarkdown,
     testthat (>= 3.0.0)
 Imports: 
-    data.table,
     dplyr,
     expint,
     future,

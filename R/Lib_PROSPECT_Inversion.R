@@ -84,6 +84,8 @@ Invert_PROSPECT <- function(SpecPROSPECT = NULL,
                                         Est_alpha = Est_alpha,
                                         xlub = xlub,
                                         InitValues = InitValues)
+  # complement initial values
+  parms_checked$InitValues <- define_Input_PROSPECT(Input_PROSPECT = parms_checked$InitValues)
   # check if data class is compatible and convert into data.frame
   RT <- reshape_lop4inversion(Refl = Refl,
                               Tran = Tran,
@@ -253,6 +255,7 @@ tryInversion <- function(x0, MeritFunction, SpecPROSPECT, Refl, Tran,
 #'
 #' @return fc estimates of the parameters
 #' @export
+
 Merit_PROSPECT_RMSE <- function(x, SpecPROSPECT,
                                 Refl, Tran,
                                 Input_PROSPECT,
@@ -260,9 +263,41 @@ Merit_PROSPECT_RMSE <- function(x, SpecPROSPECT,
   x[x < 0] <- 0
   Input_PROSPECT[Parms2Estimate] <- x
   RT <- do.call("PROSPECT", c(list(SpecPROSPECT = SpecPROSPECT), Input_PROSPECT))
+  # RT <- do.call("PROSPECT", args = list(SpecPROSPECT = SpecPROSPECT,
+  #                                       Input_PROSPECT = Input_PROSPECT,
+  #                                       check = F))
   fcr <- fct <- 0
   if (!is.null(Refl)) fcr <- sqrt(sum((Refl - RT$Reflectance)**2) / length(RT$Reflectance))
   if (!is.null(Tran)) fct <- sqrt(sum((Tran - RT$Transmittance)**2) / length(RT$Transmittance))
+  fc <- fcr + fct
+  return(fc)
+}
+
+
+#' Merit function for PROSPECT inversion
+#'
+#' @param x numeric. Vector of input variables to estimate
+#' @param SpecPROSPECT list. Includes optical constants refractive index,
+#' specific absorption coefficients and corresponding spectral bands
+#' @param Refl  numeric. measured reflectance data
+#' @param Tran  numeric. measured Transmittance data
+#' @param Input_PROSPECT dataframe. set of PROSPECT input variables
+#' @param Parms2Estimate  numeric. location of variables from Input_PROSPECT
+#' to be estimated through inversion
+#'
+#' @return fc estimates of the parameters
+#' @export
+
+Merit_PROSPECT_dRMSE <- function(x, SpecPROSPECT,
+                                Refl, Tran,
+                                Input_PROSPECT,
+                                Parms2Estimate) {
+  x[x < 0] <- 0
+  Input_PROSPECT[Parms2Estimate] <- x
+  RT <- do.call("PROSPECT", c(list(SpecPROSPECT = SpecPROSPECT), Input_PROSPECT))
+  fcr <- fct <- 0
+  if (!is.null(Refl)) fcr <- sqrt(sum((diff(Refl) - diff(RT$Reflectance))**2) / (length(RT$Reflectance)-1))
+  if (!is.null(Tran)) fct <- sqrt(sum((diff(Tran) - diff(RT$Transmittance))**2) / (length(RT$Transmittance)-1))
   fc <- fcr + fct
   return(fc)
 }

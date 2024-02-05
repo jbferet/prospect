@@ -1,3 +1,13 @@
+# prospect v1.6.2
+## fix
+- fixed wrong merge for correction of JOSS paper
+
+## addition
+- added merit function Merit_PROSPECT_dRMSE to perform inversion based on 1st derivative
+
+## change
+- moved data.table from Imports to Suggestions
+
 # prospect v1.6.1
 ## addition
 - added input dataframe InputPROSPECT to function PROSPECT
