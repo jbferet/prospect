@@ -1,46 +1,43 @@
 # ==============================================================================
 # prospect
-# Lib_PROSPECT.R
+# Lib_PROSPECT_Calibration.R
 # ==============================================================================
 # PROGRAMMERS:
 # Jean-Baptiste FERET <jb.feret@teledetection.fr>
-# Florian de Boissieu <fdeboiss@gmail.com>
-# Copyright 2020/04 Jean-Baptiste FERET
+# Florian de Boissieu <florian.deboissieu@inrae.fr>
+# Copyright 2024/02 Jean-Baptiste FERET
 # ==============================================================================
-# This Library includes functions dedicated to PROSPECT simulation
+# This Library includes functions dedicated to PROSPECT calibration
 # ==============================================================================
 
-#' core function running PROSPECT
-#' This function allows simulations using PROSPECT-D or PROSPECT-PRO depending
-#' on the parameterization.
-#  This code includes numerical optimizations proosed in the FLUSPECT code
-#  Authors: Wout Verhoef, Christiaan van der Tol (tol@itc.nl), Joris Timmermans,
-#  Date: 2007
-#  Update from PROSPECT to FLUSPECT: January 2011 (CvdT)
+#'
 #'
 #' @param SpecPROSPECT list. Includes spectral constants derived from
 #' SpecPROSPECT_FullRange: refractive index, specific absorption coefficients
 #' and corresponding spectral bands
-#' @param Input_PROSPECT list. Includes all prospect input parameters
-#' @param N numeric. Leaf structure parameter
-#' @param CHL numeric. Chlorophyll content (microg.cm-2)
-#' @param CAR numeric. Carotenoid content (microg.cm-2)
-#' @param ANT numeric. Anthocyanin content (microg.cm-2)
-#' @param BROWN numeric. Brown pigment content (Arbitrary units)
-#' @param EWT numeric. Equivalent Water Thickness (g.cm-2)
-#' @param LMA numeric. Leaf Mass per Area (g.cm-2)
-#' @param PROT numeric. protein content  (g.cm-2)
-#' @param CBC numeric. NonProt Carbon-based constituent content (g.cm-2)
-#' @param alpha numeric. Solid angle for incident light at surface of leaf
-#' @param check boolean. set to TRUE to check input data format
+#' @param
+#' @param
+#' @param
+#' @param
+#' @param
+#' @param
+#' @param
+#' @param
+#' @param
+#' @param
+#' @param
+#' @param
 #'
-#' @return leaf directional-hemispherical reflectance and transmittance
-#' @importFrom expint expint
+#' @return
+#' @importFrom
 #' @export
-PROSPECT <- function(SpecPROSPECT = NULL, Input_PROSPECT = NULL,
+PROSPECT_cal <- function(SpecPROSPECT = NULL, Input_PROSPECT = NULL,
                      N = 1.5, CHL = 40.0, CAR = 8.0, ANT = 0.0, BROWN = 0.0,
                      EWT = 0.01, LMA = NULL, PROT = 0, CBC = 0, alpha = 40.0,
                      check = TRUE) {
+
+
+
 
   # define PROSPECT input in a dataframe
   Input_PROSPECT <- define_Input_PROSPECT(Input_PROSPECT, CHL, CAR,
@@ -113,7 +110,7 @@ PROSPECT <- function(SpecPROSPECT = NULL, Input_PROSPECT = NULL,
   a <- (1 + rq - tq + D) / (2 * r)
   b <- (1 - rq + tq + D) / (2 * t)
 
-  bNm1 <- b**(Input_PROSPECT$N - 1)
+  bNm1 <- b**(N - 1)
   bN2 <- bNm1**2
   a2 <- a**2
   denom <- a2 * bN2 - 1
