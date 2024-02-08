@@ -1,3 +1,7 @@
+# prospect v1.7.0
+## fix
+- corrected inaccurate accounting for N when computing bNm1
+
 # prospect v1.6.2
 ## fix
 - fixed wrong merge for correction of JOSS paper
