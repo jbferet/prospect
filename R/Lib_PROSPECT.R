@@ -1,14 +1,14 @@
-# ==============================================================================
-# prospect
-# Lib_PROSPECT.R
-# ==============================================================================
-# PROGRAMMERS:
-# Jean-Baptiste FERET <jb.feret@teledetection.fr>
-# Florian de Boissieu <fdeboiss@gmail.com>
-# Copyright 2020/04 Jean-Baptiste FERET
-# ==============================================================================
-# This Library includes functions dedicated to PROSPECT simulation
-# ==============================================================================
+#' #############################################################################
+#' prospect
+#' Lib_PROSPECT.R
+#' #############################################################################
+#' PROGRAMMERS:
+#' Jean-Baptiste FERET jb.feret@teledetection.fr
+#' Florian de Boissieu florian.deboissieu@inrae.fr
+#' Copyright 2020/04 Jean-Baptiste FERET
+#' =============================================================================
+#' This Library includes functions dedicated to PROSPECT simulation
+#' =============================================================================
 
 #' core function running PROSPECT
 #' This function allows simulations using PROSPECT-D or PROSPECT-PRO depending
@@ -122,7 +122,7 @@ PROSPECT <- function(SpecPROSPECT = NULL, Input_PROSPECT = NULL,
 
   # 	Case of zero absorption
   j <- which(r + t >= 1)
-  Tsub[j] <- t[j] / (t[j] + (1 - t[j]) * (N - 1))
+  Tsub[j] <- t[j] / (t[j] + (1 - t[j]) * (Input_PROSPECT$N - 1))
   Rsub[j] <- 1 - Tsub[j]
 
   # leaf reflectance and transmittance : combine top layer with next N-1 layers
