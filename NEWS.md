@@ -1,3 +1,11 @@
+# prospect v1.7.2
+## addition
+- added possibility to define merit function when running Invert_PROSPECT_OPT
+
+# prospect v1.7.1
+## change
+- updated default upper boundary for BROWN during inversion
+
 # prospect v1.7.0
 ## fix
 - corrected inaccurate accounting for N when computing bNm1

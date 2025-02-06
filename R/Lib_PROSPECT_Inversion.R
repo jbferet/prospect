@@ -56,6 +56,7 @@
 #' @importFrom pracma fmincon
 #' @export
 #' @md
+#'
 Invert_PROSPECT <- function(SpecPROSPECT = NULL,
                             Refl = NULL, Tran = NULL,
                             InitValues = data.frame(
@@ -69,7 +70,7 @@ Invert_PROSPECT <- function(SpecPROSPECT = NULL,
                             MeritFunction = "Merit_PROSPECT_RMSE",
                             xlub = data.frame(
                               CHL = c(1e-4, 150), CAR = c(1e-4, 25),
-                              ANT = c(0, 50), BROWN = c(0, 1),
+                              ANT = c(0, 50), BROWN = c(0, 4),
                               EWT = c(1e-8, 0.1), LMA = c(1e-8, 0.06),
                               PROT = c(1e-7, 0.006), CBC = c(1e-6, 0.054),
                               N = c(0.5, 4), alpha = c(10, 90)),
@@ -392,6 +393,7 @@ Get_Nprior <- function(lambda, SpecPROSPECT = NULL, Refl = NULL, Tran = NULL,
 #' refractive index, specific absorption coefficients and corresponding spectral bands
 #' @param Refl  numeric. Measured reflectance data
 #' @param Tran  numeric. Measured Transmittance data
+#' @param MeritFunction character. name of the function to be used as merit function
 #' @param PROSPECT_version  character. Version of prospect model used for the
 #' inversion: 'D', 'PRO'.
 #' @param Parms2Estimate  character vector. Parameters to estimate (can be 'ALL')
@@ -410,13 +412,14 @@ Get_Nprior <- function(lambda, SpecPROSPECT = NULL, Refl = NULL, Tran = NULL,
 #' @importFrom progress progress_bar
 #' @export
 Invert_PROSPECT_OPT <- function(lambda, SpecPROSPECT = NULL, Refl = NULL, Tran = NULL,
+                                MeritFunction = "Merit_PROSPECT_RMSE",
                                 PROSPECT_version = 'D', Parms2Estimate = 'ALL',
                                 InitValues = data.frame(
                                   CHL = 40, CAR = 10, ANT = 0.1, BROWN = 0.01, EWT = 0.01,
                                   LMA = 0.01, PROT = 0.001, CBC = 0.009, N = 1.5, alpha = 40),
                                 xlub = data.frame(
                                   CHL = c(1e-4, 150), CAR = c(1e-4, 25), ANT = c(0, 50),
-                                  BROWN = c(0, 1), EWT = c(1e-8, 0.1), LMA = c(1e-6, .06),
+                                  BROWN = c(0, 4), EWT = c(1e-8, 0.1), LMA = c(1e-6, .06),
                                   PROT = c(1e-7, .006), CBC = c(1e-6, .054), N = c(.5, 4),
                                   alpha = c(10, 90)),
                                 verbose = FALSE,
@@ -486,6 +489,7 @@ Invert_PROSPECT_OPT <- function(lambda, SpecPROSPECT = NULL, Refl = NULL, Tran =
         res <- Invert_PROSPECT(SpecPROSPECT = OptLOP$SpecPROSPECT,
                                Refl = OptLOP$Refl[[i]],
                                Tran = OptLOP$Tran[[i]],
+                               MeritFunction = MeritFunction,
                                PROSPECT_version = List_Init$PROSPECT_version[[parm]],
                                Parms2Estimate = List_Init$Parms2Estimate_tmp[[parm]],
                                InitValues = List_Init$InitValues[[parm]][i,],
@@ -550,7 +554,7 @@ optimal_features_SFS <- function(Refl = NULL, Tran = NULL, lambda, BiochTruth,
                                    CBC = 0.009, N = 1.5, alpha = 40),
                                  xlub = data.frame(
                                    CHL = c(1e-4, 150), CAR = c(1e-4, 25),
-                                   ANT = c(0, 50), BROWN = c(0, 1),
+                                   ANT = c(0, 50), BROWN = c(0, 4),
                                    EWT = c(1e-8, 0.1), LMA = c(1e-6, .06),
                                    PROT = c(1e-7, .006), CBC = c(1e-6, .054),
                                    N = c(.5, 4), alpha = c(10, 90)),
@@ -676,7 +680,7 @@ Invert_PROSPECT_subdomain <- function(New_Features, Refl, Tran, SpecPROSPECT,
                                       Est_alpha = FALSE,
                                       xlub = data.frame(
                                         CHL = c(1e-4, 150), CAR = c(1e-4, 25),
-                                        ANT = c(0, 50), BROWN = c(0, 1),
+                                        ANT = c(0, 50), BROWN = c(0, 4),
                                         EWT = c(1e-8, 0.1), LMA = c(1e-6, 0.06),
                                         PROT = c(1e-7, .006), CBC = c(1e-6, 0.054),
                                         N = c(.5, 4), alpha = c(10, 90)),
@@ -876,7 +880,7 @@ check_prospect_parms <- function(PROSPECT_version,
 
   # add default values to xlub in case they were not defined
   xlub_default <- data.frame(CHL = c(1e-4, 150), CAR = c(1e-4, 25),
-                             ANT = c(0, 50), BROWN = c(0, 1),
+                             ANT = c(0, 50), BROWN = c(0, 4),
                              EWT = c(1e-8, 0.1), LMA = c(1e-6, .06),
                              PROT = c(1e-7, .006), CBC = c(1e-6, .054),
                              N = c(.5, 4), alpha = c(10, 90))

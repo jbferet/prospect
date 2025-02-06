@@ -10,12 +10,13 @@ Invert_PROSPECT_OPT(
   SpecPROSPECT = NULL,
   Refl = NULL,
   Tran = NULL,
+  MeritFunction = "Merit_PROSPECT_RMSE",
   PROSPECT_version = "D",
   Parms2Estimate = "ALL",
   InitValues = data.frame(CHL = 40, CAR = 10, ANT = 0.1, BROWN = 0.01, EWT = 0.01, LMA =
     0.01, PROT = 0.001, CBC = 0.009, N = 1.5, alpha = 40),
   xlub = data.frame(CHL = c(1e-04, 150), CAR = c(1e-04, 25), ANT = c(0, 50), BROWN = c(0,
-    1), EWT = c(1e-08, 0.1), LMA = c(1e-06, 0.06), PROT = c(1e-07, 0.006), CBC = c(1e-06,
+    4), EWT = c(1e-08, 0.1), LMA = c(1e-06, 0.06), PROT = c(1e-07, 0.006), CBC = c(1e-06,
     0.054), N = c(0.5, 4), alpha = c(10, 90)),
   verbose = FALSE,
   progressBar = TRUE
@@ -30,6 +31,8 @@ refractive index, specific absorption coefficients and corresponding spectral ba
 \item{Refl}{numeric. Measured reflectance data}
 
 \item{Tran}{numeric. Measured Transmittance data}
+
+\item{MeritFunction}{character. name of the function to be used as merit function}
 
 \item{PROSPECT_version}{character. Version of prospect model used for the
 inversion: 'D', 'PRO'.}
