@@ -37,6 +37,7 @@
 #' @return leaf directional-hemispherical reflectance and transmittance
 #' @importFrom expint expint
 #' @export
+#'
 PROSPECT <- function(SpecPROSPECT = NULL, Input_PROSPECT = NULL,
                      N = 1.5, CHL = 40.0, CAR = 8.0, ANT = 0.0, BROWN = 0.0,
                      EWT = 0.01, LMA = NULL, PROT = 0, CBC = 0, alpha = 40.0,

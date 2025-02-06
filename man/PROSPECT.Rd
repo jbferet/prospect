@@ -2,7 +2,9 @@
 % Please edit documentation in R/Lib_PROSPECT.R
 \name{PROSPECT}
 \alias{PROSPECT}
-\title{core function running PROSPECT
+\title{#############################################################################prospectLib_PROSPECT.R#############################################################################PROGRAMMERS:Jean-Baptiste FERET jb.feret@teledetection.frFlorian de Boissieu florian.deboissieu@inrae.frCopyright 2020/04 Jean-Baptiste FERETThis Library includes functions dedicated to PROSPECT simulation
+
+core function running PROSPECT
 This function allows simulations using PROSPECT-D or PROSPECT-PRO depending
 on the parameterization.}
 \usage{
@@ -55,6 +57,8 @@ and corresponding spectral bands}
 leaf directional-hemispherical reflectance and transmittance
 }
 \description{
+#############################################################################prospectLib_PROSPECT.R#############################################################################PROGRAMMERS:Jean-Baptiste FERET jb.feret@teledetection.frFlorian de Boissieu florian.deboissieu@inrae.frCopyright 2020/04 Jean-Baptiste FERETThis Library includes functions dedicated to PROSPECT simulation
+
 core function running PROSPECT
 This function allows simulations using PROSPECT-D or PROSPECT-PRO depending
 on the parameterization.
