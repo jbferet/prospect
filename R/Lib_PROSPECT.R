@@ -235,11 +235,16 @@ define_Input_PROSPECT <- function(Input_PROSPECT, CHL = NULL, CAR = NULL,
                                  'alpha' = 40.0)
   if (is.null(Input_PROSPECT)){
     dm_val <- prospect::check_version_prospect(LMA, PROT, CBC)
-    Input_PROSPECT <- data.frame('CHL' = CHL, 'CAR' = CAR, 'ANT' = ANT,
-                                 'BROWN' = BROWN, 'EWT' = EWT, 'LMA' = dm_val$LMA,
-                                 'PROT'= dm_val$PROT, 'CBC' = dm_val$CBC,
-                                 'N' = N, 'alpha' = alpha)
+    Input_PROSPECT <- data.frame('N' = N, 'CHL' = CHL, 'CAR' = CAR,
+                                 'ANT' = ANT, 'BROWN' = BROWN, 'EWT' = EWT,
+                                 'LMA' = dm_val$LMA, 'PROT'= dm_val$PROT,
+                                 'CBC' = dm_val$CBC, 'alpha' = alpha)
   } else if (!is.null(Input_PROSPECT)){
+    names(Input_PROSPECT) <- toupper(names(Input_PROSPECT))
+    if (!is.null(Input_PROSPECT$N_STRUCT)){
+      Input_PROSPECT$N <- Input_PROSPECT$N_STRUCT
+      Input_PROSPECT$N_STRUCT <- NULL
+    }
     missing <- which(!names(default_PROSPECT)%in%names(Input_PROSPECT))
     if (length(missing)>0) Input_PROSPECT <- cbind(Input_PROSPECT, default_PROSPECT[missing])
     dm_val <- prospect::check_version_prospect(Input_PROSPECT$LMA,

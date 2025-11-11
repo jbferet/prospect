@@ -434,7 +434,7 @@ Invert_PROSPECT_OPT <- function(lambda, SpecPROSPECT = NULL, Refl = NULL, Tran =
     Parms2Estimate <- Parms2Estimate[-match('BROWN',Parms2Estimate)]
   }
   # define optimal domain for the different constituents
-  OptDomain <-OptDomain_R <- OptDomain_T <- prospect::OptDomain_RT
+  OptDomain <- OptDomain_R <- OptDomain_T <- prospect::OptDomain_RT
   # check if list of parameters applicable to PROSPECT version
   parms_checked <- check_prospect_parms(PROSPECT_version = PROSPECT_version,
                                         Parms2Estimate = Parms2Estimate,
