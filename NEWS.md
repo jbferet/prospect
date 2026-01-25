@@ -1,3 +1,7 @@
+# prospect v1.7.3
+## change
+- compatibility with prosail: convert variable names to lower case in define_Input_PROSPECT
+
 # prospect v1.7.2
 ## addition
 - added possibility to define merit function when running Invert_PROSPECT_OPT
