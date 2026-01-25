@@ -21,7 +21,7 @@ before_script:
   - ls $R_LIBS_DIR
   - echo '.libPaths("'${R_LIBS_USER}'")' > .Rprofile
   - apt-get update
-  - apt-get install -y qpdf pandoc libfreetype6-dev pkg-config
+  - apt-get install -y qpdf pandoc libfreetype6-dev pkg-config libfribidi-dev libharfbuzz-dev libpng-dev libtiff5-dev libjpeg-dev
 
 stages:
 - deps
