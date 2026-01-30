@@ -2,7 +2,6 @@
 % Please edit documentation in R/prospect-package.R
 \docType{package}
 \name{prospect-package}
-\alias{prospect}
 \alias{prospect-package}
 \title{prospect: PROSPECT leaf radiative transfer model and inversion routines}
 \description{

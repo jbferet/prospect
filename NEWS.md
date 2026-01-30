@@ -1,3 +1,9 @@
+# prospect v2.0.0
+## change
+- functions in individual files
+- rewrite functions with snake case
+- fix error when computing n_struct with transmittance only
+
 # prospect v1.7.3
 ## change
 - compatibility with prosail: convert variable names to lower case in define_Input_PROSPECT
