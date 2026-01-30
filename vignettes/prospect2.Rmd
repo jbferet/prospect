@@ -30,7 +30,8 @@ knitr::opts_chunk$set(
 
 `prospect` can be inverted using iterative optimization, by calling the function 
 `invert_prospect`. 
-This iterative optimization is based on the function [`fmincon` included in the package `pracma`](https://rdrr.io/cran/pracma/man/fmincon.html).
+This iterative optimization is based on the function `fmincon` included in the 
+package [`pracma`](https://rdrr.io/cran/pracma/man/fmincon.html).
 
 By default, the merit function used for the inversion named [merit_prospect_rmse](https://jbferet.gitlab.io/prospect/reference/merit_prospect_rmse.html) 
 minimizes the RMSE between the simulated and the measured leaf optical properties.
@@ -102,6 +103,21 @@ pigments are found during later stages of senescent leaves, but they are usually
 not found in juvenile, mature or early senescent leaves. 
 * `estimate_alpha` boolean. Should `alpha` be assessed or not? Keep in mind that most 
 published results use `alpha` with its default value.
+
+In order to reduce the number of input parameters for `invert_prospect` and 
+other functions, an input variable `options` has been implemented. 
+`options` is  list combining several variables that advanced users may need to 
+adjust.
+This variable is created as follows, and elements of the list can then be 
+modified. 
+Examples will follow, illustrating how to proceed to use it. 
+
+
+```{r options variable}
+options <- set_options_prospect(fun = 'invert_prospect')
+options$estimate_brown_pigments <- TRUE
+```
+
 
 ## Output variables
 `invert_prospect` returns a list of assessed PROSPECT parameters defined in 
@@ -227,11 +243,16 @@ output_prospect_5 <- invert_prospect(refl = subset_lop$refl,
 ```
 
 # PROSPECT-D inversion: using optimal spectral domains
-The function `invert_prospect_OPT` automatically sets the optimal spectral domains during inversion for all constituents to be assessed.
+The function `invert_prospect_OPT` automatically sets the optimal spectral 
+domains during inversion for all constituents to be assessed.
 
-Optimal spectral domains and configuration are defined in [Féret et al. (2019)](https://doi.org/10.1016/j.rse.2018.11.002), [Féret et al. (2021)](https://doi.org/10.1016/j.rse.2020.112173), and [Spafford et al. (2021)](https://doi.org/10.1016/j.rse.2020.112176). 
+Optimal spectral domains and configuration are defined in 
+[Féret et al. (2019)](https://doi.org/10.1016/j.rse.2018.11.002), 
+[Féret et al. (2021)](https://doi.org/10.1016/j.rse.2020.112173), and 
+[Spafford et al. (2021)](https://doi.org/10.1016/j.rse.2020.112176). 
 
-`n_struct` does not need to be part of `parms_to_estimate`, as it is automatically assessed when needed. 
+`n_struct` does not need to be part of `parms_to_estimate`, as it is 
+automatically assessed when needed. 
 
 
 ```{r prospect inverse mode 5}
@@ -248,9 +269,13 @@ ParmEst <- invert_prospect_opt(lambda = lrt_d$wvl,
 
 # PROSPECT-PRO inversion
 Such definition of optimal spectral domains can also be set manually. 
-For example, here is how to estimate protein content from leaf optical properties using the optimal spectral domain defined in [Féret et al. (2021)](https://doi.org/10.1016/j.rse.2020.112173).
+For example, here is how to estimate protein content from leaf optical 
+properties using the optimal spectral domain defined in 
+[Féret et al. (2021)](https://doi.org/10.1016/j.rse.2020.112173).
 
-Please note that `n_struct` needs to be added to `parms_to_estimate`, if user want it to be assessed during the inversion, otherwise it will be set to its default value.
+Please note that `n_struct` needs to be added to `parms_to_estimate`, if user 
+want it to be assessed during the inversion, otherwise it will be set to its 
+default value.
 
 
 ```{r prospect inverse mode 6}
@@ -280,13 +305,14 @@ output_prospect_6 <- invert_prospect(refl = subset_lop$refl,
 
 # PROSPECT inversion with user-defined merit function
 
-A new merit function can be defined, as long as it uses the same input and output
-variables as the function [merit_prospect_rmse](https://jbferet.gitlab.io/prospect/reference/merit_prospect_rmse.html).
+A new merit function can be defined, as long as it uses the same input and 
+output variables as the function 
+[merit_prospect_rmse](https://jbferet.gitlab.io/prospect/reference/merit_prospect_rmse.html).
 
 Here is an example of a function using __nMRSE__ instead of __RMSE__ for the 
 merit function.
-This means that for each spectral band, the square difference between measured and 
-simulated leaf optics is normalized by the value of the measured leaf optics. 
+This means that for each spectral band, the square difference between measured 
+and simulated leaf optics is normalized by the value of the measured leaf optics. 
 
 First, the merit function is defined as follows: 
 

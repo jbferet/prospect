@@ -48,7 +48,7 @@ maximum spectral sampling of 1 nm.
 
 * `spec_prospect`: a data frame including the refractive index and specific 
 absorption coefficients (which are optical constants for a given version of PROSPECT).
-** `spec_prospect` alo defines the spectral domain used for simulation. 
+** `spec_prospect` also defines the spectral domain used for simulation. 
 ** The default value of `spec_prospect` is defined by `prospect::spec_prospect_full_range`, 
 which includes optical constants over the spectral domain ranging from 400 nm 
 to 2500 nm. 
@@ -233,7 +233,7 @@ PROSPECT and set `car` as a constant fraction of `chl`.
 # Computing a Look-Up-Table with `prospect`
 
 Look-Up-Tables (LUT) are widely used in order to infer leaf characteristics from 
-PROSPECT, based on minimization techniques. The function `PROSPECT_LUT` allows 
+PROSPECT, based on minimization techniques. The function `prospect_lut` allows 
 computation of a LUT directly based on a data frame of input parameters.
 
 The following example produces LUTs in the VSWIR and VNIR domains with the 

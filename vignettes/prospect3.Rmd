@@ -32,9 +32,11 @@ The ANGERS leaf dataset is used here.
 
 # Download ANGERS datasets
 
-The ANGERS dataset is available online and can be downloaded directly wih an R script.
+The ANGERS dataset is available online and can be downloaded directly with an R 
+script.
 This dataset includes directional-hemispherical reflectance and transmittance. 
-It also includes a set of measured chemical constituents: `chl`,`car`,`ewt`, and `lma`.
+It also includes a set of measured chemical constituents: `chl`,`car`,`ewt`, 
+and `lma`.
 
 ```{r get ANGERS}
 # Libraries required 
@@ -46,8 +48,10 @@ lop_database <- download_leaf_db(db_name = 'ANGERS')
 
 PROSPECT-D can be inverted using the full spectral domain available from the data. 
 This corresponds to the domain from 400 nm to 2450 nm.
-Experimental leaf optics and optical constants of PROSPECT need to be adjusted before running `invert_prospect`. 
-`chl`, `car`, `ant`, `ewt`, and `lma` are assessed when setting `parms_to_estimate  <- 'ALL'`
+Experimental leaf optics and optical constants of PROSPECT need to be adjusted 
+before running `invert_prospect`. 
+`chl`, `car`, `ant`, `ewt`, and `lma` are assessed when setting 
+`parms_to_estimate  <- 'ALL'`
 
 ```{r Invert PROSPECT-D Full}
 # assess all parameters for PROSPECT-D
@@ -79,15 +83,19 @@ Results obtained with the R package `prospect` and matlab implementation are con
   <img src="../man/figures/_LMA_RT.png" width="50%" />
 </p>
 <center>
-  Fig. 1. `chl`, `car`, `ewt` and `lma` assessed from ANGERS dataset using PROSPECT-D inversion and full spectral information available.
+  Fig. 1. `chl`, `car`, `ewt` and `lma` assessed from ANGERS dataset using 
+  PROSPECT-D inversion and full spectral information available.
 </center> 
 <p>&nbsp;</p>
 
 
 # PROSPECT-D inversion: using optimal spectral domains
 
-PROSPECT-D can be inverted using the optimal spectral domain defined for each of the constituents. 
-`chl`, `car`, `ant`, `ewt`, and `lma` can be assessed. However, no optimal spectral domain has been investigated for ant so far, so the VNIR domain from 400 nm to 800 nm is used in this case...
+PROSPECT-D can be inverted using the optimal spectral domain defined for each 
+of the constituents. 
+`chl`, `car`, `ant`, `ewt`, and `lma` can be assessed. However, no optimal 
+spectral domain has been investigated for ant so far, so the VNIR domain from 
+400 nm to 800 nm is used in this case...
 
 ```{r Invert PROSPECT-D Opt}
 # assess all parameters for PROSPECT-D 
@@ -111,8 +119,7 @@ ParmEst <- invert_prospect_opt(lambda = lop_database$lambda,
   <img src="../man/figures/_LMA_RT_OPT.png" width="50%" />
 </p>
 <center>
-  Fig. 2. Estimation of `chl`, `car`, `ewt` and `lma` from ANGERS using PROSPECT-D inversion and optimal subdomains for each of these constituents. 
+  Fig. 2. Estimation of `chl`, `car`, `ewt` and `lma` from ANGERS using 
+  PROSPECT-D inversion and optimal subdomains for each of these constituents. 
 </center> 
 <p>&nbsp;</p>
-
-
