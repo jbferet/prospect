@@ -4,10 +4,10 @@
 #'
 #'
 #' @format A data frame with 10 rows and 6 variables:
-#'  - *CHL*: Chlorophyll content
-#'  - *CAR*: carotenoid content
-#'  - *ANT*: anthocyanin content
-#'  - *EWT*: Equivalent water thickness
-#'  - *LMA*: Leaf Mass per Area
-#'  - *N*: leaf structure parameter
-"Input_PROSPECT"
+#'  - *chl*: Chlorophyll content
+#'  - *car*: carotenoid content
+#'  - *ant*: anthocyanin content
+#'  - *ewt*: Equivalent water thickness
+#'  - *lma*: Leaf Mass per Area
+#'  - *n_struct*: leaf structure parameter
+"input_prospect"

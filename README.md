@@ -13,6 +13,10 @@ After installing package `devtools`, the package `prospect` can be installed wit
 devtools::install_github("jbferet/prospect")
 ```
 
+<span style="color:red">**WARNING : **</span> **many functions have been renamed in v2.0 of the package.**
+**The documentation has been updated accordingly.**
+**Please refer to the documentation for additional information.**
+
 # 2 Tutorial
 
 <!-- README.md is generated from README.Rmd. Please edit that file -->

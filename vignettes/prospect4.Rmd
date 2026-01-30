@@ -29,15 +29,18 @@ knitr::opts_chunk$set(
 
 # Download LOPEX datasets
 
-The leaf optical properties used in [Féret et al. (2021)](https://doi.org/10.1016/j.rse.2020.112173) are available online. 
+The leaf optical properties used in [Féret et al. (2021)](https://doi.org/10.1016/j.rse.2020.112173) 
+are available online. 
 These datasets are produced from the LOPEX dataset, split into four specific subsets:
 
-*  __LOPEX_DRY_CAL__ and __LOPEX_FRESH_CAL__ correspond to the dry and fresh samples extracted from the LOPEX dataset and used for the __calibration__ of __PROSPECT-PRO__
+*  __LOPEX_DRY_CAL__ and __LOPEX_FRESH_CAL__ correspond to the dry and fresh 
+samples extracted from the LOPEX dataset and used for the __calibration__ of __PROSPECT-PRO__
 
-* __LOPEX_DRY_VAL__ and __LOPEX_FRESH_VAL__ correspond to the dry and fresh samples extracted from the LOPEX dataset and used for the __validation__ of __PROSPECT-PRO__
+* __LOPEX_DRY_VAL__ and __LOPEX_FRESH_VAL__ correspond to the dry and fresh 
+samples extracted from the LOPEX dataset and used for the __validation__ of __PROSPECT-PRO__
 
 These datasets include directional-hemispherical reflectance and transmittance data. 
-They also include a set of measured chemical constituents: `EWT`, `LMA`, `PROT` and `CBC`.
+They also include a set of measured chemical constituents: `ewt`, `lma`, `prot` and `cbc`.
 
 The datasets can be downloaded directly with an R script as described below. 
 
@@ -46,46 +49,50 @@ The datasets can be downloaded directly with an R script as described below.
 # Libraries required 
 library(prospect)
 # Datasets
-dbName <- list('LOPEX_DRY_CAL','LOPEX_FRESH_CAL',
-               'LOPEX_DRY_VAL','LOPEX_FRESH_VAL')
+db_names <- list('LOPEX_DRY_CAL','LOPEX_FRESH_CAL',
+                 'LOPEX_DRY_VAL','LOPEX_FRESH_VAL')
 # download LOPEX data
-DataBioch <- Refl <- Tran <- lambda <- list()
-for (db in dbName){
-  LeafDB <- download_LeafDB(dbName = db)
-  DataBioch[[db]] <- LeafDB$DataBioch
-  Refl[[db]] <- LeafDB$Refl
-  Tran[[db]] <- LeafDB$Tran
-  lambda[[db]] <- LeafDB$lambda
+leaf_chemistry <- refl <- tran <- lambda <- list()
+for (db in db_names){
+  lop_database <- download_leaf_db(db_name = db)
+  leaf_chemistry[[db]] <- lop_database$leaf_chemistry
+  refl[[db]] <- lop_database$refl
+  tran[[db]] <- lop_database$tran
+  lambda[[db]] <- lop_database$lambda
 }
 
 ```
 
 # PROSPECT-PRO inversion: using optimal subdomains
 
-The inversion of PROSPECT-PRO is performed using the optimal spectral domains corresponding to each constituent of interest. 
-`EWT`, `PROT` and `CBC` are estimated here. 
-The optimal spectral domains are defined based on the results described in [Féret et al. (2021)](https://doi.org/10.1016/j.rse.2020.112173). 
+The inversion of PROSPECT-PRO is performed using the optimal spectral domains 
+corresponding to each constituent of interest. 
+`ewt`, `prot` and `cbc` are estimated here. 
+The optimal spectral domains are defined based on the results described in 
+[Féret et al. (2021)](https://doi.org/10.1016/j.rse.2020.112173). 
 
 ```{r Invert PROSPECT-PRO}
-Parms2Estimate  <- c('EWT','PROT','CBC')
-EWT_mod <- PROT_mod <- CBC_mod <- list()
-# perform PROSPECT inversion using optimal spectral domains for EWT, PROT & CBC
-for (db in dbName){
-  print('PROSPECT inversion using optimal spectral domains')
-  ParmEst <- Invert_PROSPECT_OPT(lambda = lambda[[db]], 
-                                 Refl = Refl[[db]], 
-                                 Tran = Tran[[db]], 
-                                 PROSPECT_version = 'PRO',
-                                 Parms2Estimate = Parms2Estimate)
-  EWT_mod[[db]] <- ParmEst$EWT
-  PROT_mod[[db]] <- ParmEst$PROT
-  CBC_mod[[db]] <- ParmEst$CBC
+parms_to_estimate  <- c('ewt','prot','cbc')
+ewt_mod <- prot_mod <- cbc_mod <- list()
+# perform PROSPECT inversion using optimal spectral domains for ewt, prot & cbc
+for (db in db_names){
+  message(paste('prospect inversion using optimal spectral domains on dataset', db))
+  estimated_parms <- invert_prospect_opt(lambda = lambda[[db]], 
+                                 refl = refl[[db]], 
+                                 tran = tran[[db]], 
+                                 prospect_version = 'PRO',
+                                 parms_to_estimate = parms_to_estimate)
+  ewt_mod[[db]] <- estimated_parms$ewt
+  prot_mod[[db]] <- estimated_parms$prot
+  cbc_mod[[db]] <- estimated_parms$cbc
 }
 ```
 
-# Results: estimation of `PROT`, `CBC`, `EWT` and `LMA`
+# Results: estimation of `prot`, `cbc`, `ewt` and `lma`
 
-The results obtained with the R package `prospect` are very close to those obtained with matlab, using the same algorithm for iterative optimization (with the function `fmincon`).
+The results obtained with the R package `prospect` are very close to those 
+obtained with matlab, using the same algorithm for iterative optimization (with 
+the function `fmincon`).
 
 <p float="left">
   <img src="../man/figures/Estimation_EWT.png" width="50%" />
@@ -96,17 +103,22 @@ The results obtained with the R package `prospect` are very close to those obtai
   <img src="../man/figures/Estimation_CBC.png" width="50%" />
 </p>
 <center>
-  Fig. 1. Estimation of `PROT`, `CBC`, `EWT` and `LMA` as `PROT`+`CBC` using PROSPECT-PRO inversion
+  Fig. 1. Estimation of `prot`, `cbc`, `ewt` and `lma` as `prot`+`cbc` using 
+  PROSPECT-PRO inversion
 </center> 
 <p>&nbsp;</p>
 
 
-For the sake of comparison, the comparison of the results obtained with __Matlab__ and __R__ are presented in Fig. 2.
+For the sake of comparison, the comparison of the results obtained with 
+__Matlab__ and __R__ are presented in Fig. 2.
 __The performances are identical__. 
 The parametrization of the inversion may not be appropriate and fail to converge. 
-In this case, the inversion returns `NA`s and the `Tolerance` parameter of the iterative optimization is adjusted to a higher value in order to converge. 
-`Tolerance` is increased automatically as long as the convergence is not reached, to a certain extent. 
-If convergence is not obtained for `Tolerance = 1e-2`, then the inversion returns `NA`s.
+In this case, the inversion returns `NA`s and the `Tolerance` parameter of the 
+iterative optimization is adjusted to a higher value in order to converge. 
+`Tolerance` is increased automatically as long as the convergence is not 
+reached, to a certain extent. 
+If convergence is not obtained for `Tolerance = 1e-2`, then the inversion 
+returns `NA`.
 
 <p float="left">
   <img src="../man/figures/Estimation_EWT_Compare_Matlab.png" width="50%" />
@@ -117,6 +129,8 @@ If convergence is not obtained for `Tolerance = 1e-2`, then the inversion return
   <img src="../man/figures/Estimation_CBC_Compare_Matlab.png" width="50%" />
 </p>
 <center>
-  Fig. 2. Comparison of th performances obtained with Matlab and R for the estimatinon of `PROT`, `CBC`, `EWT` and `LMA` as `PROT`+`CBC` using PROSPECT-PRO inversion
+  Fig. 2. Comparison of th performances obtained with Matlab and R for the 
+  estimation of `prot`, `cbc`, `ewt` and `lma` as `prot`+`cbc` using 
+  PROSPECT-PRO inversion
 </center> 
 <p>&nbsp;</p>

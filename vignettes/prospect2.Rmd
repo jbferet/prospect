@@ -28,16 +28,19 @@ knitr::opts_chunk$set(
 
 # `prospect` inversion: generalities
 
-`PROSPECT` can be inverted using iterative optimization, by calling the function `Invert_PROSPECT`. 
-This iterative optimization is based on the function [`fmincon` included in the package `pracma`](https://rdrr.io/cran/pracma/man/fmincon.html).
+`prospect` can be inverted using iterative optimization, by calling the function 
+`invert_prospect`. 
+This iterative optimization is based on the function `fmincon` included in the 
+package [`pracma`](https://rdrr.io/cran/pracma/man/fmincon.html).
 
-By default, the merit function used for the inversion named [Merit_PROSPECT_RMSE](https://jbferet.gitlab.io/prospect/reference/Merit_PROSPECT_RMSE.html) 
+By default, the merit function used for the inversion named [merit_prospect_rmse](https://jbferet.gitlab.io/prospect/reference/merit_prospect_rmse.html) 
 minimizes the RMSE between the simulated and the measured leaf optical properties.
-However, users can define their own merit function with associated criterion to minimize 
-and define it as input variable for `Invert_PROSPECT`: `MeritFunction = "MyOwnMeritFunction"`.
+However, users can define their own merit function with associated criterion to 
+minimize and define it as input variable for 
+`invert_prospect`: `merit_function = "my_own_merit_function"`.
 
 As optimal spectral domains were identified when inverting PROSPECT with 
-`Merit_PROSPECT_RMSE`, the function `Invert_PROSPECT_OPT` does not accept other 
+`merit_prospect_rmse`, the function `invert_prospect_opt` does not accept other 
 merit functions. 
 However, users can easily develop their own script to identify optimal spectral 
 domains with the merit function of their choice. 
@@ -46,8 +49,8 @@ The results of inversion will also depend on the parameters to be assessed
 during the prospect model. 
 The following table shows the correspondence between model versions available in 
 `prospect` and input parameters accepted. 
-Each parameter can be considered as a parameter to estimate or a parameter with a
-value set to a fixed value during inversion. 
+Each parameter can be considered as a parameter to estimate or a parameter with 
+a value set to a fixed value during inversion. 
 The choice depends on different factors, such as prior knowledge, or 
 spectral domain considered (e.g.: as pigments do not absorb in the SWIR domain, 
 they cannot be assessed when inverting PROSPECT with SWIR data. Hence, user can 
@@ -55,56 +58,76 @@ set their value with no consequence for inversion).
 
 | Version  | D                                      | PRO
 | :------: |:--------------------------------------:|:--------------------------------------:|
-| CHL      |`r emojifont::emoji('white_check_mark')`|`r emojifont::emoji('white_check_mark')`|
-| CAR      |`r emojifont::emoji('white_check_mark')`|`r emojifont::emoji('white_check_mark')`|
-| ANT      |`r emojifont::emoji('white_check_mark')`|`r emojifont::emoji('white_check_mark')`|
-| BROWN    |`r emojifont::emoji('white_check_mark')`|`r emojifont::emoji('white_check_mark')`|
-| EWT      |`r emojifont::emoji('white_check_mark')`|`r emojifont::emoji('white_check_mark')`|
-| LMA      |`r emojifont::emoji('white_check_mark')`|                                        |
-| PROT     |                                        |`r emojifont::emoji('white_check_mark')`|
-| CBC      |                                        |`r emojifont::emoji('white_check_mark')`|
-| N        |`r emojifont::emoji('white_check_mark')`|`r emojifont::emoji('white_check_mark')`|
+| chl      |`r emojifont::emoji('white_check_mark')`|`r emojifont::emoji('white_check_mark')`|
+| car      |`r emojifont::emoji('white_check_mark')`|`r emojifont::emoji('white_check_mark')`|
+| ant      |`r emojifont::emoji('white_check_mark')`|`r emojifont::emoji('white_check_mark')`|
+| brown    |`r emojifont::emoji('white_check_mark')`|`r emojifont::emoji('white_check_mark')`|
+| ewt      |`r emojifont::emoji('white_check_mark')`|`r emojifont::emoji('white_check_mark')`|
+| lma      |`r emojifont::emoji('white_check_mark')`|                                        |
+| prot     |                                        |`r emojifont::emoji('white_check_mark')`|
+| cbc      |                                        |`r emojifont::emoji('white_check_mark')`|
+| n_struct |`r emojifont::emoji('white_check_mark')`|`r emojifont::emoji('white_check_mark')`|
 
 
 ## Input variables
-The function `Invert_PROSPECT` requires either reflectance, or transmittance, or both.
-User can define which input variables of `PROSPECT` should be assessed during 
+The function `invert_prospect` requires either reflectance, or transmittance, or 
+both.
+User can define which input variables of `prospect` should be assessed during 
 inversion, and which ones should be set to a given value (0 or user's choice).
 The list of input variables for inversion is :
 
-* `SpecPROSPECT`: data frame including the spectral bands, refractive index and specific absorption coefficients. 
-`SpecPROSPECT = NULL` uses the spectral domain from 400 nm to 2500 nm. 
-Simulation and inversion on different spectral domains can be performed by adjusting `SpecPROSPECT`
-* `Refl`: numeric: individual leaf reflectance corresponding to the spectral 
-domain defined in `SpecPROSPECT`. Set to `NULL` if inversion on transmittance only
-* `Tran`: numeric: individual leaf transmittance corresponding to the spectral 
-domain defined in `SpecPROSPECT`. Set to `NULL` if inversion on reflectance only
-* `Parms2Estimate` list. Parameters to estimate. Set to 'ALL' by default. 
-* `InitValues` data frame including initial values of PROSPECT input parameters. 
-During optimization, they are used either as initialization values for parameters 
-to estimate, or as fix values for other parameters. 
+* `spec_prospect`: data frame including the spectral bands, refractive index and 
+specific absorption coefficients. 
+`spec_prospect = NULL` uses the spectral domain from 400 nm to 2500 nm. 
+Simulation and inversion on different spectral domains can be performed by 
+adjusting `spec_prospect`
+* `refl`: numeric: individual leaf reflectance corresponding to the spectral 
+domain defined in `spec_prospect`. Set to `NULL` if inversion on transmittance
+only
+* `tran`: numeric: individual leaf transmittance corresponding to the spectral 
+domain defined in `spec_prospect`. Set to `NULL` if inversion on reflectance only
+* `parms_to_estimate` list. Parameters to estimate. Set to 'ALL' by default. 
+* `init_values` data frame including initial values of PROSPECT input parameters. 
+During optimization, they are used either as initialization values for 
+parameters to estimate, or as fix values for other parameters. 
 Parameters are not taken into account when not compatible with PROSPECT_version.
-* `PROSPECT_version` character. Corresponds to the PROSPECT version. 
+* `prospect_version` character. Corresponds to the PROSPECT version. 
 Should be one of the following versions: 'D', 'PRO'. 
-* `MeritFunction` character. name of the function to be used as merit function 
-with given criterion to minimize (default = Merit_PROSPECT_RMSE)
+* `merit_function` character. name of the function to be used as merit function 
+with given criterion to minimize (default = merit_prospect_rmse)
 * `xlub` data frame. Boundaries of the parameters to estimate. 
-The data frame must have columns corresponding to \code{Parms2Estimate} first 
+The data frame must have columns corresponding to \code{parms_to_estimate} first 
 line being the lower boundaries and second line the upper boundaries.
-* `Est_Brown_Pigments` boolean. Should `BROWN` be assessed or not? Brown 
+* `estimate_brown_pigments` boolean. Should `brown` be assessed or not? Brown 
 pigments are found during later stages of senescent leaves, but they are usually 
 not found in juvenile, mature or early senescent leaves. 
-* `Est_alpha` boolean. Should `alpha` be assessed or not? Keep in mind that most 
+* `estimate_alpha` boolean. Should `alpha` be assessed or not? Keep in mind that most 
 published results use `alpha` with its default value.
 
+In order to reduce the number of input parameters for `invert_prospect` and 
+other functions, an input variable `options` has been implemented. 
+`options` is  list combining several variables that advanced users may need to 
+adjust.
+This variable is created as follows, and elements of the list can then be 
+modified. 
+Examples will follow, illustrating how to proceed to use it. 
+
+
+```{r options variable}
+options <- set_options_prospect(fun = 'invert_prospect')
+options$estimate_brown_pigments <- TRUE
+```
+
+
 ## Output variables
-`Invert_PROSPECT` returns a list of assessed PROSPECT parameters defined in `Parms2Estimate`.
+`invert_prospect` returns a list of assessed PROSPECT parameters defined in 
+`parms_to_estimate`.
 
 
 # PROSPECT-D inversion: using full spectral information
 
 ## Inversion over the full spectral domain
-All parameters are assessed, except `alpha` and `BROWN` which are set to their 
+All parameters are assessed, except `alpha` and `brown` which are set to their 
 default value.
 Brown pigments are characteristic of late senescent stages. 
 They are absent for all other development stages, hence the assessment of brown 
@@ -112,177 +135,199 @@ pigments is not systematic here.
 
 ```{r prospect inverse mode 1}
 # simulate leaf optical properties
-LRT_D <- PROSPECT(CHL = 45, CAR = 10, ANT = 0.2, 
-                  EWT = 0.012, LMA = 0.01, N = 1.3)
+lrt_d <- prospect(chl = 45, car = 10, ant = 0.2, ewt = 0.012, 
+                  lma = 0.01, n_struct = 1.3)
 # define set of parameters to be assessed
-Parms2Estimate  <- 'ALL'
+parms_to_estimate  <- 'ALL'
 # invert PROSPECT with simulated leaf optical properties
-OutPROSPECT1 <- Invert_PROSPECT(Refl = LRT_D$Reflectance, 
-                                Tran = LRT_D$Transmittance,
-                                Parms2Estimate = Parms2Estimate, 
-                                PROSPECT_version = 'D')
-
+output_prospect_1 <- invert_prospect(refl = lrt_d$reflectance, 
+                                     tran = lrt_d$transmittance,
+                                     parms_to_estimate = parms_to_estimate, 
+                                     prospect_version = 'D')
 
 # simulate leaf optical properties with brown pigments
-LRT_D_brown <- PROSPECT(CHL = 45, CAR = 10, ANT = 0.2, BROWN = 0.1, 
-                        EWT = 0.012, LMA = 0.01, N = 1.3)
+lrt_d_brown <- prospect(chl = 45, car = 10, ant = 0.2, brown = 0.1, 
+                        ewt = 0.012, lma = 0.01, n_struct = 1.3)
 # define set of parameters to be assessed
-Parms2Estimate  <- 'ALL'
+parms_to_estimate  <- 'ALL'
 # invert PROSPECT with simulated leaf optical properties and specify that brown 
 # pigment should be assessed in addition to all other constituents
-OutPROSPECT2 <- Invert_PROSPECT(Refl = LRT_D_brown$Reflectance, 
-                                Tran = LRT_D_brown$Transmittance,
-                                Parms2Estimate = Parms2Estimate, 
-                                PROSPECT_version = 'D', 
-                                Est_Brown_Pigments = TRUE)
+options <- set_options_prospect(fun = 'invert_prospect')
+options$estimate_brown_pigments <- TRUE
+output_prospect_2 <- invert_prospect(refl = lrt_d_brown$reflectance, 
+                                     tran = lrt_d_brown$transmittance,
+                                     parms_to_estimate = parms_to_estimate, 
+                                     prospect_version = 'D',
+                                     options = options)
 ```
 
 
 ## Inversion over the VNIR domain
-All parameters are assessed, except `alpha` and `BROWN` which are set to their default value.
-`FitSpectralData` directly adjusts reflectance, transmittance and optical constants to user defined spectral bands. 
-These spectral bands should be integer values between 400 and 2500, and can be continuous or not. 
+All parameters are assessed, except `alpha` and `brown` which are set to their 
+default value.
+`fit_spectral_data` directly adjusts reflectance, transmittance and optical 
+constants to user defined spectral bands. 
+These spectral bands should be integer values between 400 and 2500, and can be 
+continuous or not. 
 
 ```{r prospect inverse mode 2}
 # define spectral subdomain from 400 nm to 800 nm
-SpectralSubDomain <- seq(400,800)
+spectral_subdomain <- seq(400,800)
 # adjust spectral domain for reflectance, transmittance and SpecPROSPECT
-SubData <- FitSpectralData(lambda = LRT_D$wvl, 
-                           Refl = LRT_D$Reflectance, 
-                           Tran = LRT_D$Transmittance,
-                           UserDomain = SpectralSubDomain)
+subset_lop <- fit_spectral_data(lambda = lrt_d$wvl, 
+                                refl = lrt_d$reflectance, 
+                                tran = lrt_d$transmittance,
+                                user_domain = spectral_subdomain)
 
 # Note that FitSpectralData can also run with UserDomain defining 
 # upper and lower bounds when setting input argument 'UL_Bounds = TRUE'
-ULBounds <- c(400,800)
-SubData <- FitSpectralData(lambda = LRT_D$wvl, 
-                           Refl = LRT_D$Reflectance, 
-                           Tran = LRT_D$Transmittance,
-                           UserDomain = ULBounds, 
-                           UL_Bounds = TRUE)
+ul_bounds <- c(400,800)
+subset_lop <- fit_spectral_data(lambda = lrt_d$wvl, 
+                                refl = lrt_d$reflectance, 
+                                tran = lrt_d$transmittance,
+                                user_domain = ul_bounds, 
+                                ul_bounds = TRUE)
 
 # invert PROSPECT with simulated leaf optical properties
-OutPROSPECT3 <- Invert_PROSPECT(SpecPROSPECT = SubData$SpecPROSPECT, 
-                                Refl = SubData$Refl, 
-                                Tran = SubData$Tran,
-                                Parms2Estimate = Parms2Estimate, 
-                                PROSPECT_version = 'D')
+options <- set_options_prospect(fun = 'invert_prospect')
+options$spec_prospect <- subset_lop$spec_prospect
+output_prospect_3 <- invert_prospect(refl = subset_lop$refl, 
+                                     tran = subset_lop$tran,
+                                     parms_to_estimate = parms_to_estimate, 
+                                     prospect_version = 'D', 
+                                     options = options)
 ```
 
-## Inversion over the VNIR domain with LMA and EWT values set by user
-Only pigments and `N` are assessed. 
+## Inversion over the VNIR domain with lma and ewt values set by user
+Only pigments and `n_struct` are assessed. 
 The same optical properties as previous example are used.
 
 ```{r prospect inverse mode 3}
 # define set of parameters to be assessed
-Parms2Estimate <- c('CHL', 'CAR', 'ANT', 'N')
-# define set of parameters to be assessed
-InitValues <- c('EWT' = 0.01, 'LMA' = 0.01)
+options <- set_options_prospect(fun = 'invert_prospect')
+options$spec_prospect <- subset_lop$spec_prospect
+options$init_values$ewt <- 0.01
+options$init_values$lma <- 0.01
+parms_to_estimate <- c('chl', 'car', 'ant', 'n_struct')
 # invert PROSPECT with simulated leaf optical properties
-OutPROSPECT4 <- Invert_PROSPECT(SpecPROSPECT = SubData$SpecPROSPECT, 
-                                Refl = SubData$Refl, 
-                                Tran = SubData$Tran,
-                                Parms2Estimate = Parms2Estimate, 
-                                PROSPECT_version = 'D', 
-                                InitValues = InitValues)
+output_prospect_4 <- invert_prospect(refl = subset_lop$refl, 
+                                     tran = subset_lop$tran,
+                                     parms_to_estimate = parms_to_estimate, 
+                                     prospect_version = 'D', 
+                                     options = options)
 ```
 
 ## Inversion over the SWIR domain between 1700 nm and 2400 nm
-`EWT`, `LMA` and `N` are assessed. 
+`ewt`, `lma` and `n_struct` are assessed. 
 The same optical properties as previous example are used.
 
 ```{r prospect inverse mode 4}
 # define set of parameters to be assessed
-Parms2Estimate <- c('EWT', 'LMA', 'N')
+parms_to_estimate <- c('ewt', 'lma', 'n_struct')
 # define spectral subdomain 
-SpectralSubDomain <- seq(1700,2400)
+spectral_subdomain <- seq(1700,2400)
 # adjust spectral domain
-SubData <- FitSpectralData(lambda = LRT_D$wvl, 
-                           Refl = LRT_D$Reflectance, 
-                           Tran = LRT_D$Transmittance,
-                           UserDomain = SpectralSubDomain)
+subset_lop <- fit_spectral_data(lambda = lrt_d$wvl, 
+                                refl = lrt_d$reflectance, 
+                                tran = lrt_d$transmittance,
+                                user_domain = spectral_subdomain)
 
 # invert PROSPECT with simulated leaf optical properties
-OutPROSPECT5 <- Invert_PROSPECT(SpecPROSPECT = SubData$SpecPROSPECT, 
-                                Refl = SubData$Refl, 
-                                Tran = SubData$Tran,
-                                Parms2Estimate = Parms2Estimate, 
-                                PROSPECT_version = 'D')
+options <- set_options_prospect(fun = 'invert_prospect')
+options$spec_prospect <- subset_lop$spec_prospect
+output_prospect_5 <- invert_prospect(refl = subset_lop$refl, 
+                                     tran = subset_lop$tran,
+                                     parms_to_estimate = parms_to_estimate, 
+                                     prospect_version = 'D', 
+                                     options = options)
 ```
 
 # PROSPECT-D inversion: using optimal spectral domains
-The function `Invert_PROSPECT_OPT` automatically sets the optimal spectral domains during inversion for all constituents to be assessed.
+The function `invert_prospect_OPT` automatically sets the optimal spectral 
+domains during inversion for all constituents to be assessed.
 
-Optimal spectral domains and configuration are defined in [Féret et al. (2019)](https://doi.org/10.1016/j.rse.2018.11.002), [Féret et al. (2021)](https://doi.org/10.1016/j.rse.2020.112173), and [Spafford et al. (2021)](https://doi.org/10.1016/j.rse.2020.112176). 
+Optimal spectral domains and configuration are defined in 
+[Féret et al. (2019)](https://doi.org/10.1016/j.rse.2018.11.002), 
+[Féret et al. (2021)](https://doi.org/10.1016/j.rse.2020.112173), and 
+[Spafford et al. (2021)](https://doi.org/10.1016/j.rse.2020.112176). 
 
-`N` does not need to be part of `Parms2Estimate`, as it is automatically assessed when needed. 
+`n_struct` does not need to be part of `parms_to_estimate`, as it is 
+automatically assessed when needed. 
 
 
 ```{r prospect inverse mode 5}
 # define set of parameters to be assessed
-Parms2Estimate  <- c('CHL','CAR','ANT','EWT','LMA')
-# call Invert_PROSPECT_OPT to get optimal estimation of leaf parameters 
+parms_to_estimate  <- c('chl','car','ant','ewt','lma')
+# call invert_prospect_OPT to get optimal estimation of leaf parameters 
 # using optimal spectral domains
-ParmEst <- Invert_PROSPECT_OPT(lambda = LRT_D$wvl, 
-                               Refl = LRT_D$Reflectance,
-                               Tran = LRT_D$Transmittance,
-                               PROSPECT_version = 'D',
-                               Parms2Estimate = Parms2Estimate)
+ParmEst <- invert_prospect_opt(lambda = lrt_d$wvl, 
+                               refl = lrt_d$reflectance,
+                               tran = lrt_d$transmittance,
+                               prospect_version = 'D',
+                               parms_to_estimate = parms_to_estimate)
 ```
 
 # PROSPECT-PRO inversion
 Such definition of optimal spectral domains can also be set manually. 
-For example, here is how to estimate protein content from leaf optical properties using the optimal spectral domain defined in [Féret et al. (2021)](https://doi.org/10.1016/j.rse.2020.112173).
+For example, here is how to estimate protein content from leaf optical 
+properties using the optimal spectral domain defined in 
+[Féret et al. (2021)](https://doi.org/10.1016/j.rse.2020.112173).
 
-Please note that `N` needs to be added to `Parms2Estimate`, if user want it to be assessed during the inversion, otherwise it will be set to its default value.
+Please note that `n_struct` needs to be added to `parms_to_estimate`, if user 
+want it to be assessed during the inversion, otherwise it will be set to its 
+default value.
 
 
 ```{r prospect inverse mode 6}
 # simulate leaf optical properties
-LRT_PRO <- PROSPECT(CHL = 45, CAR = 10, ANT = 0.2, EWT = 0.012,
-                    PROT = 0.002, CBC = 0.015, N = 1.3)
+lrt_pro <- prospect(chl = 45, car = 10, ant = 0.2, ewt = 0.012,
+                    prot = 0.002, cbc = 0.015, n_struct = 1.3)
 # define spectral subdomain 
-SpectralSubDomain <- c(2125,2175)
+spectral_subdomain <- c(2125,2175)
 # adjust spectral domain
-SubData <- FitSpectralData(lambda = LRT_PRO$wvl, 
-                           Refl = LRT_PRO$Reflectance, 
-                           Tran = LRT_PRO$Transmittance,
-                           UserDomain = SpectralSubDomain, 
-                           UL_Bounds = TRUE)
+subset_lop <- fit_spectral_data(lambda = lrt_pro$wvl, 
+                                refl = lrt_pro$reflectance, 
+                                tran = lrt_pro$transmittance,
+                                user_domain = spectral_subdomain, 
+                                ul_bounds = TRUE)
 
-Parms2Estimate <- c('EWT', 'PROT', 'CBC', 'N')
+parms_to_estimate <- c('ewt', 'prot', 'cbc', 'n_struct')
 # invert PROSPECT with simulated leaf optical properties
-OutPROSPECT6 <- Invert_PROSPECT(SpecPROSPECT = SubData$SpecPROSPECT,
-                                Refl = SubData$Refl, 
-                                Tran = SubData$Tran, 
-                                Parms2Estimate = Parms2Estimate, 
-                                PROSPECT_version = 'PRO')
+options <- set_options_prospect(fun = 'invert_prospect')
+options$spec_prospect <- subset_lop$spec_prospect
+output_prospect_6 <- invert_prospect(refl = subset_lop$refl, 
+                                     tran = subset_lop$tran, 
+                                     parms_to_estimate = parms_to_estimate, 
+                                     prospect_version = 'PRO', 
+                                     options = options)
 ```
 
 
 # PROSPECT inversion with user-defined merit function
 
-A new merit function can be defined, as long as it uses the same input and output
-variables as the function [Merit_PROSPECT_RMSE](https://jbferet.gitlab.io/prospect/reference/Merit_PROSPECT_RMSE.html).
+A new merit function can be defined, as long as it uses the same input and 
+output variables as the function 
+[merit_prospect_rmse](https://jbferet.gitlab.io/prospect/reference/merit_prospect_rmse.html).
 
 Here is an example of a function using __nMRSE__ instead of __RMSE__ for the 
 merit function.
-This means that for each spectral band, the square difference between measured and 
-simulated leaf optics is normalized by the value of the measured leaf optics. 
+This means that for each spectral band, the square difference between measured 
+and simulated leaf optics is normalized by the value of the measured leaf optics. 
 
-First, the merit function is 
+First, the merit function is defined as follows: 
 
 ```{r prospect merit function}
-Merit_PROSPECT_nRMSE <- function(x, SpecPROSPECT,
-                                 Refl, Tran,
-                                 Input_PROSPECT,
-                                 Parms2Estimate) {
+merit_prospect_nrmse <- function(x, spec_prospect, refl, tran, input_prospect,
+                                 parms_to_estimate) {
   x[x < 0] <- 0
-  Input_PROSPECT[Parms2Estimate] <- x
-  RT <- do.call('PROSPECT', c(list(SpecPROSPECT = SpecPROSPECT), Input_PROSPECT))
+  input_prospect[parms_to_estimate] <- x
+  RT <- do.call(what = 'prospect', args = c(list(spec_prospect = spec_prospect), 
+                                            input_prospect))
   fcr <- fct <- 0
-  if (!is.null(Refl)) fcr <- sqrt(sum(((Refl - RT$Reflectance)**2)/Refl) / length(RT$Reflectance))
-  if (!is.null(Tran)) fct <- sqrt(sum(((Tran - RT$Transmittance)**2)/Tran) / length(RT$Transmittance))
+  if (!is.null(refl)) 
+    fcr <- sqrt(sum(((refl - RT$reflectance)**2)/refl) / length(RT$reflectance))
+  if (!is.null(tran)) 
+    fct <- sqrt(sum(((tran - RT$transmittance)**2)/tran) / length(RT$transmittance))
   fc <- fcr + fct
   return(fc)
 }
@@ -290,14 +335,16 @@ Merit_PROSPECT_nRMSE <- function(x, SpecPROSPECT,
 
 ```{r prospect inverse mode merit function}
 # simulate leaf optical properties
-LRT <- PROSPECT(CHL = 45, CAR = 10, ANT = 0.2, 
-                EWT = 0.02, LMA = 0.015, N = 1.8)
-Parms2Estimate <- c('CHL', 'CAR', 'ANT', 'EWT', 'LMA', 'N')
+lrt <- prospect(chl = 45, car = 10, ant = 0.2,
+                ewt = 0.02, lma = 0.015, n_struct = 1.8)
+parms_to_estimate <- c('chl', 'car', 'ant', 'ewt', 'lma', 'n_struct')
 # invert PROSPECT with simulated leaf optical properties
-OutPROSPECT7 <- Invert_PROSPECT(Refl = LRT$Refl, 
-                                Tran = LRT$Tran, 
-                                Parms2Estimate = Parms2Estimate, 
-                                PROSPECT_version = 'D', 
-                                MeritFunction = 'Merit_PROSPECT_nRMSE')
+options <- set_options_prospect(fun = 'invert_prospect')
+options$merit_function <- 'merit_prospect_nrmse'
+output_prospect_7 <- invert_prospect(refl = lrt$refl, 
+                                     tran = lrt$tran, 
+                                     parms_to_estimate = parms_to_estimate, 
+                                     prospect_version = 'D', 
+                                     options = options)
 ```
 
