@@ -87,9 +87,9 @@ figure 1.
 
 
 <p float="left">
-  <img src="../man/figures/N_RTvsR.png" width="33%" />
-  <img src="../man/figures/N_RTvsT.png" width="33%" />
-  <img src="../man/figures/N_RvsT.png" width="33%" />
+  <img src="https://gitlab.com/jbferet/myshareddata/-/raw/master/prospect_vignette_illustrations/N_RTvsR.png" width="30%" />
+  <img src="https://gitlab.com/jbferet/myshareddata/-/raw/master/prospect_vignette_illustrations/N_RTvsT.png" width="30%" />
+  <img src="https://gitlab.com/jbferet/myshareddata/-/raw/master/prospect_vignette_illustrations/N_RvsT.png" width="30%" />
 </p>
 <center>
   Fig. 1. Comparison between `n_struct` estimated from PROSPECT inversion using 
@@ -194,14 +194,14 @@ The comparison between PROSPECT inversion without prior `n_struct`, with prior
 when only R or T are used, is showed below:
 
 <p float="left">
-  <img src="../man/figures/CHL_R.png" width="33%" />
-  <img src="../man/figures/CHL_R_Nprior.png" width="33%" />
-  <img src="../man/figures/CHL_R_Nprior_OPT.png" width="33%" />
+  <img src="https://gitlab.com/jbferet/myshareddata/-/raw/master/prospect_vignette_illustrations/CHL_R.png" width="30%" />
+  <img src="https://gitlab.com/jbferet/myshareddata/-/raw/master/prospect_vignette_illustrations/CHL_R_Nprior.png" width="30%" />
+  <img src="https://gitlab.com/jbferet/myshareddata/-/raw/master/prospect_vignette_illustrations/CHL_R_Nprior_OPT.png" width="30%" />
 </p>
 <p float="left">
-  <img src="../man/figures/CHL_T.png" width="33%" />
-  <img src="../man/figures/CHL_T_Nprior.png" width="33%" />
-  <img src="../man/figures/CHL_T_Nprior_OPT.png" width="33%" />
+  <img src="https://gitlab.com/jbferet/myshareddata/-/raw/master/prospect_vignette_illustrations/CHL_T.png" width="30%" />
+  <img src="https://gitlab.com/jbferet/myshareddata/-/raw/master/prospect_vignette_illustrations/CHL_T_Nprior.png" width="30%" />
+  <img src="https://gitlab.com/jbferet/myshareddata/-/raw/master/prospect_vignette_illustrations/CHL_T_Nprior_OPT.png" width="30%" />
 </p>
 <center>
   Fig. 2. Estimation of `chl` from PROSPECT inversion, without prior `n_struct` 
@@ -213,14 +213,14 @@ when only R or T are used, is showed below:
 <p>&nbsp;</p>
 
 <p float="left">
-  <img src="../man/figures/CAR_R.png" width="33%" />
-  <img src="../man/figures/CAR_R_Nprior.png" width="33%" />
-  <img src="../man/figures/CAR_R_Nprior_OPT.png" width="33%" />
+  <img src="https://gitlab.com/jbferet/myshareddata/-/raw/master/prospect_vignette_illustrations/CAR_R.png" width="30%" />
+  <img src="https://gitlab.com/jbferet/myshareddata/-/raw/master/prospect_vignette_illustrations/CAR_R_Nprior.png" width="30%" />
+  <img src="https://gitlab.com/jbferet/myshareddata/-/raw/master/prospect_vignette_illustrations/CAR_R_Nprior_OPT.png" width="30%" />
 </p>
 <p float="left">
-  <img src="../man/figures/CAR_T.png" width="33%" />
-  <img src="../man/figures/CAR_T_Nprior.png" width="33%" />
-  <img src="../man/figures/CAR_T_Nprior_OPT.png" width="33%" />
+  <img src="https://gitlab.com/jbferet/myshareddata/-/raw/master/prospect_vignette_illustrations/CAR_T.png" width="30%" />
+  <img src="https://gitlab.com/jbferet/myshareddata/-/raw/master/prospect_vignette_illustrations/CAR_T_Nprior.png" width="30%" />
+  <img src="https://gitlab.com/jbferet/myshareddata/-/raw/master/prospect_vignette_illustrations/CAR_T_Nprior_OPT.png" width="30%" />
 </p>
 <center>
   Fig. 3. Estimation of `car` from PROSPECT inversion, without prior `n_struct` 
@@ -232,14 +232,14 @@ when only R or T are used, is showed below:
 <p>&nbsp;</p>
 
 <p float="left">
-  <img src="../man/figures/EWT_R.png" width="33%" />
-  <img src="../man/figures/EWT_R_Nprior.png" width="33%" />
-  <img src="../man/figures/EWT_R_Nprior_OPT.png" width="33%" />
+  <img src="https://gitlab.com/jbferet/myshareddata/-/raw/master/prospect_vignette_illustrations/EWT_R.png" width="30%" />
+  <img src="https://gitlab.com/jbferet/myshareddata/-/raw/master/prospect_vignette_illustrations/EWT_R_Nprior.png" width="30%" />
+  <img src="https://gitlab.com/jbferet/myshareddata/-/raw/master/prospect_vignette_illustrations/EWT_R_Nprior_OPT.png" width="30%" />
 </p>
 <p float="left">
-  <img src="../man/figures/EWT_T.png" width="33%" />
-  <img src="../man/figures/EWT_T_Nprior.png" width="33%" />
-  <img src="../man/figures/EWT_T_Nprior_OPT.png" width="33%" />
+  <img src="https://gitlab.com/jbferet/myshareddata/-/raw/master/prospect_vignette_illustrations/EWT_T.png" width="30%" />
+  <img src="https://gitlab.com/jbferet/myshareddata/-/raw/master/prospect_vignette_illustrations/EWT_T_Nprior.png" width="30%" />
+  <img src="https://gitlab.com/jbferet/myshareddata/-/raw/master/prospect_vignette_illustrations/EWT_T_Nprior_OPT.png" width="30%" />
 </p>
 <center>
   Fig. 4. Estimation of `ewt` from PROSPECT inversion, without prior `n_struct` 
@@ -251,14 +251,14 @@ when only R or T are used, is showed below:
 <p>&nbsp;</p>
 
 <p float="left">
-  <img src="../man/figures/LMA_R.png" width="33%" />
-  <img src="../man/figures/LMA_R_Nprior.png" width="33%" />
-  <img src="../man/figures/LMA_R_Nprior_OPT.png" width="33%" />
+  <img src="https://gitlab.com/jbferet/myshareddata/-/raw/master/prospect_vignette_illustrations/LMA_R.png" width="30%" />
+  <img src="https://gitlab.com/jbferet/myshareddata/-/raw/master/prospect_vignette_illustrations/LMA_R_Nprior.png" width="30%" />
+  <img src="https://gitlab.com/jbferet/myshareddata/-/raw/master/prospect_vignette_illustrations/LMA_R_Nprior_OPT.png" width="30%" />
 </p>
 <p float="left">
-  <img src="../man/figures/LMA_T.png" width="33%" />
-  <img src="../man/figures/LMA_T_Nprior.png" width="33%" />
-  <img src="../man/figures/LMA_T_Nprior_OPT.png" width="33%" />
+  <img src="https://gitlab.com/jbferet/myshareddata/-/raw/master/prospect_vignette_illustrations/LMA_T.png" width="30%" />
+  <img src="https://gitlab.com/jbferet/myshareddata/-/raw/master/prospect_vignette_illustrations/LMA_T_Nprior.png" width="30%" />
+  <img src="https://gitlab.com/jbferet/myshareddata/-/raw/master/prospect_vignette_illustrations/LMA_T_Nprior_OPT.png" width="30%" />
 </p>
 <center>
   Fig. 5. Estimation of `lma` from PROSPECT inversion, without prior `n_struct` 

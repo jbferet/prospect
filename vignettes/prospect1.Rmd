@@ -162,12 +162,15 @@ lrt_pro <- prospect(chl = 45, car = 10, ant = 0.2, ewt = 0.012,
 ```
 
 The resulting leaf optical properties are, indeed, very similar:
+
+<p>&nbsp;</p>
+```{r, eval=TRUE, echo = FALSE, out.width="70%"}
+url <- "https://gitlab.com/jbferet/myshareddata/-/raw/master/prospect_vignette_illustrations/compare_PROSPECT.png"
+knitr::include_graphics(url)
+```
 <p>&nbsp;</p>
 <center>
-  <img align="bottom" width="50%" height="50%" src="../man/figures/compare_PROSPECT.png">
-</center> 
-<center>
-  Fig. 1. Comparison between PROSPECT-D and PROSPECT-PRO, stoichiometry respected
+  Fig. 1. Comparison between PROSPECT-D and PROSPECT-PRO
 </center> 
 <p>&nbsp;</p>
 
@@ -181,9 +184,11 @@ lrt_pro2 <- prospect(chl = 45, car = 10, ant = 0.2, ewt = 0.012,
 ```
 
 <p>&nbsp;</p>
-<center>
-  <img align="bottom" width="50%" height="50%" src="../man/figures/compare_PROSPECT2.png">
-</center> 
+```{r, eval=TRUE, echo = FALSE, out.width="70%"}
+url <- "https://gitlab.com/jbferet/myshareddata/-/raw/master/prospect_vignette_illustrations/compare_PROSPECT2.png"
+knitr::include_graphics(url)
+```
+<p>&nbsp;</p>
 <center>
   Fig. 2. Comparison between PROSPECT-D and PROSPECT-PRO, Proteins only, no CBC
 </center> 
@@ -205,9 +210,11 @@ lrt_pro3 <- prospect(chl = 45, car = 10, ant = 0.2, ewt = 0.012,
 
 
 <p>&nbsp;</p>
-<center>
-  <img align="bottom" width="50%" height="50%" src="../man/figures/compare_PROSPECT3.png">
-</center> 
+```{r, eval=TRUE, echo = FALSE, out.width="70%"}
+url <- "https://gitlab.com/jbferet/myshareddata/-/raw/master/prospect_vignette_illustrations/compare_PROSPECT3.png"
+knitr::include_graphics(url)
+```
+<p>&nbsp;</p>
 <center>
   Fig. 3. Comparison between PROSPECT-D and PROSPECT-PRO, CBC only, no Proteins
 </center> 

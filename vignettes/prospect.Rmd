@@ -13,7 +13,7 @@ output:
     toc_depth: 2
 vignette: >
   \usepackage[utf8]{inputenc}
-  %\VignetteIndexEntry{introduction}
+  %\VignetteIndexEntry{Introduction to `prospect`}
   %\VignetteEncoding{UTF-8}
   %\VignetteEngine{knitr::rmarkdown}
 ---
@@ -72,10 +72,11 @@ for alternative approaches taking advantage of physical modeling for the
 estimation of leaf chemistry from such reflectance measurements. 
 
 
-<p>&nbsp;</p>
-<center>
-  <img align="bottom" width="100%" height="100%" src="../man/figures/PROSPECT_representation_Full_Crop.png">
-</center> 
+
+```{r, eval=TRUE, echo = FALSE, out.width="100%"}
+url <- "https://gitlab.com/jbferet/myshareddata/-/raw/master/prospect_vignette_illustrations/PROSPECT_representation_Full_Crop.png"
+knitr::include_graphics(url)
+```
 <p>&nbsp;</p>
 <center>
   Fig. 1. Representation of a leaf according to PROSPECT and corresponding leaf 
@@ -143,10 +144,11 @@ the leaf optical properties.
 See the following pages of the tutorial for an illustration of how to use 
 `prospect` in forward and inverse mode.
 
-<p>&nbsp;</p>
-<center>
-  <img align="bottom" width="100%" height="100%" src="../man/figures/PROSPECT_DirectInverse_crop.png">
-</center> 
+
+```{r, eval=TRUE, echo = FALSE, out.width="100%"}
+url <- "https://gitlab.com/jbferet/myshareddata/-/raw/master/prospect_vignette_illustrations/PROSPECT_DirectInverse_crop.png"
+knitr::include_graphics(url)
+```
 <p>&nbsp;</p>
 <center>
   Fig. 2. Forward and inverse modes of PROSPECT

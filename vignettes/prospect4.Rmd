@@ -1,5 +1,5 @@
 ---
-title: "4. Inverse mode: Illustration with LOPEX"
+title: "4. inversion of PROSPECT-PRO with LOPEX dataset"
 author: "Jean-Baptiste Féret, Florian de Boissieu"
 date: "`r Sys.Date()`"
 output:
@@ -13,7 +13,7 @@ output:
     toc_depth: 2
 vignette: >
   \usepackage[utf8]{inputenc}
-  %\VignetteIndexEntry{4. Inverse mode: Illustration with LOPEX}
+  %\VignetteIndexEntry{4. inversion of PROSPECT-PRO with LOPEX dataset}
   %\VignetteEncoding{UTF-8}
   %\VignetteEngine{knitr::rmarkdown}
 ---
@@ -95,12 +95,12 @@ obtained with matlab, using the same algorithm for iterative optimization (with
 the function `fmincon`).
 
 <p float="left">
-  <img src="../man/figures/Estimation_EWT.png" width="50%" />
-  <img src="../man/figures/Estimation_LMA.png" width="50%" />
+  <img src="https://gitlab.com/jbferet/myshareddata/-/raw/master/prospect_vignette_illustrations/Estimation_EWT.png" width="45%" />
+  <img src="https://gitlab.com/jbferet/myshareddata/-/raw/master/prospect_vignette_illustrations/Estimation_LMA.png" width="45%" />
 </p>
 <p float="left">
-  <img src="../man/figures/Estimation_PROT.png" width="50%" />
-  <img src="../man/figures/Estimation_CBC.png" width="50%" />
+  <img src="https://gitlab.com/jbferet/myshareddata/-/raw/master/prospect_vignette_illustrations/Estimation_PROT.png" width="45%" />
+  <img src="https://gitlab.com/jbferet/myshareddata/-/raw/master/prospect_vignette_illustrations/Estimation_CBC.png" width="45%" />
 </p>
 <center>
   Fig. 1. Estimation of `prot`, `cbc`, `ewt` and `lma` as `prot`+`cbc` using 
@@ -121,12 +121,12 @@ If convergence is not obtained for `Tolerance = 1e-2`, then the inversion
 returns `NA`.
 
 <p float="left">
-  <img src="../man/figures/Estimation_EWT_Compare_Matlab.png" width="50%" />
-  <img src="../man/figures/Estimation_LMA_Compare_Matlab.png" width="50%" />
+  <img src="https://gitlab.com/jbferet/myshareddata/-/raw/master/prospect_vignette_illustrations/Estimation_EWT_Compare_Matlab.png" width="45%" />
+  <img src="https://gitlab.com/jbferet/myshareddata/-/raw/master/prospect_vignette_illustrations/Estimation_LMA_Compare_Matlab.png" width="45%" />
 </p>
 <p float="left">
-  <img src="../man/figures/Estimation_PROT_Compare_Matlab.png" width="50%" />
-  <img src="../man/figures/Estimation_CBC_Compare_Matlab.png" width="50%" />
+  <img src="https://gitlab.com/jbferet/myshareddata/-/raw/master/prospect_vignette_illustrations/Estimation_PROT_Compare_Matlab.png" width="45%" />
+  <img src="https://gitlab.com/jbferet/myshareddata/-/raw/master/prospect_vignette_illustrations/Estimation_CBC_Compare_Matlab.png" width="45%" />
 </p>
 <center>
   Fig. 2. Comparison of th performances obtained with Matlab and R for the 
