@@ -1,5 +1,5 @@
 ---
-title: "3. Inverse mode: Illustration with ANGERS"
+title: "3. inversion of PROSPECT-D with ANGERS dataset"
 author: "Jean-Baptiste Féret, Florian de Boissieu"
 date: "`r Sys.Date()`"
 output:
@@ -13,7 +13,7 @@ output:
     toc_depth: 2
 vignette: >
   \usepackage[utf8]{inputenc}
-  %\VignetteIndexEntry{3. Inverse mode: Illustration with ANGERS}
+  %\VignetteIndexEntry{3. inversion of PROSPECT-D with ANGERS dataset}
   %\VignetteEncoding{UTF-8}
   %\VignetteEngine{knitr::rmarkdown}
 ---
@@ -74,13 +74,15 @@ res <- invert_prospect(refl = subset_lop$refl,
 
 Results obtained with the R package `prospect` and matlab implementation are consistent.
 
+
+
 <p float="left">
-  <img src="../man/figures/_CHL_RT.png" width="50%" />
-  <img src="../man/figures/_CAR_RT.png" width="50%" />
+  <img src="https://gitlab.com/jbferet/myshareddata/-/raw/master/prospect_vignette_illustrations/_CHL_RT.png" width="45%" />
+  <img src="https://gitlab.com/jbferet/myshareddata/-/raw/master/prospect_vignette_illustrations/_CAR_RT.png" width="45%" />
 </p>
 <p float="left">
-  <img src="../man/figures/_EWT_RT.png" width="50%" />
-  <img src="../man/figures/_LMA_RT.png" width="50%" />
+  <img src="https://gitlab.com/jbferet/myshareddata/-/raw/master/prospect_vignette_illustrations/_EWT_RT.png" width="45%" />
+  <img src="https://gitlab.com/jbferet/myshareddata/-/raw/master/prospect_vignette_illustrations/_LMA_RT.png" width="45%" />
 </p>
 <center>
   Fig. 1. `chl`, `car`, `ewt` and `lma` assessed from ANGERS dataset using 
@@ -111,12 +113,12 @@ ParmEst <- invert_prospect_opt(lambda = lop_database$lambda,
 ## Results: estimation of `chl`, `car`, `ewt` and `lma`
 
 <p float="left">
-  <img src="../man/figures/_CHL_RT_OPT.png" width="50%" />
-  <img src="../man/figures/_CAR_RT_OPT.png" width="50%" />
+  <img src="https://gitlab.com/jbferet/myshareddata/-/raw/master/prospect_vignette_illustrations/_CHL_RT_OPT.png" width="45%" />
+  <img src="https://gitlab.com/jbferet/myshareddata/-/raw/master/prospect_vignette_illustrations/_CAR_RT_OPT.png" width="45%" />
 </p>
 <p float="left">
-  <img src="../man/figures/_EWT_RT_OPT.png" width="50%" />
-  <img src="../man/figures/_LMA_RT_OPT.png" width="50%" />
+  <img src="https://gitlab.com/jbferet/myshareddata/-/raw/master/prospect_vignette_illustrations/_EWT_RT_OPT.png" width="45%" />
+  <img src="https://gitlab.com/jbferet/myshareddata/-/raw/master/prospect_vignette_illustrations/_LMA_RT_OPT.png" width="45%" />
 </p>
 <center>
   Fig. 2. Estimation of `chl`, `car`, `ewt` and `lma` from ANGERS using 
