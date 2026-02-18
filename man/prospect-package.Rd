@@ -5,8 +5,6 @@
 \alias{prospect-package}
 \title{prospect: PROSPECT leaf radiative transfer model and inversion routines}
 \description{
-\if{html}{\figure{logo.png}{options: style='float: right' alt='logo' width='120'}}
-
 The package prospect includes PROSPECT-PRO, the latest version of the PROSPECT leaf model. It also includes inversion routines based on iterative optimization in order to estimate leaf chemistry from spectroscopic measurements.
 }
 \seealso{
