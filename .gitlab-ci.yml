@@ -20,8 +20,10 @@ before_script:
   - find $R_LIBS_DIR/* -maxdepth 0 ! -name $(basename $R_LIBS_USER) -type d -exec rm -r {} +
   - ls $R_LIBS_DIR
   - echo '.libPaths("'${R_LIBS_USER}'")' > .Rprofile
-  - apt-get update
-  - apt-get install -y qpdf pandoc libfreetype6-dev pkg-config libfribidi-dev libharfbuzz-dev libpng-dev libtiff5-dev libjpeg-dev
+  # - apt-get update
+  # - apt-get install -y qpdf pandoc libfreetype6-dev pkg-config libfribidi-dev libharfbuzz-dev libpng-dev libtiff5-dev libjpeg-dev
+  - apt-get update -qq
+  - apt-get install -y qpdf pandoc libfreetype6-dev pkg-config libfribidi-dev libharfbuzz-dev libpng-dev libtiff5-dev libjpeg-dev libwebp-dev
 
 stages:
 - deps
