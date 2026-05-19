@@ -5,7 +5,7 @@
 \title{This function checks if the input parameters are defined as expected
 to run either PROSPECT-D or PROSPECT-PRO}
 \usage{
-check_version_prospect(lma, prot, cbc)
+check_version_prospect(lma, prot, cbc, verbose = TRUE)
 }
 \arguments{
 \item{lma}{numeric. content corresponding to lma}
@@ -13,6 +13,8 @@ check_version_prospect(lma, prot, cbc)
 \item{prot}{numeric. content corresponding to protein content}
 
 \item{cbc}{numeric. content corresponding to carbon based constituents}
+
+\item{verbose}{boolean}
 }
 \value{
 list. updated lma, prot and cbc

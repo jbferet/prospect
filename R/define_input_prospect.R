@@ -12,6 +12,7 @@
 #' @param cbc numeric. Nonprot carbon-based constituent content (g.cm-2)
 #' @param n_struct numeric. Leaf structure parameter
 #' @param alpha numeric. Solid angle for incident light at surface of leaf
+#' @param verbose  boolean
 #'
 #' @return list. updated lma, prot and cbc
 #' @export
@@ -19,14 +20,15 @@
 define_input_prospect <- function(input_prospect, chl = NULL, car = NULL,
                                   ant = NULL, brown = NULL, ewt = NULL,
                                   lma = NULL, prot = NULL, cbc = NULL,
-                                  n_struct = NULL, alpha = NULL){
+                                  n_struct = NULL, alpha = NULL, verbose = TRUE){
 
   default_prospect <- data.frame('chl' = 40.0, 'car' = 8.0, 'ant' = 0.0,
                                  'brown' = 0.0, 'ewt' = 0.01, 'lma' = 0.0,
                                  'prot'= 0.0, 'cbc' = 0.0, 'n_struct' = 1.5,
                                  'alpha' = 40.0)
   if (is.null(input_prospect)){
-    dm_val <- check_version_prospect(lma = lma, prot = prot, cbc = cbc)
+    dm_val <- check_version_prospect(lma = lma, prot = prot, cbc = cbc,
+                                     verbose = verbose)
     input_prospect <- data.frame('n_struct' = n_struct, 'chl' = chl, 'car' = car,
                                  'ant' = ant, 'brown' = brown, 'ewt' = ewt,
                                  'lma' = dm_val$lma, 'prot'= dm_val$prot,

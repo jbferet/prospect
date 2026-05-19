@@ -8,9 +8,17 @@
 
 # 1 Install
 
-After installing package `devtools`, the package `prospect` can be installed with the following command line in R session:
+## Install `remotes`
+
+Install the package `remotes`:
+
 ```
-devtools::install_github("jbferet/prospect")
+install.packages("remotes")
+```
+
+After installing package `remotes`, the package `prospect` can be installed with the following command line in R session:
+```
+remotes::install_github("jbferet/prospect")
 ```
 
 <span style="color:red">**WARNING : **</span> **many functions have been renamed in v2.0 of the package.**

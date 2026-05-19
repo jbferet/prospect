@@ -19,7 +19,8 @@ prospect(
   prot = 0,
   cbc = 0,
   alpha = 40,
-  check = TRUE
+  check = TRUE,
+  verbose = TRUE
 )
 }
 \arguments{
@@ -50,6 +51,8 @@ and corresponding spectral bands}
 \item{alpha}{numeric. Solid angle for incident light at surface of leaf}
 
 \item{check}{boolean. set to TRUE to check input data format}
+
+\item{verbose}{boolean}
 }
 \value{
 leaf directional-hemispherical reflectance and transmittance

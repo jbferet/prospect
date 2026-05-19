@@ -5,12 +5,14 @@
 \title{computation of a LUT of leaf optical properties using a set of
 leaf chemical & structural parameters}
 \usage{
-prospect_lut(input_prospect, spec_prospect = NULL)
+prospect_lut(input_prospect, spec_prospect = NULL, verbose = TRUE)
 }
 \arguments{
 \item{input_prospect}{dataframe. list of PROSPECT input parameters.}
 
-\item{spec_prospect}{list. spectral constants
+\item{spec_prospect}{list. spectral constants}
+
+\item{verbose}{boolean
 refractive index, specific absorption coefficients & spectral bands}
 }
 \value{
