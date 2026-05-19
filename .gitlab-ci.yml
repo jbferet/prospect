@@ -26,14 +26,15 @@ before_script:
   - apt-get install -y qpdf pandoc libfreetype6-dev pkg-config libfribidi-dev libharfbuzz-dev libpng-dev libtiff5-dev libjpeg-dev libwebp-dev
 
 stages:
-- deps
-- check
-- deploy
+  - deps
+  - check
+  - deploy
 
 deps:
   stage: deps
   script:
-  - R -e 'devtools::install_deps(dependencies = T)'
+  - R -e 'install.packages("remotes", type = "source")'
+  - R -e 'remotes::install_deps(dependencies=T)'
   only:
     - master
     - schedules
@@ -41,6 +42,8 @@ deps:
 check:
   stage: check
   script:
+  - R -e 'install.packages("remotes", type = "source")'
+  - R -e "remotes::install_cran(c('systemfonts', 'textshaping'))"
   - R -e 'devtools::check(check_dir = Sys.getenv("CHECK_DIR"), error_on = "error")'
   - R -e 'devtools::install()'
   only:
