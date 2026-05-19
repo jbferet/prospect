@@ -16,7 +16,8 @@ define_input_prospect(
   prot = NULL,
   cbc = NULL,
   n_struct = NULL,
-  alpha = NULL
+  alpha = NULL,
+  verbose = TRUE
 )
 }
 \arguments{
@@ -41,6 +42,8 @@ define_input_prospect(
 \item{n_struct}{numeric. Leaf structure parameter}
 
 \item{alpha}{numeric. Solid angle for incident light at surface of leaf}
+
+\item{verbose}{boolean}
 }
 \value{
 list. updated lma, prot and cbc

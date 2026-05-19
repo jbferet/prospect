@@ -21,6 +21,7 @@
 #' @param cbc numeric. NonProt Carbon-based constituent content (g.cm-2)
 #' @param alpha numeric. Solid angle for incident light at surface of leaf
 #' @param check boolean. set to TRUE to check input data format
+#' @param verbose  boolean
 #'
 #' @return leaf directional-hemispherical reflectance and transmittance
 #' @importFrom expint expint
@@ -29,14 +30,15 @@
 prospect <- function(spec_prospect = NULL, input_prospect = NULL,
                      n_struct = 1.5, chl = 40.0, car = 8.0, ant = 0.0, brown = 0.0,
                      ewt = 0.01, lma = NULL, prot = 0, cbc = 0, alpha = 40.0,
-                     check = TRUE) {
+                     check = TRUE, verbose = TRUE) {
 
   # define PROSPECT input in a dataframe
   input_prospect <- define_input_prospect(input_prospect = input_prospect,
                                           chl = chl, car = car, ant = ant,
                                           brown = brown, ewt = ewt, lma = lma,
                                           prot = prot, cbc = cbc,
-                                          n_struct = n_struct, alpha)
+                                          n_struct = n_struct, alpha,
+                                          verbose = verbose)
   # if (check) input_prospect <- define_input_prospect(input_prospect, chl, car,
   #                                                    ant, brown, ewt, lma, prot,
   #                                                    cbc, n_struct, alpha)

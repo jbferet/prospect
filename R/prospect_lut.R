@@ -3,12 +3,14 @@
 #'
 #' @param input_prospect dataframe. list of PROSPECT input parameters.
 #' @param spec_prospect  list. spectral constants
+#' @param verbose  boolean
 #' refractive index, specific absorption coefficients & spectral bands
 #'
 #' @return list. LUT including leaf reflectance and transmittance
 #' @export
 #'
-prospect_lut <- function(input_prospect, spec_prospect = NULL) {
+prospect_lut <- function(input_prospect, spec_prospect = NULL,
+                         verbose = TRUE) {
 
   if (is.null(spec_prospect))
     spec_prospect <- prospect::spec_prospect_full_range
@@ -21,7 +23,7 @@ prospect_lut <- function(input_prospect, spec_prospect = NULL) {
   # identify missing elements
   parm_to_add <- which(!names(expected_parms) %in% inOK)
   # check if all parameters are included.
-  if (length(parm_to_add) > 0)
+  if (length(parm_to_add) > 0 & verbose)
     print_msg(cause = 'Missing_Input',
               args = list('Input' = inOK, 'Expected' = expected_parms))
 
@@ -37,7 +39,9 @@ prospect_lut <- function(input_prospect, spec_prospect = NULL) {
   # run PROSPECT for nb_samples
   run_list_PROSPECT <- function(input_prospect, spec_prospect){
     lut_tmp <- do.call(prospect,
-                       c(list(spec_prospect = spec_prospect), input_prospect))
+                       c(list(spec_prospect = spec_prospect),
+                         input_prospect,
+                         verbose = FALSE))
     return(lut_tmp)
   }
   indiv_leaves <- split(input_prospect, factor(seq_len(nb_samples)))
