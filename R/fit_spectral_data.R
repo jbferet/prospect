@@ -55,16 +55,3 @@ fit_spectral_data <- function(lambda, spec_prospect = NULL,
   return(list("spec_prospect" = spec_prospect, "lambda" = lambda,
               "refl" = RT$refl, "tran" = RT$tran, "nb_samples" = RT$nb_samples))
 }
-
-#' @rdname FitSpectralData-deprecated
-#' @export
-#'
-FitSpectralData <- function(lambda, SpecPROSPECT = NULL,
-                            Refl = NULL, Tran = NULL,
-                            UserDomain = NULL, UL_Bounds = FALSE) {
-
-  .Deprecated("FitSpectralData")
-  fit_spectral_data(lambda = lambda, spec_prospect = SpecPROSPECT,
-                    refl = Refl, tran = Tran, user_domain = UserDomain,
-                    ul_bounds = UL_Bounds)
-}

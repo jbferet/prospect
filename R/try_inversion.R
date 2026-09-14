@@ -112,18 +112,3 @@ try_inversion <- function(x0, merit_function, spec_prospect, refl, tran,
   }
   return(res)
 }
-
-
-
-#' @rdname tryInversion-deprecated
-#' @export
-#'
-tryInversion <- function(x0, MeritFunction, SpecPROSPECT, Refl, Tran,
-                         Parms2Estimate, lb, ub, verbose = FALSE) {
-
-  .Deprecated("tryInversion")
-  try_inversion(x0 = x0, merit_function = MeritFunction,
-                spec_prospect = SpecPROSPECT, refl = Refl, tran = Tran,
-                parms_to_estimate = Parms2Estimate, lb = lb, ub = ub,
-                verbose = verbose)
-}

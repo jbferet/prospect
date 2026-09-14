@@ -94,15 +94,3 @@ get_N_prior <- function(lambda, spec_prospect = NULL, refl = NULL, tran = NULL,
   colnames(Nprior) <- 'n_struct'
   return(Nprior)
 }
-
-#' @rdname Get_Nprior-deprecated
-#' @export
-#'
-Get_Nprior <- function(lambda, SpecPROSPECT = NULL, Refl = NULL, Tran = NULL,
-                       OptWL_R = list(NIR = 800,SWIR = 1131),
-                       OptWL_T = list(NIR = 753,SWIR = 1121)) {
-
-  .Deprecated("Get_Nprior")
-  get_N_prior(lambda = lambda, spec_prospect = SpecPROSPECT,
-              refl = Refl, tran = Tran, OptWL_R = OptWL_R, OptWL_T = OptWL_T)
-}

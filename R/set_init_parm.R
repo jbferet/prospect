@@ -81,17 +81,3 @@ set_init_parm <- function(parms_to_estimate, parm_estimated, prospect_version,
               'init_values'=init_values))
 }
 
-
-
-#' @rdname SetInitParm-deprecated
-#' @export
-#'
-SetInitParm <- function(Parms2Estimate, ParmEst, PROSPECT_version, Nprior,
-                        ANTinit, OptDomain, Refl, Tran){
-
-  .Deprecated("SetInitParm")
-  set_init_parm(parms_to_estimate = Parms2Estimate, parm_estimated = ParmEst,
-                prospect_version = PROSPECT_version, Nprior = Nprior,
-                ant_init = ANTinit, optimal_domain = OptDomain,
-                refl = Refl, tran = Tran)
-}

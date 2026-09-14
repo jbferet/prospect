@@ -25,12 +25,3 @@ set_n_values <- function(refl, tran, spec_prospect){
   }
   return(Nprior)
 }
-
-#' @rdname SetNValues-deprecated
-#' @export
-#'
-SetNValues <- function(Refl, Tran, SpecPROSPECT){
-
-  .Deprecated("SetNValues")
-  set_n_values(refl = Refl, tran = Tran, spec_prospect = SpecPROSPECT)
-}

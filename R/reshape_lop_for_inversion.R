@@ -35,16 +35,3 @@ reshape_lop_for_inversion <- function(refl, tran, spec_prospect){
   RT$nb_samples <- unique(c(ncol(RT$refl), ncol(RT$tran)))
   return(RT)
 }
-
-
-
-#' @rdname reshape_lop4inversion-deprecated
-#' @export
-#'
-reshape_lop4inversion <- function(Refl, Tran, SpecPROSPECT){
-
-  .Deprecated("reshape_lop4inversion")
-  reshape_lop_for_inversion(refl = Refl, tran = Tran,
-                            spec_prospect = SpecPROSPECT)
-}
-

@@ -56,13 +56,3 @@ prospect_lut <- function(input_prospect, spec_prospect = NULL,
               'input_prospect' = input_prospect))
 }
 
-
-#' @rdname PROSPECT_LUT-deprecated
-#' @export
-#'
-PROSPECT_LUT <- function(Input_PROSPECT, SpecPROSPECT = NULL) {
-
-  .Deprecated("PROSPECT_LUT")
-  prospect_lut(input_prospect = Input_PROSPECT,
-               spec_prospect = SpecPROSPECT)
-}
