@@ -1,3 +1,8 @@
+# prospect v2.0.1
+## change
+- update license to GNU GPL-3 to comply with licenses of software dependencies
+- add deprecated file
+
 # prospect v2.0.0
 ## change
 - functions in individual files

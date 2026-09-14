@@ -51,18 +51,3 @@ define_input_prospect <- function(input_prospect, chl = NULL, car = NULL,
   }
   return(input_prospect)
 }
-
-#' @rdname define_Input_PROSPECT-deprecated
-#' @export
-#'
-define_Input_PROSPECT <- function(Input_PROSPECT, CHL = NULL, CAR = NULL,
-                                  ANT = NULL, BROWN = NULL, EWT = NULL,
-                                  LMA = NULL, PROT = NULL, CBC = NULL,
-                                  N = NULL, alpha = NULL){
-
-  .Deprecated("define_Input_PROSPECT")
-  define_input_prospect(input_prospect = Input_PROSPECT, chl = CHL, car = CAR,
-                        ant = ANT, brown = BROWN, ewt = EWT, lma = LMA,
-                        prot = PROT, cbc = CBC, n_struct = N, alpha = alpha)
-}
-

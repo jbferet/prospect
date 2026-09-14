@@ -127,18 +127,3 @@ prospect <- function(spec_prospect = NULL, input_prospect = NULL,
                     'reflectance' = refl,
                     'transmittance' = tran))
 }
-
-#' @rdname prospect-deprecated
-#' @export
-#'
-PROSPECT <- function(SpecPROSPECT = NULL, Input_PROSPECT = NULL,
-                     N = 1.5, CHL = 40.0, CAR = 8.0, ANT = 0.0, BROWN = 0.0,
-                     EWT = 0.01, LMA = NULL, PROT = 0, CBC = 0, alpha = 40.0,
-                     check = TRUE) {
-
-  .Deprecated("prospect")
-  prospect(spec_prospect = SpecPROSPECT, input_prospect = Input_PROSPECT,
-           n_struct = N, chl = CHL, car = CAR, ant = ANT, brown = BROWN,
-           ewt = EWT, lma = LMA, prot = PROT, cbc = CBC, alpha = alpha,
-           check = check)
-}
